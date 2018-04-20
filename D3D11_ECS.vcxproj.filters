@@ -19,6 +19,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="D3D11Utility\struct">
+      <UniqueIdentifier>{5e185841-55c8-4fd6-9eca-2ec5df65e08b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="D3D11Utility\system">
+      <UniqueIdentifier>{38a4cb14-dbbe-4a2d-b0e4-ffe943b18917}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameLoop.cpp">
@@ -32,12 +38,6 @@
     </ClCompile>
     <ClCompile Include="src\EntryPoint.cpp">
       <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\IDirect3D.cpp">
-      <Filter>D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\IDirect3DRenderer.cpp">
-      <Filter>D3D11Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Mesh.cpp">
       <Filter>D3D11Utility</Filter>
@@ -60,6 +60,12 @@
     <ClCompile Include="src\D3D11Utility\Entity.cpp">
       <Filter>D3D11Utility</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\IDirect3D.cpp">
+      <Filter>D3D11Utility\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\IDirect3DRenderer.cpp">
+      <Filter>D3D11Utility\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\header\C_Singleton.h">
@@ -81,12 +87,6 @@
       <Filter>D3D11Utility\header</Filter>
     </ClInclude>
     <ClInclude Include="src\D3D11Utility\header\D3D11Utility.h">
-      <Filter>D3D11Utility\header</Filter>
-    </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\IDirect3D.h">
-      <Filter>D3D11Utility\header</Filter>
-    </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\IDirect3DRenderer.h">
       <Filter>D3D11Utility\header</Filter>
     </ClInclude>
     <ClInclude Include="src\D3D11Utility\header\Mesh.h">
@@ -112,6 +112,21 @@
     </ClInclude>
     <ClInclude Include="src\D3D11Utility\header\Component.h">
       <Filter>D3D11Utility\header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\header\RenderManager.h">
+      <Filter>header</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D11Utility\header\EntityId.h">
+      <Filter>D3D11Utility\struct</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D11Utility\header\EntityManager.h">
+      <Filter>D3D11Utility\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D11Utility\header\IDirect3D.h">
+      <Filter>D3D11Utility\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\D3D11Utility\header\IDirect3DRenderer.h">
+      <Filter>D3D11Utility\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

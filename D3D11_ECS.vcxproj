@@ -160,6 +160,8 @@
     <ClInclude Include="src\D3D11Utility\header\Component.h" />
     <ClInclude Include="src\D3D11Utility\header\D3D11Utility.h" />
     <ClInclude Include="src\D3D11Utility\header\Entity.h" />
+    <ClInclude Include="src\D3D11Utility\header\EntityId.h" />
+    <ClInclude Include="src\D3D11Utility\header\EntityManager.h" />
     <ClInclude Include="src\D3D11Utility\header\IDirect3D.h" />
     <ClInclude Include="src\D3D11Utility\header\IDirect3DRenderer.h" />
     <ClInclude Include="src\D3D11Utility\header\Mesh.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="src\header\GameUtility.h" />
     <ClInclude Include="src\header\IDrawable.h" />
     <ClInclude Include="src\header\IGraphicsRenderer.h" />
+    <ClInclude Include="src\header\RenderManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
