@@ -1,44 +1,39 @@
 //----------------------------------------------------------------------------------
-// File : IDrawable.h
-// Desc : The interface class for an object rendering.
+// File : IGraphicsRenderer.h
+// Desc : Any versions a D3D rendering or OGL rendering interface.
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_INTERFACE_DRAWABLE_
-#define  _INCLUDED_INTERFACE_DRAWABLE_
+#ifndef  _INCLUDED_INTERFACE_GRAPHICS_RENDERER_
+#define  _INCLUDED_INTERFACE_GRAPHICS_RENDERER_
+
+//----------------------------------------------------------------------------------
+// Includes
+//----------------------------------------------------------------------------------
+#include  <IRenderable.h>
+#include  <list>
+#include  <vector>
 
 //----------------------------------------------------------------------------------
 // abstract interface
 //----------------------------------------------------------------------------------
-class  IDrawable
+class  IGraphicsRenderer
 {
 
 protected:
 		//----------------------------------------------------------------------------------
-		// protected variables
+		// protected functions
 		//----------------------------------------------------------------------------------
-		bool  m_isDraw = false;
-
-
-public:
-		//----------------------------------------------------------------------------------
-		// public variables
-		//----------------------------------------------------------------------------------
-
-
-protected:
-		//----------------------------------------------------------------------------------
-		// protected methods
-		//----------------------------------------------------------------------------------
-
+		std::list<UINT>  m_renderList;
+		std::vector<IRenderable>  m_renderObjects;
 
 public:
 		//----------------------------------------------------------------------------------
-		// public methods
+		// public functions
 		//----------------------------------------------------------------------------------
+		template<typename  T>  UINT  CreateRenderObjects( T  type );
 		virtual  void  Rendering()const = 0;
 
+};// class  IGraphicsRenderer
 
-}; // class IDrawable
 
-
-#endif // ! _INCLUDED_INTERFACE_DRAWABLE_
+#endif // ! _INCLUDED_INTERFACE_GRAPHICS_RENDERER_

@@ -10,10 +10,10 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
+#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\System\RenderManager.h>
 #include  <IGraphicsRenderer.h>
-#include  <IDirect3D.h>
-#include  <IDrawable.h>
-#include  <RenderManager.h>
+#include  <IRenderable.h>
 #include  <Vector>
 
 
@@ -36,7 +36,7 @@ namespace  D3D11Utility
 				// private  variables
 				//----------------------------------------------------------------------------------
 				std::shared_ptr<IDirect3D>  m_pID3D;
-				std::vector<IDrawable*>  m_pRenderObjects;
+				std::vector<IRenderable*>  m_pRenderObjects;
 
 
 		public:

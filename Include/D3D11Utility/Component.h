@@ -9,7 +9,8 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <Entity.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <GameUtility.h>
 
 
 namespace  D3D11Utility
@@ -22,7 +23,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				Component();
+				Component()
+				{}
 
 
 		private:
@@ -47,8 +49,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  functions
 				//----------------------------------------------------------------------------------
-				void  SentMessage( std::string  message );
-				void  SentMessage( std::string  message, void*  value );
+				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
+				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
+				virtual  void  Update() = 0;
 
 
 		};// class Component

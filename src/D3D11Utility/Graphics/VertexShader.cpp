@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <VertexShader.h>
-#include  <D3D11Utility.h>
-#include  <IDirect3D.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Graphics\VertexShader.h>
+#include  <D3D11Utility\System\IDirect3D.h>
 
 //----------------------------------------------------------------------------------
 // Defines
@@ -19,29 +19,29 @@ using namespace D3D11Utility;
 using namespace Graphics;
 
 
-CVertexShader::CVertexShader()
+VertexShader::VertexShader()
 {
 		CreateVertexShader( DEFAULT_SHADER );
 }
 
 
-CVertexShader::~CVertexShader()
+VertexShader::~VertexShader()
 {
 		Release();
 }
 
 
-HRESULT  CVertexShader::CreateVertexShader( LPCWSTR  szFileName )
+HRESULT  VertexShader::CreateVertexShader( LPCWSTR  szFileName )
 {
 		HRESULT  hr = S_OK;
 
 		// 頂点シェーダのコンパイル
-		ID3DBlob*  pVSBlob = NULL;
+		ID3DBlob*  pVSBlob = nullptr;
 
 		hr = CompileShaderFromFile( szFileName, DEFAULT_FUNCTION, DEFAULT_VERSION, &pVSBlob );
 		if ( FAILED( hr ) )
 		{
-				OutputDebugString( TEXT( "<CVertexShader> FAILED CompileShaderFromFile \n" ) );
+				OutputDebugString( TEXT( "<VertexShader> FAILED CompileShaderFromFile \n" ) );
 				return  hr;
 		}
 
@@ -50,7 +50,7 @@ HRESULT  CVertexShader::CreateVertexShader( LPCWSTR  szFileName )
 		hr = pd3dDevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), NULL, &m_pVertexShader );
 		if ( FAILED( hr ) )
 		{
-				OutputDebugString( TEXT( "<CVertexShader> FAILED CreateVertexShader \n" ) );
+				OutputDebugString( TEXT( "<VertexShader> FAILED CreateVertexShader \n" ) );
 				SAFE_RELEASE( pVSBlob );
 				return  hr;
 		}
@@ -61,7 +61,7 @@ HRESULT  CVertexShader::CreateVertexShader( LPCWSTR  szFileName )
 		SAFE_RELEASE( pVSBlob );
 		if ( FAILED( hr ) )
 		{
-				OutputDebugString( TEXT( "<CVertexShader> FAILED CreateInputLayout \n" ) );
+				OutputDebugString( TEXT( "<VertexShader> FAILED CreateInputLayout \n" ) );
 				return  hr;
 		}
 
@@ -70,27 +70,25 @@ HRESULT  CVertexShader::CreateVertexShader( LPCWSTR  szFileName )
 }
 
 
-HRESULT  CVertexShader::CreateInputLayout( ID3DBlob* pVSBlob )
+HRESULT  VertexShader::CreateInputLayout( ID3DBlob* pVSBlob )
 {
 		HRESULT  hr = S_OK;
 
 
 		// 入力レイアウトの定義
 		D3D11_INPUT_ELEMENT_DESC  layout[ ] = {
-				{ "POSITION",  0,  DXGI_FORMAT_R32G32B32A32_FLOAT,  0,  0,  D3D11_INPUT_PER_VERTEX_DATA,  0 },
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		UINT  numElements = ARRAYSIZE( layout );
 
-
 		hr = pd3dDevice->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &m_pInputLayout );
-
 
 
 		return  hr;
 }
 
 
-VOID  CVertexShader::UpdateShader()
+void  VertexShader::UpdateShader()
 {
 		pd3dDeviceContext->VSSetShader( m_pVertexShader, nullptr, 0 );
 
@@ -99,7 +97,7 @@ VOID  CVertexShader::UpdateShader()
 }
 
 
-VOID  CVertexShader::Release()
+void  VertexShader::Release()
 {
 		SAFE_RELEASE( m_pVertexShader );
 		SAFE_RELEASE( m_pInputLayout );

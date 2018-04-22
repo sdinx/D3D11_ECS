@@ -9,7 +9,10 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Component.h>
+#include  <GameUtility.h>
+#include  <memory>
 
 //----------------------------------------------------------------------------------
 // namespace  D3D11Utility  class
@@ -17,7 +20,14 @@
 namespace  D3D11Utility
 {
 
-		class  Camera
+		enum  MSG_CAMERA
+		{
+				MSG_NONE = 0,
+				MSG_UPDATE_VIEW,
+				MSG_UPDATE_PROJECTION,
+		};// enum MSG_CAMERA
+
+		class  Camera :public  Component
 		{
 
 		public:
@@ -25,7 +35,7 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 				Camera();
-				Camera(Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, float FovAngleY, float AspectHByW, float NearZ, float FarZ );
+				Camera(Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
 
 
@@ -33,11 +43,11 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
-				static  CONSTANTBUFFER*  s_pCBuffer;
-				BOOL  m_isEnable = FALSE;
+				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
+				BOOL  m_isEnable = false;
 
-				DirectX::XMMATRIX  m_view;
-				DirectX::XMMATRIX  m_projection;
+				Matrix4x4  m_view;
+				Matrix4x4  m_projection;
 				DirectX::XMVECTOR  m_eyePosition;
 				DirectX::XMVECTOR  m_focusTarget;
 				DirectX::XMVECTOR  m_upDirection;
@@ -59,18 +69,34 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				static  VOID  SetConstantBuffer();
-				VOID  UpdateView();
-				VOID  UpdateProjection( float fovAngleY, float aspectHByW, float nearZ, float farZ );
-				VOID  UpdateConstantBuffer();
-				VOID  SetPosition( Vector3  eyePosition );
-				VOID  SetTarget( Vector3  focusPosition );
-				VOID  SetUp( Vector3  upDirection );
-				DirectX::XMMATRIX  GetMatrixProjection() { return  m_projection; }
-				DirectX::XMMATRIX  GetMatrixView() {return  m_view; }
-				Matrix4x4  GetMatrix4x4Projection();
-				Matrix4x4  GetMatrix4x4View();
-				VOID  Release();
+				static  void  SetConstantBuffer();
+
+				Matrix4x4  GetMatrix4x4Projection()
+				{
+						return  m_projection;
+				}
+				Matrix4x4  GetMatrix4x4View()
+				{
+						return  m_view;
+				}
+				DirectX::XMMATRIX  GetMatrixProjection()
+				{
+						return  DirectX::XMLoadFloat4x4( &m_projection );
+				}
+				DirectX::XMMATRIX  GetMatrixView()
+				{
+						return  DirectX::XMLoadFloat4x4( &m_view );
+				}
+				void  HandleMessage( const  GameUtility::Message&  msg );
+				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
+				void  SetPosition( Vector3  eyePosition );
+				void  SetTarget( Vector3  focusPosition );
+				void  SetUp( Vector3  upDirection );
+				void  Update();
+				void  UpdateView();
+				void  UpdateProjection( FLOAT fovAngleY, FLOAT aspectHByW, FLOAT nearZ, FLOAT farZ );
+				void  UpdateConstantBuffer();
+				void  Release();
 
 
 		};// class  Camera

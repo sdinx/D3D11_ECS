@@ -23,15 +23,15 @@ namespace  D3D11Utility
 		namespace  Graphics
 		{
 
-				class  CVertexShader
+				class  VertexShader
 				{
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
-						CVertexShader();
-						~CVertexShader();
+						VertexShader();
+						~VertexShader();
 
 				private:
 						//----------------------------------------------------------------------------------
@@ -62,10 +62,10 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						// シェーダのコンパイルと頂点シェーダの作成
-						HRESULT  CreateVertexShader( LPCWSTR  szFileName = NULL );
+						HRESULT  CreateVertexShader( LPCWSTR  szFileName = nullptr );
 						// 描画を行う前に呼び出す
-						VOID  UpdateShader();
-						VOID  Release();
+						void  UpdateShader();
+						void  Release();
 
 
 				}; // class VertexShader

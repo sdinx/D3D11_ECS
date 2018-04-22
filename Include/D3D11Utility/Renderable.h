@@ -1,78 +1,80 @@
 //----------------------------------------------------------------------------------
-// File : Object.h
-// Desc : 
+// File : Mesh.h
+// Desc : D3D11Utility::Mesh, a GameObject base class
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_OBJECT_
-#define  _INCLUDED_D3D11_UTILITY_OBJECT_
+#ifndef  _INCLUDED_D3D11_UTILITY_MESH_
+#define  _INCLUDED_D3D11_UTILITY_MESH_
 
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <string>
+#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Graphics\VertexBuffer.h>
+#include  <D3D11Utility\Graphics\VertexShader.h>
+#include  <D3D11Utility\Graphics\PixelShader.h>
+#include  <GameUtility.h>
+#include  <IRenderable.h>
+#include  <memory>
 
 //----------------------------------------------------------------------------------
-// base class
+// namespace D3D11UItility class
 //----------------------------------------------------------------------------------
 namespace  D3D11Utility
 {
 
-		class  Object  abstract
+		class  Renderable : public  Component, public  IRenderable
 		{
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				Object() = delete;
-				Object( std::string  objectName ) :name( objectName ) {}
+				Renderable();
+				Renderable( PRIMITIVE_TYPE  primitiveType );
+				~Renderable()
+				{}
+
+
+		private:
+				//----------------------------------------------------------------------------------
+				// private variables
+				//----------------------------------------------------------------------------------
+				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
+
+				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer;
+				std::unique_ptr<Graphics::VertexShader>  m_pVertexShader;
+				std::unique_ptr<Graphics::PixelShader>  m_pPixelShader;
 
 
 		protected:
 				//----------------------------------------------------------------------------------
 				// protected variables
 				//----------------------------------------------------------------------------------
-				unsigned  int  objectID;
-				std::string  name;
+				Matrix4x4  m_localWorld;
 
 
-		public:
+		private:
 				//----------------------------------------------------------------------------------
-				// public variables
+				// private methods
 				//----------------------------------------------------------------------------------
 
-
-		protected:
-				//----------------------------------------------------------------------------------
-				// protected methods
-				//----------------------------------------------------------------------------------
 
 
 		public:
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				int  GetObjectID() { return  objectID; }
-				std::string  ToString() { return  name; }
-				void  Release() { name.clear(); name.shrink_to_fit(); }
+				static  void  SetConstantBuffer();
 
-
-		public:
-				//----------------------------------------------------------------------------------
-				// operator
-				//----------------------------------------------------------------------------------
-				inline  bool  operator==( const  Object*  var ) {
-						return  ( this->objectID == var->objectID ) ? true : false;
-				}
-				inline  bool  operator!=( const  Object*  var ) {
-						return  ( this->objectID != var->objectID ) ? true : false;
-				}
-				inline  bool  operator==( std::string  name ) {
-						return  ( this->name == name ) ? true : false;
-				}
-				inline  bool  operator!=( std::string  name ) {
-						return  ( this->name != name ) ? true : false;
-				}
+				void  HandleMessage( const  GameUtility::Message&  msg )
+				{}
+				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
+				{}
+				void  Rendering()const;
+				void  Update()
+				{}
 
 
 		};
@@ -80,4 +82,5 @@ namespace  D3D11Utility
 }
 
 
-#endif // ! _INCLUDED_D3D11_UTILITY_OBJECT_
+
+#endif // ! _INCLUDED_D3D11_UTILITY_MESH_

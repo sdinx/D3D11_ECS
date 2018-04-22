@@ -9,13 +9,13 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <Camera.h>
+#include  <D3D11Utility\Camera.h>
 #include  <vector>
 
 //----------------------------------------------------------------------------------
 // ‘O’ñ’è‹`
 //----------------------------------------------------------------------------------
-namespace  GameUtility { class  GameObject; }
+//namespace  GameUtility { class  GameObject; }
 
 
 namespace  D3D11Utility
@@ -42,7 +42,7 @@ namespace  D3D11Utility
 				UINT  m_nSceneID;
 
 				std::vector<Camera>  m_cameras;
-				std::vector<GameUtility::GameObject*>  m_gameObjects;
+				//std::vector<GameUtility::GameObject*>  m_gameObjects;
 
 
 		public:
@@ -61,15 +61,15 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				VOID  CreateCamera( const  Camera&  camera );
-				VOID  CreateGameObject();
-				VOID  CreateGameObject( UINT  position );
-				VOID  CreateGameObject( GameUtility::GameObject  gameObject );
-				GameUtility::GameObject*  FindNameGameObject( std::string  name );
-				std::vector<GameUtility::GameObject*>  FindTagGameObjects( std::string  tag );
-				UINT  GetRootGameObjects( std::vector<GameUtility::GameObject*>  pGameObjects );
-				VOID  Rendering();
-				VOID  Release();
+				void  CreateCamera( const  Camera&  camera );
+				void  CreateGameObject();
+				void  CreateGameObject( UINT  position );
+				//void  CreateGameObject( GameUtility::GameObject  gameObject );
+				//GameUtility::GameObject*  FindNameGameObject( std::string  name );
+				//std::vector<GameUtility::GameObject*>  FindTagGameObjects( std::string  tag );
+				//UINT  GetRootGameObjects( std::vector<GameUtility::GameObject*>  pGameObjects );
+				void  Rendering();
+				void  Release();
 
 
 		public:

@@ -3,8 +3,8 @@
 
 
 #include  <d3d11.h>
-#include  <IDirect3D.h>
-#include  <D3D11Utility.h>
+#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\D3D11Utility.h>
 
 
 INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCmdLine, INT  nCmdShow )

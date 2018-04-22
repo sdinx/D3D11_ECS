@@ -9,14 +9,47 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <Component.h>
-#include  <D3D11Utility.h>
-#include  <EntityId.h>
+#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\D3D11Utility.h>
 #include  <string>
 
 
 namespace  D3D11Utility
 {
+
+		struct  EntityId
+		{
+				const  unsigned  entityId;
+
+				EntityId( const  unsigned  id ) :
+						entityId( id )
+				{}
+
+				inline  bool  operator==( EntityId  id )const
+				{
+						return  ( entityId == id.entityId ) ? true : false;
+				}
+				inline  bool  operator!=( EntityId  id )const
+				{
+						return  ( entityId != id.entityId ) ? true : false;
+				}
+				inline  bool  operator<( EntityId  id )const
+				{
+						return  ( entityId < id.entityId ) ? true : false;
+				}
+				inline  bool  operator>( EntityId  id )const
+				{
+						return  ( entityId > id.entityId ) ? true : false;
+				}
+				inline  bool  operator<=( EntityId  id )const
+				{
+						return  ( entityId <= id.entityId ) ? true : false;
+				}
+				inline  bool  operator>=( EntityId  id )const
+				{
+						return  ( entityId >= id.entityId ) ? true : false;
+				}
+		};
 
 		class  Entity
 		{
@@ -27,7 +60,6 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				Entity();
 				Entity( std::string  name );
-				Entity( std::string  name, Component*  components );
 				~Entity();
 
 
@@ -37,7 +69,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				BOOL  m_isActive;
 				std::string  m_tag;
-				EntityId  entityId;
+				const  EntityId*  m_pEntityId;
 
 
 		public:
@@ -56,14 +88,33 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				inline  BOOL  GetActive() { return  m_isActive; }
-				inline  std::string  GetTag() { return  m_tag; }
-				inline  void  SetTag( std::string  tag ) { m_tag = tag; }
-				inline  void  SetActive( BOOL  isActive ) { m_isActive = isActive; }
-				inline  UINT  GetEntityID() { return  entityId.entityId; }
-				inline  BOOL  CompareTag( std::string  tag ) { return  ( m_tag == tag ) ? true : false; }
+				inline  BOOL  CompareTag( std::string  tag )const 
+				{
+						return  ( m_tag == tag ) ? true : false; 
+				}
+				inline  BOOL  GetActive()const
+				{
+						return  m_isActive;
+				}
+				inline  UINT  GetEntityID()const
+				{ 
+						return  m_pEntityId->entityId;
+				}
+				inline  std::string  GetTag()const 
+				{
+						return  m_tag; 
+				}
+				inline  void  SetActive( BOOL  isActive ) 
+				{ 
+						m_isActive = isActive;
+				}
+				inline  void  SetTag( std::string  tag )
+				{
+						m_tag = tag; 
+				}
 
-				void  CreateVertexBuffer( PRIMITIVE_TYPE  primitiveType );
+				void  AddComponent( Component*  component );
+				template<typename  T>  T  GetComponent()const;
 				void  Release();
 
 
@@ -71,25 +122,22 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// operator
 				//----------------------------------------------------------------------------------
-				inline  BOOL  operator==( BOOL  isActive ) {
+				inline  BOOL  operator==( BOOL  isActive ) const 
+				{
 						return  ( m_isActive == isActive ) ? true : false;
 				}
-				inline  BOOL  operator!=( BOOL  isActive ) {
+				inline  BOOL  operator!=( BOOL  isActive ) const 
+				{
 						return  ( m_isActive != isActive ) ? true : false;
 				}
 
-				inline  BOOL  operator==( Entity  entity ) {
+				inline  BOOL  operator==( Entity  entity ) const
+				{
 						return  ( GetEntityID() == entity.GetEntityID() ) ? true : false;
 				}
-				inline  BOOL  operator!=( Entity  entity ) {
+				inline  BOOL  operator!=( Entity  entity ) const
+				{
 						return  ( GetEntityID() != entity.GetEntityID() ) ? true : false;
-				}
-
-				inline  BOOL  operator==( const  D3D11Utility::Scene*  scene ) {
-						return  ( *m_pParentsScene == *scene ) ? true : false;
-				}
-				inline  BOOL  operator!=( const  D3D11Utility::Scene*  scene ) {
-						return  ( *m_pParentsScene != *scene ) ? true : false;
 				}
 
 		};// class Entity

@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <IDirect3D.h>
-#include  <D3D11Utility.h>
-#include  <Mesh.h>
+#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Renderable.h>
 #include  <GameUtility.h>
 
 //----------------------------------------------------------------------------------
@@ -15,13 +15,13 @@ using  namespace  D3D11Utility;
 IDirect3D::IDirect3D()
 {
 
-}
+}// end default constructor
 
 
 IDirect3D::~IDirect3D()
 {
 		Release();
-}
+}// end destructor
 
 
 LRESULT  CALLBACK  IDirect3D::WndProc( HWND  hWnd, UINT  message, WPARAM  wParam, LPARAM  lParam )
@@ -36,7 +36,7 @@ LRESULT  CALLBACK  IDirect3D::WndProc( HWND  hWnd, UINT  message, WPARAM  wParam
 		}
 
 		return  DefWindowProc( hWnd, message, wParam, lParam );
-}
+}// end WndProc(HWND, UINT, WPARAM, LPARAM)
 
 
 HRESULT  IDirect3D::CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE  hInstance )
@@ -69,7 +69,7 @@ HRESULT  IDirect3D::CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE
 
 
 		return  S_OK;
-}
+}// end CreateScreen(INT, INT, HINSTANCE)
 
 
 HRESULT  IDirect3D::CreateDevice()
@@ -186,7 +186,7 @@ HRESULT  IDirect3D::CreateDevice()
 
 		return  S_OK;
 
-}
+}// end CreateDevice()
 
 
 HRESULT  IDirect3D::CreateDefaultDepthStencil()
@@ -298,7 +298,7 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 
 
 		return  S_OK;
-}
+}// end CreateDefaultDepthStencil()
 
 
 VOID  IDirect3D::MainLoop()
@@ -326,7 +326,7 @@ VOID  IDirect3D::MainLoop()
 
 		}
 
-}
+}// end MainLoop()
 
 
 VOID  IDirect3D::SetWindow( INT  screenWidth, INT  screenHeight )
@@ -355,7 +355,7 @@ VOID  IDirect3D::SetWindow( INT  screenWidth, INT  screenHeight )
 
 		ShowWindow( m_hWnd, SW_SHOWDEFAULT );
 		UpdateWindow( m_hWnd );
-}
+}// end SetWindow(INT, INT)
 
 
 VOID  IDirect3D::BeginRender()
@@ -363,14 +363,14 @@ VOID  IDirect3D::BeginRender()
 		// ビューをクリア
 		m_pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
 		m_pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
-}
+}// end BeginRender()
 
 
 VOID  IDirect3D::EndRender()
 {
 		// レンダリングイメージの表示
 		m_pSwapChain->Present( 0, 0 );
-}
+}// end EndRender()
 
 
 VOID  IDirect3D::Release()
@@ -399,14 +399,14 @@ VOID  IDirect3D::Release()
 
 
 		ReleaseScreen();
-}
+}// end Release()
 
 
 VOID  IDirect3D::ReleaseScreen()
 {
 		if ( m_hInstance != NULL )
 				UnregisterClass( m_szWindowClass, m_hInstance );
-}
+}// end ReleaseScreen()
 
 
 VOID  IDirect3D::ReleaseDefaultRenderTarget()
@@ -414,7 +414,7 @@ VOID  IDirect3D::ReleaseDefaultRenderTarget()
 		SAFE_RELEASE( m_pRTShaderResourceView );
 		SAFE_RELEASE( m_pRTView );
 		SAFE_RELEASE( m_pRTTexture );
-}
+}// end ReleaseDefaultRenderTarget()
 
 
 VOID  IDirect3D::ReleaseDefaultDepthStencil()
@@ -422,4 +422,4 @@ VOID  IDirect3D::ReleaseDefaultDepthStencil()
 		SAFE_RELEASE( m_pDSShaderResourceView );
 		SAFE_RELEASE( m_pDSView );
 		SAFE_RELEASE( m_pDSTexture );
-}
+}// end ReleaseDefaultDepthStencil()

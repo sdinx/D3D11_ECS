@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <Camera.h>
+#include  <D3D11Utility\Camera.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
@@ -11,22 +11,22 @@ using  namespace  D3D11Utility;
 //----------------------------------------------------------------------------------
 // static  variables
 //----------------------------------------------------------------------------------
-CONSTANTBUFFER*  Camera::s_pCBuffer = nullptr;
+std::unique_ptr<CONSTANTBUFFER>  Camera::s_pCBuffer = nullptr;
 
 //----------------------------------------------------------------------------------
 // struct
 //----------------------------------------------------------------------------------
 struct  ConstantBufferForPerFrame
 {
-		DirectX::XMMATRIX  view;
-		DirectX::XMMATRIX  projection;
+		Matrix4x4  view;
+		Matrix4x4  projection;
 };
 
 
 Camera::Camera()
 {
-		m_eyePosition = DirectX::XMVectorZero(); 
-		m_focusTarget = DirectX::XMVectorZero();
+		m_eyePosition = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		m_focusTarget = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
 		m_upDirection = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
 
 		UpdateView();
@@ -34,7 +34,7 @@ Camera::Camera()
 }
 
 
-Camera::Camera( Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, float FovAngleY, float AspectHByW, float NearZ, float FarZ )
+Camera::Camera( Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ )
 {
 		m_eyePosition = DirectX::XMLoadFloat3( &eyePosition );
 		m_focusTarget = DirectX::XMLoadFloat3( &focusPosition );
@@ -51,82 +51,97 @@ Camera::~Camera()
 }
 
 
-VOID  Camera::SetConstantBuffer()
+void  Camera::HandleMessage( const  GameUtility::Message&  msg )
+{
+		switch ( msg.messageType )
+		{
+		case  MSG_UPDATE_VIEW:
+				{
+						UpdateView();
+				}
+				break;
+		case  MSG_UPDATE_PROJECTION:
+				{
+
+				}
+				break;
+		default:
+				{
+						/* NOTHING */
+				}
+				return;
+
+		}// end switch
+
+}// end HandleMessage(const Message&)
+
+
+void  Camera::HandleMessage( const  GameUtility::Message&  msg, Value  var )
+{
+		/* NOTHING */
+}// end HandleMessage(const Message&, void*)
+
+
+void  Camera::SetConstantBuffer()
 {
 		if ( s_pCBuffer == nullptr )
 		{
-				s_pCBuffer = new  CONSTANTBUFFER;
-				CreateConstantBuffer( s_pCBuffer->pCB, s_pCBuffer->nCBSlot, sizeof( ConstantBufferForPerFrame ) );
+				s_pCBuffer = std::unique_ptr<CONSTANTBUFFER>( new  CONSTANTBUFFER );
+				CreateConstantBuffer( &s_pCBuffer->pCB, s_pCBuffer->nCBSlot, sizeof( ConstantBufferForPerFrame ) );
 		}
 }
 
 
-VOID  Camera::UpdateView()
-{
-		DirectX::XMVECTOR  eye = DirectX::XMVectorSet( 0, 1, 0, 0 );
-		DirectX::XMVECTOR  focus = DirectX::XMVectorSet( 0, 0, 100, 0 );
-		DirectX::XMVECTOR  up = DirectX::XMVectorSet( 0, 1, 0, 0 );
-
-		m_view = DirectX::XMMatrixLookAtLH( eye, focus, up );
-}
-
-
-VOID  Camera::UpdateProjection( float fovAngleY, float aspectHByW, float nearZ, float farZ )
-{
-		m_projection = DirectX::XMMatrixPerspectiveFovLH( fovAngleY, aspectHByW, nearZ, farZ );
-}
-
-
-VOID  Camera::UpdateConstantBuffer()
-{
-		ConstantBufferForPerFrame  cbuffer;
-		cbuffer.view = GetMatrixView();
-		cbuffer.projection = GetMatrixProjection();
-		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
-
-
-		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
-}
-
-
-VOID  Camera::SetPosition( Vector3  eyePosition )
+void  Camera::SetPosition( Vector3  eyePosition )
 {
 		m_eyePosition = DirectX::XMLoadFloat3( &eyePosition );
 }
 
 
-VOID  Camera::SetTarget( Vector3  focusPosition )
+void  Camera::SetTarget( Vector3  focusPosition )
 {
 		m_focusTarget = DirectX::XMLoadFloat3( &focusPosition );
 }
 
 
-VOID  Camera::SetUp( Vector3  upDirection )
+void  Camera::SetUp( Vector3  upDirection )
 {
 		m_upDirection = DirectX::XMLoadFloat3( &upDirection );
 }
 
 
-Matrix4x4  Camera::GetMatrix4x4Projection() 
-{ 
-		Matrix4x4  retProjection;
-		DirectX::XMStoreFloat4x4( &retProjection, m_projection );
-		return  retProjection;
+void  Camera::Update()
+{
+		UpdateConstantBuffer();
 }
 
 
-Matrix4x4  Camera::GetMatrix4x4View() 
+void  Camera::UpdateView()
 {
-		Matrix4x4  retView;
-		DirectX::XMStoreFloat4x4( &retView, m_view );
-		return  retView;
+		DirectX::XMStoreFloat4x4( &m_view, DirectX::XMMatrixLookAtLH( m_eyePosition, m_focusTarget, m_upDirection ) );
 }
 
 
-VOID  Camera::Release()
+void  Camera::UpdateProjection( FLOAT fovAngleY, FLOAT aspectHByW, FLOAT nearZ, FLOAT farZ )
 {
-		m_eyePosition = DirectX::XMVectorZero(); 
-		m_focusTarget = DirectX::XMVectorZero();
+		DirectX::XMStoreFloat4x4( &m_projection, DirectX::XMMatrixPerspectiveFovLH( fovAngleY, aspectHByW, nearZ, farZ ) );
+}
+
+
+void  Camera::UpdateConstantBuffer()
+{
+		ConstantBufferForPerFrame  cbuffer;
+		cbuffer.view = GetMatrix4x4View();
+		cbuffer.projection = GetMatrix4x4Projection();
+		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
+		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
+}
+
+
+void  Camera::Release()
+{
+		m_eyePosition = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		m_focusTarget = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
 		m_upDirection = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
 
 		UpdateView();

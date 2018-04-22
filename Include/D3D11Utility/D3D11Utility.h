@@ -31,13 +31,14 @@
 namespace  D3D11Utility
 {
 		//----------------------------------------------------------------------------------
-		// typedef
+		// using
 		//----------------------------------------------------------------------------------
-		typedef  DirectX::XMFLOAT2  FLOAT2, Vector2;
-		typedef  DirectX::XMFLOAT3  FLOAT3, Vector3;
-		typedef  DirectX::XMFLOAT4  FLOAT4, Vector4;
-		typedef  DirectX::XMFLOAT3X3  Matrix3x3;
-		typedef  DirectX::XMFLOAT4X4  Matrix4x4;
+		using  Vector2 = DirectX::XMFLOAT2;
+		using  Vector3 = DirectX::XMFLOAT3;
+		using  Vector4 = DirectX::XMFLOAT4;
+		using  Matrix3x3 = DirectX::XMFLOAT3X3;
+		using  Matrix4x4 = DirectX::XMFLOAT4X4;
+		using  Value = void*;
 
 
 		//----------------------------------------------------------------------------------
@@ -46,13 +47,19 @@ namespace  D3D11Utility
 		struct  VERTEX
 		{
 				Vector3  position;
-		};// VERTEX
+		};// struct VERTEX
 
 		struct  CONSTANTBUFFER
 		{
 				ID3D11Buffer*  pCB;
 				UINT  nCBSlot;
-		};// CONSTANTBUFFER
+				CONSTANTBUFFER()
+				{}
+				~CONSTANTBUFFER()
+				{
+						SAFE_RELEASE( pCB );
+				}
+		};// struct CONSTANTBUFFER
 
 		//----------------------------------------------------------------------------------
 		// enum
@@ -81,11 +88,11 @@ namespace  D3D11Utility
 		// functions
 		//----------------------------------------------------------------------------------
 		HRESULT  CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel, ID3DBlob**  ppBlobOut );
-		HRESULT  CreateConstantBuffer(ID3D11Buffer*  pCB, UINT&  nOutSlot, size_t  byteWidth);
-		VOID  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
+		HRESULT  CreateConstantBuffer(ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth);
+		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
-		ID3D11Device*  GetD3DDevice();
-		ID3D11DeviceContext*  GetD3DDeviceContext();
+		//ID3D11Device*  GetD3DDevice();
+		//ID3D11DeviceContext*  GetD3DDeviceContext();
 
 } // namespace  D3D11Utility
 

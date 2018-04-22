@@ -12,7 +12,7 @@
 template<typename  T>
 T  GameUtility::Random( T  min, T  max )
 {
-		T  ret = NULL;
+		T  ret = 0;
 
 		static  std::random_device  rnd;
 		static  std::mt19937  mt( rnd() );

@@ -1,73 +1,57 @@
 //----------------------------------------------------------------------------------
-// File : Mesh.h
-// Desc : D3D11Utility::Mesh, a GameObject base class
+// file : ComponentManager.h
+// desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_MESH_
-#define  _INCLUDED_D3D11_UTILITY_MESH_
+#ifndef  _INCLUDED_D3D11_UTILITY_COMPONENT_MANAGER_
+#define  _INCLUDED_D3D11_UTILITY_COMPONENT_MANAGER_
 
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <Component.h>
-#include  <D3D11Utility.h>
-#include  <IDrawable.h>
-#include  <VertexBuffer.h>
-#include  <VertexShader.h>
+#include  <D3D11Utility\Component.h>
 
-//----------------------------------------------------------------------------------
-// namespace D3D11UItility class
-//----------------------------------------------------------------------------------
+
 namespace  D3D11Utility
 {
 
-		class  Mesh : public  Component, public  IDrawable
+		class  ComponentManager
 		{
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				Mesh() = delete;
-				Mesh( PRIMITIVE_TYPE  primitiveType );
+				ComponentManager()
+				{}
 
 
 		private:
 				//----------------------------------------------------------------------------------
-				// private variables
+				// private  variables
 				//----------------------------------------------------------------------------------
-				static  CONSTANTBUFFER*  s_pCBuffer;
-
-				Graphics::CVertexBuffer*  m_pVertexBuffer;
-				Graphics::CVertexShader*  m_pVertexShader;
-
-
-		protected:
-				//----------------------------------------------------------------------------------
-				// protected variables
-				//----------------------------------------------------------------------------------
-				Matrix4x4  m_mtxWorld;
-
-
-		private:
-				//----------------------------------------------------------------------------------
-				// private methods
-				//----------------------------------------------------------------------------------
-
 
 
 		public:
 				//----------------------------------------------------------------------------------
-				// public methods
+				// public  variables
 				//----------------------------------------------------------------------------------
-				static  VOID  SetConstantBuffer();
-				VOID  Rendering()const;
 
 
-		};
+		private:
+				//----------------------------------------------------------------------------------
+				// private  functions
+				//----------------------------------------------------------------------------------
 
-}
+
+		public:
+				//----------------------------------------------------------------------------------
+				// public  functions
+				//----------------------------------------------------------------------------------
 
 
+		};// class  ComponentManager
 
-#endif // ! _INCLUDED_D3D11_UTILITY_MESH_
+}// namespace  D3D11Utility
+
+#endif // ! _INCLUDED_D3D11_UTILITY_COMPONENT_MANAGER_

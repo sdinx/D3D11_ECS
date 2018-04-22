@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <Component.h>
-#include  <D3D11Utility.h>
+#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\D3D11Utility.h>
 
 
 namespace  D3D11Utility

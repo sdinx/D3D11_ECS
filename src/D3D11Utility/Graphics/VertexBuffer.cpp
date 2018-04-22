@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <VertexBuffer.h>
+#include  <D3D11Utility\Graphics\VertexBuffer.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
@@ -10,28 +10,31 @@ using  namespace  D3D11Utility;
 using  namespace  Graphics;
 
 
-CVertexBuffer::CVertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts )
+VertexBuffer::VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts )
 {
-		m_pVertices = new VERTEX( *pVertices );
+		//m_pVertices = new VERTEX( *pVertices );
+		m_pVertices = new  VERTEX[numVertexCounts];
+		for ( UINT i = 0; i < numVertexCounts; i++ )
+				m_pVertices[i] = pVertices[i];
 		m_numVertexCounts = numVertexCounts;
 
 		CreateVertexBuffer();
 }
 
 
-CVertexBuffer::CVertexBuffer( POLYGON_TYPE  polygonType )
+VertexBuffer::VertexBuffer( PRIMITIVE_TYPE  primitiveType )
 {
-		m_pVertices = NULL;
+		m_pVertices = nullptr;
 }
 
 
-CVertexBuffer::~CVertexBuffer()
+VertexBuffer::~VertexBuffer()
 {
 		Release();
 }
 
 
-HRESULT  CVertexBuffer::CreateVertexBuffer()
+HRESULT  VertexBuffer::CreateVertexBuffer()
 {
 		HRESULT  hr = S_OK;
 
@@ -48,14 +51,19 @@ HRESULT  CVertexBuffer::CreateVertexBuffer()
 		// サブリソースの設定
 		D3D11_SUBRESOURCE_DATA  initData;
 		ZeroMemory( &initData, sizeof( D3D11_SUBRESOURCE_DATA ) );
-		initData.pSysMem = m_pVertices;
-
+		VERTEX  vertices[ ] = {
+				Vector3( 1.0f,1.0f,3.0f ),
+				Vector3( 2.0f,0.0f,3.0f ),
+				Vector3( 0.0f,0.0f,3.0f ),
+		};
+		initData.pSysMem = vertices;
+		
 
 		// 頂点バッファの生成
 		hr = pd3dDevice->CreateBuffer( &bd, &initData, &m_pVertexBuffer );
 		if ( FAILED( hr ) )
 		{
-				OutputDebugString( TEXT( "<CVertexBuffer> FAILED CreateBuffer (vertex buffer) \n" ) );
+				OutputDebugString( TEXT( "<VertexBuffer> FAILED CreateBuffer (vertex buffer) \n" ) );
 				return  hr;
 		}
 
@@ -68,7 +76,7 @@ HRESULT  CVertexBuffer::CreateVertexBuffer()
 }
 
 
-VOID  CVertexBuffer::BindBuffer()
+void  VertexBuffer::BindBuffer()
 {
 		// 入力アセンブラに頂点バッファを設定
 		pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVertexBuffer, &m_nStride, &m_nOffset );
@@ -80,7 +88,7 @@ VOID  CVertexBuffer::BindBuffer()
 }
 
 
-VOID  CVertexBuffer::Release()
+void  VertexBuffer::Release()
 {
 		SAFE_RELEASE( m_pVertexBuffer );
 		SAFE_DELETEARRAY( m_pVertices );

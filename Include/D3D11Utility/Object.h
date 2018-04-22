@@ -1,43 +1,41 @@
 //----------------------------------------------------------------------------------
-// file : GameObject.h
-// desc : final class
+// File : Object.h
+// Desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_GAME_UTILITY_GAME_OBJECT_
-#define  _INCLUDED_GAME_UTILITY_GAME_OBJECT_
+#ifndef  _INCLUDED_D3D11_UTILITY_OBJECT_
+#define  _INCLUDED_D3D11_UTILITY_OBJECT_
 
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <Mesh.h>
-#include  <Scene.h>
-#include  <list>
+#include  <string>
 
-
-namespace  GameUtility
+//----------------------------------------------------------------------------------
+// base class
+//----------------------------------------------------------------------------------
+namespace  D3D11Utility
 {
 
-		class  GameObject  final:  public  D3D11Utility::Mesh
+		class  Object  abstract
 		{
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				GameObject() = delete;
-				GameObject( std::string  name, std::string  tag = NULL );
-				GameObject( D3D11Utility::Scene*  pParentsScene, std::string  name, std::string  tag = NULL );
-				~GameObject();
+				Object() = delete;
+				Object( std::string  objectName ) 
+						:name( objectName ) 
+				{}
 
 
-		private:
+		protected:
 				//----------------------------------------------------------------------------------
-				// private variables
+				// protected variables
 				//----------------------------------------------------------------------------------
-				static  std::list<std::string>  allTag;
-
-				D3D11Utility::Scene*  m_pParentsScene = nullptr;
-				std::string  tag;
+				unsigned  int  objectID;
+				std::string  name;
 
 
 		public:
@@ -46,9 +44,9 @@ namespace  GameUtility
 				//----------------------------------------------------------------------------------
 
 
-		private:
+		protected:
 				//----------------------------------------------------------------------------------
-				// private methods
+				// protected methods
 				//----------------------------------------------------------------------------------
 
 
@@ -56,36 +54,47 @@ namespace  GameUtility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				VOID  SetTag( std::string  objectTag ) { tag = objectTag; }
-				VOID  Release();
+				int  GetObjectID() 
+				{
+						return  objectID;
+				}
+				std::string  ToString() 
+				{
+						return  name; 
+				}
+				void  Release() 
+				{
+						name.clear();
+						name.shrink_to_fit(); 
+				}
 
 
 		public:
 				//----------------------------------------------------------------------------------
 				// operator
 				//----------------------------------------------------------------------------------
-				inline  BOOL  operator==( const  GameObject*  obj ) {
-						return  ( this->tag == obj->tag ) ? true : false;
+				inline  bool  operator==( const  Object*  object ) 
+				{
+						return  ( this->objectID == object->objectID ) ? true : false;
 				}
-				inline  BOOL  operator==( std::string  tag ) {
-						return  ( this->tag == tag ) ? true : false;
+				inline  bool  operator!=( const  Object*  object )
+				{
+						return  ( this->objectID != object->objectID ) ? true : false;
 				}
-				inline  BOOL  operator==( const  D3D11Utility::Scene*  scene ) const{
-						return  ( *m_pParentsScene == *scene ) ? true : false;
+
+				inline  bool  operator==( std::string  name ) 
+				{
+						return  ( this->name == name ) ? true : false;
 				}
-				inline  BOOL  operator!=( const  GameObject*  obj ) const {
-						return  ( this->tag != obj->tag ) ? true : false;
-				}
-				inline  BOOL  operator!=( std::string  tag ) const {
-						return  ( this->tag != tag ) ? true : false;
-				}
-				inline  BOOL  operator!=( const  D3D11Utility::Scene*  scene ) const {
-						return  ( *m_pParentsScene != *scene ) ? true : false;
+				inline  bool  operator!=( std::string  name )
+				{
+						return  ( this->name != name ) ? true : false;
 				}
 
 
-		};// class  GaneObject
+		};
 
-}// namespace  GameUtility
+}
 
-#endif // ! _INCLUDED_GAME_UTILITY_GAME_OBJECT_
+
+#endif // ! _INCLUDED_D3D11_UTILITY_OBJECT_

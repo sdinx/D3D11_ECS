@@ -18,6 +18,44 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\D3D11Utility\Camera.cpp" />
+    <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp" />
+    <ClCompile Include="src\D3D11Utility\Entity.cpp" />
+    <ClCompile Include="src\D3D11Utility\Graphics\PixelShader.cpp" />
+    <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
+    <ClCompile Include="src\D3D11Utility\Renderable.cpp" />
+    <ClCompile Include="src\D3D11Utility\Scene.cpp" />
+    <ClCompile Include="src\D3D11Utility\System\IDirect3D.cpp" />
+    <ClCompile Include="src\D3D11Utility\System\IDirect3DRenderer.cpp" />
+    <ClCompile Include="src\EntryPoint.cpp" />
+    <ClCompile Include="src\GameLoop.cpp" />
+    <ClCompile Include="src\GameUtility.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\D3D11Utility\Camera.h" />
+    <ClInclude Include="Include\D3D11Utility\Component.h" />
+    <ClInclude Include="Include\D3D11Utility\D3D11Utility.h" />
+    <ClInclude Include="Include\D3D11Utility\Entity.h" />
+    <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h" />
+    <ClInclude Include="Include\D3D11Utility\Graphics\VertexBuffer.h" />
+    <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h" />
+    <ClInclude Include="Include\D3D11Utility\Object.h" />
+    <ClInclude Include="Include\D3D11Utility\Renderable.h" />
+    <ClInclude Include="Include\D3D11Utility\Scene.h" />
+    <ClInclude Include="Include\D3D11Utility\System\CameraManager.h" />
+    <ClInclude Include="Include\D3D11Utility\System\ComponentManager.h" />
+    <ClInclude Include="Include\D3D11Utility\System\EntityManager.h" />
+    <ClInclude Include="Include\D3D11Utility\System\IDirect3D.h" />
+    <ClInclude Include="Include\D3D11Utility\System\IDirect3DRenderer.h" />
+    <ClInclude Include="Include\D3D11Utility\System\RenderManager.h" />
+    <ClInclude Include="Include\D3D11Utility\Transform.h" />
+    <ClInclude Include="Include\GameUtility.h" />
+    <ClInclude Include="Include\IGraphicsRenderer.h" />
+    <ClInclude Include="Include\IRenderable.h" />
+    <ClInclude Include="Include\Singleton.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{79520549-072D-4C15-8377-E7F8C22FA0FF}</ProjectGuid>
@@ -72,14 +110,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(LocalDebuggerWorkingDirectory)src\D3D11Utility\header\;$(LocalDebuggerWorkingDirectory)src\header\;$(IncludePath)</IncludePath>
+    <IncludePath>$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(LocalDebuggerWorkingDirectory)src\D3D11Utility\header\;$(LocalDebuggerWorkingDirectory)src\header\;$(IncludePath)</IncludePath>
+    <IncludePath>$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -140,43 +178,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\D3D11Utility\Camera.cpp" />
-    <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp" />
-    <ClCompile Include="src\D3D11Utility\Entity.cpp" />
-    <ClCompile Include="src\D3D11Utility\IDirect3D.cpp" />
-    <ClCompile Include="src\D3D11Utility\IDirect3DRenderer.cpp" />
-    <ClCompile Include="src\D3D11Utility\Mesh.cpp" />
-    <ClCompile Include="src\D3D11Utility\Scene.cpp" />
-    <ClCompile Include="src\D3D11Utility\VertexBuffer.cpp" />
-    <ClCompile Include="src\D3D11Utility\VertexShader.cpp" />
-    <ClCompile Include="src\EntryPoint.cpp" />
-    <ClCompile Include="src\GameLoop.cpp" />
-    <ClCompile Include="src\GameObject.cpp" />
-    <ClCompile Include="src\GameUtility.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\D3D11Utility\header\Camera.h" />
-    <ClInclude Include="src\D3D11Utility\header\Component.h" />
-    <ClInclude Include="src\D3D11Utility\header\D3D11Utility.h" />
-    <ClInclude Include="src\D3D11Utility\header\Entity.h" />
-    <ClInclude Include="src\D3D11Utility\header\EntityId.h" />
-    <ClInclude Include="src\D3D11Utility\header\EntityManager.h" />
-    <ClInclude Include="src\D3D11Utility\header\IDirect3D.h" />
-    <ClInclude Include="src\D3D11Utility\header\IDirect3DRenderer.h" />
-    <ClInclude Include="src\D3D11Utility\header\Mesh.h" />
-    <ClInclude Include="src\D3D11Utility\header\Object.h" />
-    <ClInclude Include="src\D3D11Utility\header\Scene.h" />
-    <ClInclude Include="src\D3D11Utility\header\Transform.h" />
-    <ClInclude Include="src\D3D11Utility\header\VertexBuffer.h" />
-    <ClInclude Include="src\D3D11Utility\header\VertexShader.h" />
-    <ClInclude Include="src\header\C_Singleton.h" />
-    <ClInclude Include="src\header\GameObject.h" />
-    <ClInclude Include="src\header\GameUtility.h" />
-    <ClInclude Include="src\header\IDrawable.h" />
-    <ClInclude Include="src\header\IGraphicsRenderer.h" />
-    <ClInclude Include="src\header\RenderManager.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

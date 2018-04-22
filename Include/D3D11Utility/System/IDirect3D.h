@@ -16,7 +16,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <d3d11.h>
-#include  "C_Singleton.h"
+#include  "Singleton.h"
 
 
 namespace  D3D11Utility
@@ -28,7 +28,6 @@ namespace  D3D11Utility
 				// friend and etc...
 				//----------------------------------------------------------------------------------
 				friend  class  _Singleton<IDirect3D>;
-				// friend  class  IDirect3DRenderer;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -43,9 +42,9 @@ namespace  D3D11Utility
 				// private variables
 				//----------------------------------------------------------------------------------
 
-#if  defined UNICODE || _UNICODE
+#if  defined  (UNICODE)  ||  (_UNICODE)
 				LPCWSTR  m_szWindowClass = L"Direct3D_11";
-#else  // マルチバイト
+#else  // Multibyte
 				LPCSTR  m_szWindowClass = "Direct3D_11";
 #endif // _UNICODE
 
@@ -61,19 +60,19 @@ namespace  D3D11Utility
 				DXGI_FORMAT  m_swapChainFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 				//----------------------------------------------------------------------------------
-				// utility variables
+				// device
 				//----------------------------------------------------------------------------------
 				HWND  m_hWnd;
 				HINSTANCE  m_hInstance;
-				ID3D11Device*  m_pd3dDevice = NULL;
-				ID3D11DeviceContext*  m_pd3dDeviceContext = NULL;
-				IDXGISwapChain*  m_pSwapChain = NULL;
-				ID3D11RenderTargetView* m_pRTView = NULL;
-				ID3D11DepthStencilView*  m_pDSView = NULL;
-				ID3D11Texture2D*  m_pRTTexture = NULL;
-				ID3D11Texture2D*  m_pDSTexture = NULL;
-				ID3D11ShaderResourceView*  m_pRTShaderResourceView = NULL;
-				ID3D11ShaderResourceView*  m_pDSShaderResourceView = NULL;
+				ID3D11Device*  m_pd3dDevice = nullptr;
+				ID3D11DeviceContext*  m_pd3dDeviceContext = nullptr;
+				IDXGISwapChain*  m_pSwapChain = nullptr;
+				ID3D11RenderTargetView* m_pRTView = nullptr;
+				ID3D11DepthStencilView*  m_pDSView = nullptr;
+				ID3D11Texture2D*  m_pRTTexture = nullptr;
+				ID3D11Texture2D*  m_pDSTexture = nullptr;
+				ID3D11ShaderResourceView*  m_pRTShaderResourceView = nullptr;
+				ID3D11ShaderResourceView*  m_pDSShaderResourceView = nullptr;
 
 
 		private:
@@ -97,7 +96,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				// 引数で指定した大きさでウィンドウを作成.
-				HRESULT  CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE  hInstance = GetModuleHandle( NULL ) );
+				HRESULT  CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE  hInstance = GetModuleHandle( nullptr ) );
 				// デバイスを作成
 				HRESULT  CreateDevice();
 				// デフォルトの深度ステンシルバッファ作成

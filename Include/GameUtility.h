@@ -1,52 +1,46 @@
 //----------------------------------------------------------------------------------
-// file : RenderManager.h
+// file : GameUtility.h
 // desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_RENDER_MANAGER_
-#define  _INCLUDED_RENDER_MANAGER_
+#ifndef  _INCLUDED_GAME_UTILITY_
+#define  _INCLUDED_GAME_UTILITY_
 
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <IDrawable.h>
-#include  <vector>
+#include  <iostream>
+#include  <random>
 
 
-class  RenderManager
+namespace  GameUtility
 {
 
-public:
 		//----------------------------------------------------------------------------------
-		// other
+		// struct
 		//----------------------------------------------------------------------------------
-		RenderManager();
-		~RenderManager();
+		struct  Message
+		{
+				Message()
+				{}
+				Message( unsigned  int  msg )
+				{
+						messageType = msg;
+				}
 
+				unsigned  int  messageType;
+		};// struct Message
 
-private:
 		//----------------------------------------------------------------------------------
-		// private  variables
-		//----------------------------------------------------------------------------------
-		std::vector<IDrawable>  m_renderObjects;
-
-
-public:
-		//----------------------------------------------------------------------------------
-		// public  variables
-		//----------------------------------------------------------------------------------
-
-
-private:
-		//----------------------------------------------------------------------------------
-		// private  functions
+		// variables
 		//----------------------------------------------------------------------------------
 
-
-public:
 		//----------------------------------------------------------------------------------
-		// public  functions
+		// functions
 		//----------------------------------------------------------------------------------
-};
+		void  GameLoop();
+		template<typename  T>T  Random( T  min, T  max );
 
-#endif // ! _INCLUDED_RENDER_MANAGER_
+}// namespace  GameUtility
+
+#endif //  !_INCLUDED_GAME_UTILITY_

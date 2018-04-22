@@ -1,132 +1,135 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="D3D11Utility">
-      <UniqueIdentifier>{2a5b8c23-8dec-4c1c-b9e4-378fa3579f63}</UniqueIdentifier>
+    <Filter Include="Header">
+      <UniqueIdentifier>{092ef261-d423-4f61-aef4-80b41c986569}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D3D11Utility\header">
-      <UniqueIdentifier>{57460b71-03bf-42d0-abe0-fef501309313}</UniqueIdentifier>
+    <Filter Include="Source">
+      <UniqueIdentifier>{bbb2b2e6-7451-4d82-8a2f-99c088bb1423}</UniqueIdentifier>
     </Filter>
-    <Filter Include="source">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Source\D3D11Utility">
+      <UniqueIdentifier>{2f6ae9f2-fe4c-4fcb-bf90-07d80b0f1773}</UniqueIdentifier>
     </Filter>
-    <Filter Include="header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Source\D3D11Utility\Graphics">
+      <UniqueIdentifier>{85d06e3c-2d6f-4fda-8d0f-7f10c2630ba4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="resource">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Source\D3D11Utility\System">
+      <UniqueIdentifier>{df73bcb4-e66f-4b5a-b7b2-68c0776c0411}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D3D11Utility\struct">
-      <UniqueIdentifier>{5e185841-55c8-4fd6-9eca-2ec5df65e08b}</UniqueIdentifier>
+    <Filter Include="Header\D3D11Utility">
+      <UniqueIdentifier>{bc9f62d6-1cfa-4b65-890f-b7a2d72671b4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D3D11Utility\system">
-      <UniqueIdentifier>{38a4cb14-dbbe-4a2d-b0e4-ffe943b18917}</UniqueIdentifier>
+    <Filter Include="Header\D3D11Utility\Graphics">
+      <UniqueIdentifier>{d77f2c72-9ee4-4c36-bb2e-c36e7d251aa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\D3D11Utility\System">
+      <UniqueIdentifier>{15f0c91b-6af5-485e-a0cf-9c7028fc4cf0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\GameLoop.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp">
+      <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObject.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp">
+      <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameUtility.cpp">
-      <Filter>source</Filter>
+    <ClCompile Include="src\D3D11Utility\System\IDirect3D.cpp">
+      <Filter>Source\D3D11Utility\System</Filter>
     </ClCompile>
-    <ClCompile Include="src\EntryPoint.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Mesh.cpp">
-      <Filter>D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Scene.cpp">
-      <Filter>D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\VertexBuffer.cpp">
-      <Filter>D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\VertexShader.cpp">
-      <Filter>D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Camera.cpp">
-      <Filter>D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp">
-      <Filter>D3D11Utility</Filter>
+    <ClCompile Include="src\D3D11Utility\System\IDirect3DRenderer.cpp">
+      <Filter>Source\D3D11Utility\System</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Entity.cpp">
-      <Filter>D3D11Utility</Filter>
+      <Filter>Source\D3D11Utility</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D11Utility\IDirect3D.cpp">
-      <Filter>D3D11Utility\system</Filter>
+    <ClCompile Include="src\D3D11Utility\Renderable.cpp">
+      <Filter>Source\D3D11Utility</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D11Utility\IDirect3DRenderer.cpp">
-      <Filter>D3D11Utility\system</Filter>
+    <ClCompile Include="src\D3D11Utility\Scene.cpp">
+      <Filter>Source\D3D11Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Camera.cpp">
+      <Filter>Source\D3D11Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp">
+      <Filter>Source\D3D11Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameLoop.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameUtility.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EntryPoint.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Graphics\PixelShader.cpp">
+      <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\header\C_Singleton.h">
-      <Filter>header</Filter>
+    <ClInclude Include="Include\IGraphicsRenderer.h">
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\GameObject.h">
-      <Filter>header</Filter>
+    <ClInclude Include="Include\IRenderable.h">
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\GameUtility.h">
-      <Filter>header</Filter>
+    <ClInclude Include="Include\Singleton.h">
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\IDrawable.h">
-      <Filter>header</Filter>
+    <ClInclude Include="Include\GameUtility.h">
+      <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\IGraphicsRenderer.h">
-      <Filter>header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Graphics\VertexBuffer.h">
+      <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Camera.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h">
+      <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\D3D11Utility.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\System\ComponentManager.h">
+      <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Mesh.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\System\EntityManager.h">
+      <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Object.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\System\IDirect3D.h">
+      <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Scene.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\System\IDirect3DRenderer.h">
+      <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Transform.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\System\RenderManager.h">
+      <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\VertexBuffer.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Entity.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\VertexShader.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Object.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Entity.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Renderable.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\Component.h">
-      <Filter>D3D11Utility\header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Scene.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\header\RenderManager.h">
-      <Filter>header</Filter>
+    <ClInclude Include="Include\D3D11Utility\Transform.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\EntityId.h">
-      <Filter>D3D11Utility\struct</Filter>
+    <ClInclude Include="Include\D3D11Utility\Camera.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\EntityManager.h">
-      <Filter>D3D11Utility\system</Filter>
+    <ClInclude Include="Include\D3D11Utility\Component.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\IDirect3D.h">
-      <Filter>D3D11Utility\system</Filter>
+    <ClInclude Include="Include\D3D11Utility\D3D11Utility.h">
+      <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="src\D3D11Utility\header\IDirect3DRenderer.h">
-      <Filter>D3D11Utility\system</Filter>
+    <ClInclude Include="Include\D3D11Utility\System\CameraManager.h">
+      <Filter>Header\D3D11Utility\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h">
+      <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

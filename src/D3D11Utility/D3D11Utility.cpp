@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility.h>
-#include  <IDirect3D.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\System\IDirect3D.h>
 #include  <string>
 
 
@@ -73,7 +73,7 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 }
 
 
-HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer*  pCB, UINT&  nOutSlot, size_t  byteWidth )
+HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth )
 {
 		static  UINT  maxConstantBuffer = 0;
 		HRESULT  hr = S_OK;
@@ -89,7 +89,7 @@ HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer*  pCB, UINT&  nOutSlot
 
 
 		// 定数バッファの設定
-		hr = pd3dDevice->CreateBuffer( &bd, NULL, &pCB );
+		hr = pd3dDevice->CreateBuffer( &bd, NULL, ppCB );
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<D3D11Utility> FAILED CreateBuffer (constant buffer) \n" ) );
@@ -102,7 +102,7 @@ HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer*  pCB, UINT&  nOutSlot
 		return  hr;
 }
 
-VOID  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext )
+void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext )
 {
 		D3D11Utility::pd3dDevice = pDevice;
 		D3D11Utility::pd3dDeviceContext = pDeviceContext;
