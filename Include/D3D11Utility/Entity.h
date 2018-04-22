@@ -53,7 +53,8 @@ namespace  D3D11Utility
 
 		class  Entity
 		{
-
+				// TODO: GetComponent()のコーディングを考える
+				// TODO: AddComponent()書こうぜ
 		public:
 				//----------------------------------------------------------------------------------
 				// other

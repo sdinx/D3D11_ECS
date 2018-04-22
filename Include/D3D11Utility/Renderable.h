@@ -26,7 +26,7 @@ namespace  D3D11Utility
 
 		class  Renderable : public  Component, public  IRenderable
 		{
-
+				// TODO: ƒ|ƒŠƒSƒ“o‚È‚¢•a
 		public:
 				//----------------------------------------------------------------------------------
 				// other

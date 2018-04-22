@@ -15,7 +15,7 @@
 
 namespace  D3D11Utility
 {
-
+		// TODO: Entity の生成とメッセージ処理とか考える
 		class  EntityManager
 		{
 
