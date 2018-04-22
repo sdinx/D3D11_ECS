@@ -31,6 +31,7 @@ Camera::Camera()
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
+		UpdateConstantBuffer();
 }
 
 
@@ -60,9 +61,9 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 						UpdateView();
 				}
 				break;
-		case  MSG_UPDATE_PROJECTION:
+		case  MSG_UPDATE_CBUFFER:
 				{
-
+						UpdateConstantBuffer();
 				}
 				break;
 		default:
@@ -112,7 +113,7 @@ void  Camera::SetUp( Vector3  upDirection )
 
 void  Camera::Update()
 {
-		UpdateConstantBuffer();
+		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
 }
 
 

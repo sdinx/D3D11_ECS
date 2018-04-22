@@ -36,8 +36,12 @@ VOID  IDirect3DRenderer::Rendering()const
 
 				static  Camera  camera;
 				static  Renderable  mesh( PT_CUBE );
-				camera.SetPosition( Vector3( 0.0f, 1.0f, -10.0f ) );
-				camera.SetTarget( Vector3( 0.0f, 0.0f, 10.0f ) );
+				static  bool  init = true;
+				if ( init ) {
+						camera.SetPosition( Vector3( 0.0f, 0.0f, -50.0f ) );
+						camera.SetTarget( Vector3( 0.0f, 0.0f, 5.0f ) );
+						camera.UpdateView();
+				}
 				camera.Update();
 				mesh.Rendering();
 

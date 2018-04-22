@@ -22,7 +22,7 @@ std::unique_ptr<CONSTANTBUFFER>  Renderable::s_pCBuffer = nullptr;
 //----------------------------------------------------------------------------------
 struct  ConstantBufferForPerFrame
 {
-		DirectX::XMMATRIX  world;
+		Matrix4x4  world;
 };
 
 
@@ -35,15 +35,18 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		m_isRendering = true;
 		m_pVertexShader = std::unique_ptr<VertexShader>( new  VertexShader() );
 		m_pPixelShader = std::unique_ptr<PixelShader>( new  PixelShader() );
+		m_pGeometryShader = std::unique_ptr<GeometryShader>( new  GeometryShader() );
 
 		VERTEX  vertices[ ] = {
-				Vector3( 0.0f,10.0f,3.0f ),
-				Vector3( 10.0f,0.0f,3.0f ),
-				Vector3( -10.0f,0.0f,3.0f ),
+				Vector3( 0.0f,1.0f,0.0f ),
+				Vector3( 1.0f,0.0f,0.0f ),
+				Vector3( -1.0f,0.0f,0.0f ),
 		};
 		UINT  numVertices = ARRAYSIZE( vertices );
 
 		m_pVertexBuffer = std::unique_ptr<VertexBuffer>( new  VertexBuffer( vertices, numVertices ) );
+
+		XMStoreFloat4x4( &m_localWorld, XMMatrixTranslation( 0, 0, 0 ) );
 }
 
 
@@ -61,12 +64,14 @@ void  Renderable::Rendering()const
 {
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
+		//m_pGeometryShader->UpdateShader();
 
 		ConstantBufferForPerFrame  cbuffer;
-		cbuffer.world = XMLoadFloat4x4( &m_localWorld );
+		cbuffer.world = m_localWorld;
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
 		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
 		pd3dDeviceContext->PSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->GSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
 
 		m_pVertexBuffer->BindBuffer();
 }

@@ -13,8 +13,8 @@ void  GameUtility::GameLoop()
 		static  BOOL  isInit = true;
 		if ( isInit ) 
 		{
-				D3D11Utility::Renderable::SetConstantBuffer();
 				D3D11Utility::Camera::SetConstantBuffer();
+				D3D11Utility::Renderable::SetConstantBuffer();
 				isInit = false;
 		}
 

@@ -66,6 +66,9 @@
     <ClCompile Include="src\D3D11Utility\Graphics\PixelShader.cpp">
       <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Graphics\GeometryShader.cpp">
+      <Filter>Source\D3D11Utility\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -129,6 +132,9 @@
       <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h">
+      <Filter>Header\D3D11Utility\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Graphics\GeometryShader.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

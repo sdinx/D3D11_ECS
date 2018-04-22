@@ -134,6 +134,8 @@ namespace  D3D11Utility
 				IDXGISwapChain* GetSwapChain() { return  m_pSwapChain; }
 				ID3D11RenderTargetView* GetRenderTargetView() { return  m_pRTView; }
 				ID3D11DepthStencilView* GetDepthStencilView() { return  m_pDSView; }
+				ID3D11ShaderResourceView* GetRTShaderResourceView() { return  m_pRTShaderResourceView; }
+				ID3D11ShaderResourceView* GetDSShaderResourceView() { return  m_pDSShaderResourceView; }
 				POINT  GetScreenSize() { return{ m_nScreenWidth, m_nScreenHeight }; }
 
 		}; // class IDirect3D

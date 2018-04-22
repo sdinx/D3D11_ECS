@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
-// file : PixelShader.h
+// file : GeometryShader.h
 // desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_PIXEL_BUFFER_
-#define  _INCLUDED_D3D11_UTILITY_PIXEL_BUFFER_
+#ifndef  _INCLUDED_D3D11_UTILITY_GEOMETRY_BUFFER_
+#define  _INCLUDED_D3D11_UTILITY_GEOMETRY_BUFFER_
 
 //----------------------------------------------------------------------------------
 // pragma
@@ -24,20 +24,20 @@ namespace  D3D11Utility
 
 		namespace  Graphics
 		{
-				class  PixelShader
+				class  GeometryShader
 				{
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
-						PixelShader();
-						~PixelShader();
+						GeometryShader();
+						~GeometryShader();
 
 				private:
 						//----------------------------------------------------------------------------------
 						// private variables
 						//----------------------------------------------------------------------------------
-						ID3D11PixelShader*  m_pPixelShader = nullptr;
+						ID3D11GeometryShader*  m_pGeometryShader = nullptr;
 
 
 				public:
@@ -58,16 +58,16 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						// シェーダのコンパイルと頂点シェーダの作成
-						HRESULT  CreatePixelShader( LPCWSTR  szFileName = nullptr );
+						HRESULT  CreateGeometryShader( LPCWSTR  szFileName = nullptr );
 						// 描画を行う前に呼び出す
 						void  UpdateShader();
 						void  Release();
 
-				}; // class PixelBuffer
+				}; // class GeometryShader
 
 		}// namespace Graphics
 
 }// namespace D3D11Utility
 
 
-#endif // ! _INCLUDED_D3D11_UTILITY_PIXEL_BUFFER_
+#endif // ! _INCLUDED_D3D11_UTILITY_GEOMETRY_BUFFER_

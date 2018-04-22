@@ -12,7 +12,6 @@ using  namespace  Graphics;
 
 VertexBuffer::VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts )
 {
-		//m_pVertices = new VERTEX( *pVertices );
 		m_pVertices = new  VERTEX[numVertexCounts];
 		for ( UINT i = 0; i < numVertexCounts; i++ )
 				m_pVertices[i] = pVertices[i];
@@ -51,12 +50,7 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 		// サブリソースの設定
 		D3D11_SUBRESOURCE_DATA  initData;
 		ZeroMemory( &initData, sizeof( D3D11_SUBRESOURCE_DATA ) );
-		VERTEX  vertices[ ] = {
-				Vector3( 1.0f,1.0f,3.0f ),
-				Vector3( 2.0f,0.0f,3.0f ),
-				Vector3( 0.0f,0.0f,3.0f ),
-		};
-		initData.pSysMem = vertices;
+		initData.pSysMem = m_pVertices;
 		
 
 		// 頂点バッファの生成

@@ -22,6 +22,7 @@
     <ClCompile Include="src\D3D11Utility\Camera.cpp" />
     <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp" />
     <ClCompile Include="src\D3D11Utility\Entity.cpp" />
+    <ClCompile Include="src\D3D11Utility\Graphics\GeometryShader.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\PixelShader.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="Include\D3D11Utility\Component.h" />
     <ClInclude Include="Include\D3D11Utility\D3D11Utility.h" />
     <ClInclude Include="Include\D3D11Utility\Entity.h" />
+    <ClInclude Include="Include\D3D11Utility\Graphics\GeometryShader.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexBuffer.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h" />

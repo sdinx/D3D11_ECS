@@ -14,6 +14,7 @@
 #include  <D3D11Utility\Graphics\VertexBuffer.h>
 #include  <D3D11Utility\Graphics\VertexShader.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
+#include  <D3D11Utility\Graphics\GeometryShader.h>
 #include  <GameUtility.h>
 #include  <IRenderable.h>
 #include  <memory>
@@ -46,6 +47,7 @@ namespace  D3D11Utility
 				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer;
 				std::unique_ptr<Graphics::VertexShader>  m_pVertexShader;
 				std::unique_ptr<Graphics::PixelShader>  m_pPixelShader;
+				std::unique_ptr<Graphics::GeometryShader>  m_pGeometryShader;
 
 
 		protected:
