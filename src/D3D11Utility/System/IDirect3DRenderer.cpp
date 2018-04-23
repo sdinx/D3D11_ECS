@@ -38,11 +38,12 @@ VOID  IDirect3DRenderer::Rendering()const
 				static  Renderable  mesh( PT_CUBE );
 				static  bool  init = true;
 				if ( init ) {
-						camera.SetPosition( Vector3( 0.0f, 0.0f, -50.0f ) );
-						camera.SetTarget( Vector3( 0.0f, 0.0f, 5.0f ) );
+						camera.SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
+						camera.SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
 						camera.UpdateView();
+						camera.UpdateConstantBuffer();
+						init = false;
 				}
-				camera.Update();
 				mesh.Rendering();
 
 		}

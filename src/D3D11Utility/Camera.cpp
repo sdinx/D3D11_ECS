@@ -113,7 +113,7 @@ void  Camera::SetUp( Vector3  upDirection )
 
 void  Camera::Update()
 {
-		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
+		/* NOTHING */
 }
 
 
@@ -135,7 +135,8 @@ void  Camera::UpdateConstantBuffer()
 		cbuffer.view = GetMatrix4x4View();
 		cbuffer.projection = GetMatrix4x4Projection();
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
-		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->VSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->GSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
 }
 
 

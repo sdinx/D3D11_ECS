@@ -38,9 +38,9 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		m_pGeometryShader = std::unique_ptr<GeometryShader>( new  GeometryShader() );
 
 		VERTEX  vertices[ ] = {
-				Vector3( 0.0f,1.0f,0.0f ),
-				Vector3( 1.0f,0.0f,0.0f ),
-				Vector3( -1.0f,0.0f,0.0f ),
+				Vector3( 0.0f,0.5f,0.0f ),
+				Vector3( 0.5f,-0.5f,0.0f ),
+				Vector3( -0.5f,-0.5f,0.0f ),
 		};
 		UINT  numVertices = ARRAYSIZE( vertices );
 
@@ -64,14 +64,14 @@ void  Renderable::Rendering()const
 {
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
-		//m_pGeometryShader->UpdateShader();
+		m_pGeometryShader->UpdateShader();
 
 		ConstantBufferForPerFrame  cbuffer;
 		cbuffer.world = m_localWorld;
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
-		pd3dDeviceContext->VSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
-		pd3dDeviceContext->PSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
-		pd3dDeviceContext->GSSetConstantBuffers( s_pCBuffer->nCBSlot, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->VSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->PSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->GSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 
 		m_pVertexBuffer->BindBuffer();
 }
