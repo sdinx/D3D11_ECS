@@ -25,6 +25,7 @@ namespace  D3D11Utility
 				MSG_NONE = 0,
 				MSG_UPDATE_VIEW,
 				MSG_UPDATE_CBUFFER,
+				MSG_UPDATE_ALL,
 		};// enum MSG_CAMERA
 
 		class  Camera :public  Component

@@ -23,9 +23,9 @@ INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCm
 		if ( FAILED( d3d11->CreateDefaultDepthStencil() ) )
 				return  E_FAIL;
 
-
+		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 		d3d11->MainLoop();
-
+		_CrtDumpMemoryLeaks();
 		// スマートポインタなので自動的に開放される
 		// d3d11->Release();
 

@@ -66,6 +66,11 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 						UpdateConstantBuffer();
 				}
 				break;
+		case  MSG_UPDATE_ALL:
+				{
+						UpdateView();
+						UpdateConstantBuffer();
+				}
 		default:
 				{
 						/* NOTHING */

@@ -12,6 +12,7 @@
 #define  SAFE_RELEASE(p)  { if(p != nullptr) { p->Release(); p = nullptr; } }
 #define  SAFE_DELETE(p)  { if(p != NULL) { delete p; p = nullptr; } }
 #define  SAFE_DELETEARRAY(p)  { if(p != NULL) { delete[] p; p = nullptr; } }
+#define  _CRTDBG_MAP_ALLOC 
 
 //----------------------------------------------------------------------------------
 // pragma
@@ -23,6 +24,8 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
+#include <crtdbg.h>
+#include <cstdlib> 
 #include  <d3d11.h>
 #include  <d3dcompiler.h>
 #include  <DirectXMath.h>
