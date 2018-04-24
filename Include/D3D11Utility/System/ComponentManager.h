@@ -9,11 +9,17 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <vector>
 
 
 namespace  D3D11Utility
 {
+		//----------------------------------------------------------------------------------
+		// ‘O’ñ’è‹`
+		//----------------------------------------------------------------------------------
+		class  Component;
+		struct EntityId;
 
 		class  ComponentManager
 		{
@@ -30,6 +36,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
+				using  ComponentTable = std::vector<std::vector<Component>>;
+				ComponentTable  m_componentTable;
 
 
 		public:
@@ -48,6 +56,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  functions
 				//----------------------------------------------------------------------------------
+				template<typename  T>
+				static  void  AddComponent( const  T*  component );
+				template<typename  T>
+				static  T*  GetComponent( const  EntityId&  entityId, const  UINT  componentType );
 
 
 		};// class  ComponentManager

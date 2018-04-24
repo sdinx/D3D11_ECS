@@ -69,6 +69,12 @@
     <ClCompile Include="src\D3D11Utility\Graphics\GeometryShader.cpp">
       <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\System\ComponentManager.cpp">
+      <Filter>Source\D3D11Utility\System</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\System\EntityManager.cpp">
+      <Filter>Source\D3D11Utility\System</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">

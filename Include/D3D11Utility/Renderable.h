@@ -27,7 +27,7 @@ namespace  D3D11Utility
 
 		class  Renderable : public  Component, public  IRenderable
 		{
-				// TODO: É|ÉäÉSÉìèoÇ»Ç¢ïa
+
 		public:
 				//----------------------------------------------------------------------------------
 				// other
@@ -44,10 +44,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
 
-				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer;
-				std::unique_ptr<Graphics::VertexShader>  m_pVertexShader;
-				std::unique_ptr<Graphics::PixelShader>  m_pPixelShader;
-				std::unique_ptr<Graphics::GeometryShader>  m_pGeometryShader;
+				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer = nullptr;
+				std::unique_ptr<Graphics::VertexShader>  m_pVertexShader = nullptr;
+				std::unique_ptr<Graphics::PixelShader>  m_pPixelShader = nullptr;
+				std::unique_ptr<Graphics::GeometryShader>  m_pGeometryShader = nullptr;
 
 
 		protected:

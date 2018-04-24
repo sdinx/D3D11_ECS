@@ -8,13 +8,15 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Entity.h>
 #include  <list>
 #include  <vector>
 
 
 namespace  D3D11Utility
 {
+		class  Entity;
+		struct  EntityId;
+
 		// TODO: Entity の生成とメッセージ処理とか考える
 		class  EntityManager
 		{
@@ -31,8 +33,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
-				std::list<EntityId>  m_entityIds;
-				std::vector<Entity>  m_entitys;
+				using  EntityList = std::vector<Entity*>;
+				EntityList  m_entityList;
 
 
 		public:
@@ -51,8 +53,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  functions
 				//----------------------------------------------------------------------------------
-				EntityId  CreateEntity( Entity*  entity );
-
+				const  EntityId&  CreateEntity( std::string  name );
+				Entity*  GetEntity( const  EntityId&  entityId );
+				const  EntityId  GetEntityId( const  Entity&  entity );
 
 		};
 

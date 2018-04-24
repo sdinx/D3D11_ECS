@@ -28,6 +28,8 @@
     <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
     <ClCompile Include="src\D3D11Utility\Renderable.cpp" />
     <ClCompile Include="src\D3D11Utility\Scene.cpp" />
+    <ClCompile Include="src\D3D11Utility\System\ComponentManager.cpp" />
+    <ClCompile Include="src\D3D11Utility\System\EntityManager.cpp" />
     <ClCompile Include="src\D3D11Utility\System\IDirect3D.cpp" />
     <ClCompile Include="src\D3D11Utility\System\IDirect3DRenderer.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />

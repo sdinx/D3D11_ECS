@@ -4,6 +4,7 @@
 #include  <D3D11Utility\System\IDirect3DRenderer.h>
 #include  <D3D11Utility\Camera.h>
 #include  <D3D11Utility\Renderable.h>
+#include  <GameUtility.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
@@ -40,12 +41,11 @@ VOID  IDirect3DRenderer::Rendering()const
 				if ( init ) {
 						camera.SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
 						camera.SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
-						camera.UpdateView();
-						camera.UpdateConstantBuffer();
+						camera.HandleMessage( GameUtility::Message( MSG_UPDATE_ALL ) );
 						init = false;
 				}
 				mesh.Rendering();
 
 		}
 		m_pID3D->EndRender();
-}
+}// end Rendering()const

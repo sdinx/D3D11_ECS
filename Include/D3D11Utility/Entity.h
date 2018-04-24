@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
 #include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\System\EntityManager.h>
 #include  <string>
 
 
@@ -70,8 +71,6 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				BOOL  m_isActive;
 				std::string  m_tag;
-				const  EntityId*  m_pEntityId;
-
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -97,9 +96,9 @@ namespace  D3D11Utility
 				{
 						return  m_isActive;
 				}
-				inline  UINT  GetEntityID()const
+				inline  const  EntityId  GetEntityId()const
 				{ 
-						return  m_pEntityId->entityId;
+						return  0;
 				}
 				inline  std::string  GetTag()const 
 				{
@@ -132,14 +131,14 @@ namespace  D3D11Utility
 						return  ( m_isActive != isActive ) ? true : false;
 				}
 
-				inline  BOOL  operator==( Entity  entity ) const
-				{
-						return  ( GetEntityID() == entity.GetEntityID() ) ? true : false;
-				}
-				inline  BOOL  operator!=( Entity  entity ) const
-				{
-						return  ( GetEntityID() != entity.GetEntityID() ) ? true : false;
-				}
+				//inline  BOOL  operator==( Entity  entity ) const
+				//{
+				//		return  ( GetEntityID() == entity.GetEntityID() ) ? true : false;
+				//}
+				//inline  BOOL  operator!=( Entity  entity ) const
+				//{
+				//		return  ( GetEntityID() != entity.GetEntityID() ) ? true : false;
+				//}
 
 		};// class Entity
 
