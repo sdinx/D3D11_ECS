@@ -25,13 +25,12 @@ void  ComponentManager::AddComponent( const  T*  component )
 //----------------------------------------------------------------------------------
 // func: GetComponent(const EntityId&, const UINT) : T*
 // コンポーネントの存在を判定しているが, 
-// 速度向上の為比較する必要はない
+// TODO: 速度向上の為, Releaseでは比較しないかも
 //----------------------------------------------------------------------------------
 template<typename  T>
 T*  ComponentManager::GetComponent( const  EntityId&  entityId, const  UINT  componentType )
 {
-		// エンティティIDは存在する前提なので比較はしない
-		if ( m_componentTable[entityId.entityId].size() > componentType )
+		if ( m_componentTable.size() > entityId.entityId && m_componentTable[entityId.entityId].size() > componentType )
 		{
 				return  m_componentTable[entityId][componentType];
 		}
