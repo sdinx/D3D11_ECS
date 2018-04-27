@@ -53,7 +53,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  functions
 				//----------------------------------------------------------------------------------
-				const  EntityId&  CreateEntity( std::string  name );
+				const  EntityId*  CreateEntity( std::string  name );
 				const  Entity*  GetEntity( const  EntityId&  entityId );
 				const  EntityId  GetEntityId( const  Entity&  entity );
 				void  ReleaseEntity( Entity*  entity );

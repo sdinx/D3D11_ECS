@@ -10,12 +10,12 @@
 using  namespace  D3D11Utility;
 
 
-const  EntityId&  EntityManager::CreateEntity( std::string  name )
+const  EntityId*  EntityManager::CreateEntity( std::string  name )
 {
 		UINT  maxList = m_entityList.size();
 		m_entityList.push_back( new  Entity( name ) );
 
-		return  const  EntityId( maxList );
+		return  ( new  EntityId( maxList ) );
 }// end CreateEntity(const Entity*) : const EntityId&
 
 

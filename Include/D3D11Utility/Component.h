@@ -12,11 +12,17 @@
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\System\ComponentManager.h>
 #include  <GameUtility.h>
+#include  <list>
 
 
 namespace  D3D11Utility
 {
+
+		//----------------------------------------------------------------------------------
+		// ‘O’ñ’è‹`
+		//----------------------------------------------------------------------------------
 		struct  EntityId;
+
 
 		class  Component
 		{
@@ -34,6 +40,7 @@ namespace  D3D11Utility
 				// private  variables
 				//----------------------------------------------------------------------------------
 				const  EntityId*  m_parentsEntityId;
+				ComponentIdList  m_registerList;
 
 
 		public:
@@ -52,9 +59,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  functions
 				//----------------------------------------------------------------------------------
-				template<typename  T>  T*  GetComponent()
+				template<typename  T>
+				inline  T*  GetComponent()
 				{
-						ComponentManager::GetComponent( m_parentsEntityId, T::STATIC_HASH_CODE );
+						ComponentManager::GetComponent( m_parentsEntityId, T::STATIC_COMPONENT_ID );
 				}
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;

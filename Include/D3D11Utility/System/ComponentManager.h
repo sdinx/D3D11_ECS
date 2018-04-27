@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <vector>
+#include  <list>
 
 
 namespace  D3D11Utility
@@ -21,6 +22,14 @@ namespace  D3D11Utility
 		class  Component;
 		struct EntityId;
 
+		//----------------------------------------------------------------------------------
+		// type defined
+		//----------------------------------------------------------------------------------
+		using  ComponentId = UINT;
+		using  ComponentIdList = std::list<ComponentId>;
+		using  ComponentTable = std::vector<std::vector<Component>>;
+
+
 		class  ComponentManager
 		{
 				// TODO: コンポーネントテーブルを用意する必要あり
@@ -28,15 +37,13 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				ComponentManager()
-				{}
-
+				ComponentManager();
 
 		private:
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
-				using  ComponentTable = std::vector<std::vector<Component>>;
+				ComponentIdList  m_componentIdList;
 				ComponentTable  m_componentTable;
 
 
@@ -44,12 +51,13 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  variables
 				//----------------------------------------------------------------------------------
-
+				/* NOTHING */
 
 		private:
 				//----------------------------------------------------------------------------------
 				// private  functions
 				//----------------------------------------------------------------------------------
+				/* NOTHING */
 
 
 		public:
@@ -59,7 +67,7 @@ namespace  D3D11Utility
 				template<typename  T>
 				static  void  AddComponent( const  T*  component );
 				template<typename  T>
-				static  T*  GetComponent( const  EntityId&  entityId, const  UINT  componentType );
+				static  T*  GetComponent( const  EntityId  entityId, const  UINT  componentType );
 
 
 		};// class  ComponentManager
