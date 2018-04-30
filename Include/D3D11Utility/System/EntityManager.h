@@ -2,6 +2,7 @@
 // file : EntityManager.h
 // desc : Entity class and EntityID management class
 //----------------------------------------------------------------------------------
+
 #ifndef  _INCLUDED_D3D11_UTILITY_ENTITY_MANAGER_
 #define  _INCLUDED_D3D11_UTILITY_ENTITY_MANAGER_
 
@@ -14,10 +15,20 @@
 
 namespace  D3D11Utility
 {
+		// TODO: Entity の生成とメッセージ処理とか考える
+
+		//----------------------------------------------------------------------------------
+		// 前提定義
+		//----------------------------------------------------------------------------------
 		class  Entity;
 		struct  EntityId;
 
-		// TODO: Entity の生成とメッセージ処理とか考える
+		//----------------------------------------------------------------------------------
+		// type defined
+		//----------------------------------------------------------------------------------
+		using  EntityList = std::vector<Entity*>;
+
+
 		class  EntityManager
 		{
 
@@ -25,16 +36,17 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				EntityManager();
-				~EntityManager();
+				EntityManager()
+				{}
+				~EntityManager()
+				{}
 
 
 		private:
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
-				using  EntityList = std::vector<Entity*>;
-				EntityList  m_entityList;
+				static  EntityList  m_entityList;
 
 
 		public:
@@ -45,18 +57,18 @@ namespace  D3D11Utility
 
 		private:
 				//----------------------------------------------------------------------------------
-				// private  functions
+				// private  methods
 				//----------------------------------------------------------------------------------
 				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------
-				// public  functions
+				// public  methods
 				//----------------------------------------------------------------------------------
-				const  EntityId*  CreateEntity( std::string  name );
-				const  Entity*  GetEntity( const  EntityId&  entityId );
-				const  EntityId  GetEntityId( const  Entity&  entity );
-				void  ReleaseEntity( Entity*  entity );
+				static  const  EntityId*  CreateEntity( std::string  name );
+				static  const  Entity*  GetEntity( const  EntityId&  entityId );
+				static  const  EntityId  GetEntityId( const  Entity&  entity );
+				static  void  ReleaseEntity( Entity*  entity );
 
 		};
 

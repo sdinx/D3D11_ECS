@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\System\ComponentManager.h>
+#include  <D3D11Utility\System\EntityManager.h>
 #include  <GameUtility.h>
 #include  <list>
 
@@ -24,7 +25,7 @@ namespace  D3D11Utility
 		struct  EntityId;
 
 
-		class  Component
+		class  Component  abstract
 		{
 
 		public:
@@ -40,7 +41,6 @@ namespace  D3D11Utility
 				// private  variables
 				//----------------------------------------------------------------------------------
 				const  EntityId*  m_parentsEntityId;
-				ComponentIdList  m_registerList;
 
 
 		public:
@@ -51,13 +51,13 @@ namespace  D3D11Utility
 
 		private:
 				//----------------------------------------------------------------------------------
-				// private  functions
+				// private  methods
 				//----------------------------------------------------------------------------------
 
 
 		public:
 				//----------------------------------------------------------------------------------
-				// public  functions
+				// public  methods
 				//----------------------------------------------------------------------------------
 				template<typename  T>
 				inline  T*  GetComponent()

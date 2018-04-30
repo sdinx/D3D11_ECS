@@ -12,10 +12,12 @@ using  namespace  D3D11Utility;
 using  namespace  Graphics;
 using  namespace  DirectX;
 
+
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
 std::unique_ptr<CONSTANTBUFFER>  Renderable::s_pCBuffer = nullptr;
+
 
 //----------------------------------------------------------------------------------
 // struct
@@ -33,6 +35,7 @@ Renderable::Renderable()
 Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 {
 		m_isRendering = true;
+
 		m_pVertexShader = std::unique_ptr<VertexShader>( new  VertexShader() );
 		m_pPixelShader = std::unique_ptr<PixelShader>( new  PixelShader() );
 		m_pGeometryShader = std::unique_ptr<GeometryShader>( new  GeometryShader() );

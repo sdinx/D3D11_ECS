@@ -71,6 +71,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				BOOL  m_isActive;
 				std::string  m_tag;
+				ComponentIdList  m_registerList;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -99,6 +100,10 @@ namespace  D3D11Utility
 				inline  const  EntityId  GetEntityId()const
 				{ 
 						return  0;
+				}
+				inline  ComponentIdList  GetRegisterComponentList()
+				{
+						return  m_registerList;
 				}
 				inline  std::string  GetTag()const 
 				{

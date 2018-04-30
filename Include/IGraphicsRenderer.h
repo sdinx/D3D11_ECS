@@ -21,14 +21,14 @@ class  IGraphicsRenderer
 
 protected:
 		//----------------------------------------------------------------------------------
-		// protected functions
+		// protected methods
 		//----------------------------------------------------------------------------------
 		std::list<UINT>  m_renderList;
 		std::vector<IRenderable>  m_renderObjects;
 
 public:
 		//----------------------------------------------------------------------------------
-		// public functions
+		// public methods
 		//----------------------------------------------------------------------------------
 		template<typename  T>  UINT  CreateRenderObjects( T  type );
 		virtual  void  Rendering()const = 0;

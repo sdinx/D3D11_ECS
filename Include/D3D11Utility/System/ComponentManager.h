@@ -20,12 +20,12 @@ namespace  D3D11Utility
 		// ‘O’ñ’è‹`
 		//----------------------------------------------------------------------------------
 		class  Component;
-		struct EntityId;
+		struct  EntityId;
 
 		//----------------------------------------------------------------------------------
 		// type defined
 		//----------------------------------------------------------------------------------
-		using  ComponentId = UINT;
+		using  ComponentId = int;
 		using  ComponentIdList = std::list<ComponentId>;
 		using  ComponentTable = std::vector<std::vector<Component>>;
 
@@ -43,8 +43,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
-				ComponentIdList  m_componentIdList;
-				ComponentTable  m_componentTable;
+				static  ComponentIdList  m_componentIdList;
+				static  ComponentTable  m_componentTable;
 
 
 		public:
@@ -55,19 +55,21 @@ namespace  D3D11Utility
 
 		private:
 				//----------------------------------------------------------------------------------
-				// private  functions
+				// private  methods
 				//----------------------------------------------------------------------------------
 				/* NOTHING */
 
-
 		public:
 				//----------------------------------------------------------------------------------
-				// public  functions
+				// public  methods
 				//----------------------------------------------------------------------------------
 				template<typename  T>
-				static  void  AddComponent( const  T*  component );
+				static  void  AddComponent( const  EntityId  entityId, const  T*  component );
 				template<typename  T>
-				static  T*  GetComponent( const  EntityId  entityId, const  UINT  componentType );
+				inline  static  T*  GetComponent( const  EntityId  entityId, const  UINT  componentType );
+				template<typename  T>
+				static  void  RemoveComponent();
+				static  void  Update();
 
 
 		};// class  ComponentManager
