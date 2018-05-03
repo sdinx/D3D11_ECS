@@ -1,11 +1,16 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\System\ComponentManager.h>
-#include  <D3D11Utility\System\EntityManager.h>
 #include  <D3D11Utility\Component.h>
 #include  <D3D11Utility\Entity.h>
+#include  <D3D11Utility\System\ComponentManager.h>
+#include  <D3D11Utility\System\EntityManager.h>
 
+
+//----------------------------------------------------------------------------------
+// defined
+//----------------------------------------------------------------------------------
+#define  STATIC_ID_INVALID  ( -1 )
 
 //----------------------------------------------------------------------------------
 // using namespace
@@ -31,28 +36,28 @@ ComponentManager::ComponentManager()
 
 
 //----------------------------------------------------------------------------------
+// func: destructor
+//----------------------------------------------------------------------------------
+ComponentManager::~ComponentManager()
+{
+		ComponentManager::Release();
+}
+
+
+//----------------------------------------------------------------------------------
 // func: AddComponent(const  EntityId, const  T*) : void
 // 始めてテーブルに登録されるコンポーネントの場合,
 // リストの末尾にIDを追加.
 //----------------------------------------------------------------------------------
 template<typename  T>
-void  ComponentManager::AddComponent( const  EntityId  entityId, const  T*  component )
+void  ComponentManager::AddComponent( const  EntityId  entityId, T*  component )
 {
-		ComponentId id;
-		std::size_t  listSize = m_componentIdList.size();
-
-		// ID の存在確認のみなので空ループで回してる
-		for ( id : m_componentIdList; id != T::STATIC_COMPONENT_ID )
-		{
-				/* NOTHING */
-		}// end for
-
-		// IDリストのリサイズ
-		if ( id == listSize )
-				m_componentIdList.push_back( id );
+		// 初登録コンポーネントにstatic_idを割り当て
+		if ( STATIC_ID_INVALID == component->GetStaticId() )
+				component->SetStaticId( m_componentIdList.size() );
 
 		// コンポーネントの追加
-		m_componentTable[entityId.entityId].push_back( T );
+		m_componentTable[entityId.entityId].push_back( new  T( *component ) );
 
 }// end AddComponent(const T*) : void
 
@@ -85,6 +90,18 @@ void  ComponentManager::RemoveComponent()
 }// end RemoveComponent() : void
 
 
+ //----------------------------------------------------------------------------------
+ // func: Release() : void
+ //----------------------------------------------------------------------------------
+void  ComponentManager::Release()
+{
+		m_componentIdList.clear();
+
+		m_componentTable.clear();
+		m_componentTable.shrink_to_fit();
+}
+
+
 //----------------------------------------------------------------------------------
 // func: Update() : void
 // Entityに登録されているコンポーネントを更新する
@@ -97,6 +114,6 @@ void  ComponentManager::Update()
 		for ( ; i < listSize; i++ )
 				for ( auto& component : m_componentTable[i] )
 				{
-						component.Update();
+						component->Update();
 				}
 }

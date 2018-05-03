@@ -7,6 +7,12 @@
 #define  _INCLUDED_D3D11_UTILITY_COMPONENT_MANAGER_
 
 //----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+// TODO: コンポーネントテーブルを用意する必要あり
+// TODO: 自作ハッシュテーブルでキャッシュミスを減らしたアクセスの高速化が必要
+
+//----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
@@ -27,17 +33,18 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 		using  ComponentId = int;
 		using  ComponentIdList = std::list<ComponentId>;
-		using  ComponentTable = std::vector<std::vector<Component>>;
+		using  ComponentTable = std::vector<std::vector<Component*>>;
 
 
 		class  ComponentManager
 		{
-				// TODO: コンポーネントテーブルを用意する必要あり
+
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
 				ComponentManager();
+				virtual  ~ComponentManager();
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -64,11 +71,12 @@ namespace  D3D11Utility
 				// public  methods
 				//----------------------------------------------------------------------------------
 				template<typename  T>
-				static  void  AddComponent( const  EntityId  entityId, const  T*  component );
+				static  void  AddComponent( const  EntityId  entityId, T*  component );
 				template<typename  T>
-				inline  static  T*  GetComponent( const  EntityId  entityId, const  UINT  componentType );
+				static  T*  GetComponent( const  EntityId  entityId, const  UINT  componentType );
 				template<typename  T>
 				static  void  RemoveComponent();
+				static  void  Release();
 				static  void  Update();
 
 

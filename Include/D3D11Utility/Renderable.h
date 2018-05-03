@@ -42,6 +42,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
+				static  INT  STATIC_COMPONENT_ID;
 				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
 
 				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer = nullptr;
@@ -70,11 +71,20 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				static  void  SetConstantBuffer();
 
+				INT  GetStaticId()const
+				{
+						return  STATIC_COMPONENT_ID;
+				}
 				void  HandleMessage( const  GameUtility::Message&  msg )
 				{}
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
 				void  Rendering()const;
+				void  SetStaticId( const  UINT  id )
+				{
+						if ( STATIC_COMPONENT_ID == -1 )
+								STATIC_COMPONENT_ID = ( int ) id;
+				}
 				void  Update()
 				{}
 

@@ -143,5 +143,8 @@
     <ClInclude Include="Include\D3D11Utility\Graphics\GeometryShader.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\IEntity.h">
+      <Filter>Header\D3D11Utility</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

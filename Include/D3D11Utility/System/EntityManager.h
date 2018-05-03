@@ -66,8 +66,8 @@ namespace  D3D11Utility
 				// public  methods
 				//----------------------------------------------------------------------------------
 				static  const  EntityId*  CreateEntity( std::string  name );
-				static  const  Entity*  GetEntity( const  EntityId&  entityId );
 				static  const  EntityId  GetEntityId( const  Entity&  entity );
+				static  Entity*  GetEntity( const  EntityId&  entityId );
 				static  void  ReleaseEntity( Entity*  entity );
 
 		};

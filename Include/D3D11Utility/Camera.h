@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\D3D11Utility.h>
 #include  <GameUtility.h>
 #include  <memory>
 
@@ -19,7 +19,7 @@
 //----------------------------------------------------------------------------------
 namespace  D3D11Utility
 {
-		// TODO: カメラ表示未確認てか確認できない
+
 		enum  MSG_CAMERA
 		{
 				MSG_NONE = 0,
@@ -58,7 +58,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public variables
 				//----------------------------------------------------------------------------------
-
+				static  INT  STATIC_COMPONENT_ID;
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -88,9 +88,18 @@ namespace  D3D11Utility
 				{
 						return  DirectX::XMLoadFloat4x4( &m_view );
 				}
+				INT  GetStaticId()const
+				{
+						return  STATIC_COMPONENT_ID;
+				}
 				void  HandleMessage( const  GameUtility::Message&  msg );
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
 				void  SetPosition( Vector3  eyePosition );
+				void  SetStaticId( const  UINT  id )
+				{
+						if ( STATIC_COMPONENT_ID == -1 )
+								STATIC_COMPONENT_ID = ( int ) id;
+				}
 				void  SetTarget( Vector3  focusPosition );
 				void  SetUp( Vector3  upDirection );
 				void  Update();

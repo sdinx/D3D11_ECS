@@ -25,7 +25,7 @@ namespace  D3D11Utility
 		struct  EntityId;
 
 
-		class  Component  abstract
+		class  Component
 		{
 
 		public:
@@ -34,7 +34,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				Component()
 				{}
-
+				virtual  ~Component()
+				{}
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -42,28 +43,29 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				const  EntityId*  m_parentsEntityId;
 
-
 		public:
 				//----------------------------------------------------------------------------------
 				// public  variables
 				//----------------------------------------------------------------------------------
-
+				/* NOTHING */
 
 		private:
 				//----------------------------------------------------------------------------------
 				// private  methods
 				//----------------------------------------------------------------------------------
-
+				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------
 				// public  methods
 				//----------------------------------------------------------------------------------
 				template<typename  T>
-				inline  T*  GetComponent()
+				inline  T*  GetComponent()const
 				{
-						ComponentManager::GetComponent( m_parentsEntityId, T::STATIC_COMPONENT_ID );
+						ComponentManager::GetComponent( *m_parentsEntityId, T::STATIC_COMPONENT_ID );
 				}
+				virtual  INT  GetStaticId()const = 0;
+				virtual  void  SetStaticId( const  UINT  id ) = 0;
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
 				virtual  void  Update() = 0;

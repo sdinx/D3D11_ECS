@@ -5,6 +5,7 @@
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <DirectXMath.h>
 
+
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
@@ -14,8 +15,9 @@ using  namespace  DirectX;
 
 
 //----------------------------------------------------------------------------------
-// using  namespace
+// static variables
 //----------------------------------------------------------------------------------
+INT  Renderable::STATIC_COMPONENT_ID = -1;
 std::unique_ptr<CONSTANTBUFFER>  Renderable::s_pCBuffer = nullptr;
 
 

@@ -9,8 +9,8 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Component.h>
 #include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\IEntity.h>
 #include  <D3D11Utility\System\EntityManager.h>
 #include  <string>
 
@@ -18,51 +18,16 @@
 namespace  D3D11Utility
 {
 
-		struct  EntityId
+		class  Entity :public  IEntity
 		{
-				const  unsigned  entityId;
-
-				EntityId( const  unsigned  id ) :
-						entityId( id )
-				{}
-
-				inline  bool  operator==( EntityId  id )const
-				{
-						return  ( entityId == id.entityId ) ? true : false;
-				}
-				inline  bool  operator!=( EntityId  id )const
-				{
-						return  ( entityId != id.entityId ) ? true : false;
-				}
-				inline  bool  operator<( EntityId  id )const
-				{
-						return  ( entityId < id.entityId ) ? true : false;
-				}
-				inline  bool  operator>( EntityId  id )const
-				{
-						return  ( entityId > id.entityId ) ? true : false;
-				}
-				inline  bool  operator<=( EntityId  id )const
-				{
-						return  ( entityId <= id.entityId ) ? true : false;
-				}
-				inline  bool  operator>=( EntityId  id )const
-				{
-						return  ( entityId >= id.entityId ) ? true : false;
-				}
-		};
-
-		class  Entity
-		{
-				// TODO: GetComponent()ÇçlÇ¶ÇÈ
 				// TODO: AddComponent()èëÇ±Ç§Ç∫
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				Entity();
-				Entity( std::string  name );
-				~Entity();
+				Entity() = delete;
+				Entity( std::string  name, const  UINT  id );
+				virtual  ~Entity();
 
 
 		private:
@@ -97,10 +62,6 @@ namespace  D3D11Utility
 				{
 						return  m_isActive;
 				}
-				inline  const  EntityId  GetEntityId()const
-				{ 
-						return  0;
-				}
 				inline  ComponentIdList  GetRegisterComponentList()
 				{
 						return  m_registerList;
@@ -117,9 +78,6 @@ namespace  D3D11Utility
 				{
 						m_tag = tag; 
 				}
-
-				void  AddComponent( Component*  component );
-				template<typename  T>  T  GetComponent()const;
 				void  Release();
 
 
