@@ -42,7 +42,6 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
-				static  INT  STATIC_COMPONENT_ID;
 				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
 
 				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer = nullptr;
@@ -57,6 +56,11 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				Matrix4x4  m_localWorld;
 
+		public:
+				//----------------------------------------------------------------------------------
+				// public variables
+				//----------------------------------------------------------------------------------
+				static  INT  STATIC_COMPONENT_ID;// TODO: private Ç≈çÏÇËíºÇ∑
 
 		private:
 				//----------------------------------------------------------------------------------
