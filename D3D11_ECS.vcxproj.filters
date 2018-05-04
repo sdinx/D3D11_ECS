@@ -13,9 +13,6 @@
     <Filter Include="Source\D3D11Utility\Graphics">
       <UniqueIdentifier>{85d06e3c-2d6f-4fda-8d0f-7f10c2630ba4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\D3D11Utility\System">
-      <UniqueIdentifier>{df73bcb4-e66f-4b5a-b7b2-68c0776c0411}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header\D3D11Utility">
       <UniqueIdentifier>{bc9f62d6-1cfa-4b65-890f-b7a2d72671b4}</UniqueIdentifier>
     </Filter>
@@ -24,6 +21,9 @@
     </Filter>
     <Filter Include="Header\D3D11Utility\System">
       <UniqueIdentifier>{15f0c91b-6af5-485e-a0cf-9c7028fc4cf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\D3D11Utility\System">
+      <UniqueIdentifier>{df73bcb4-e66f-4b5a-b7b2-68c0776c0411}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +144,9 @@
       <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\IEntity.h">
+      <Filter>Header\D3D11Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Interface.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
   </ItemGroup>

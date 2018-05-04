@@ -8,12 +8,17 @@
 
 #include  <D3D11Utility\Entity.h>
 #include  <D3D11Utility\System\ComponentManager.h>
+#include  <D3D11Utility\System\EntityManager.h>
 using namespace D3D11Utility;
+
+
 void  GameUtility::GameLoop()
 {
-		static  const  EntityId  entityId = EntityManager::CreateEntity( "TestEntity" );
-		static  const  EntityId  entityId2 = EntityManager::CreateEntity( "Test2Entity" );
-		static  Entity*  entity = EntityManager::GetEntity( entityId );
+		static  ComponentManager  componentManager;
+		static  EntityManager  entityManager( &componentManager );
+		static  const  EntityId  entityId = entityManager.CreateEntity( "TestEntity" );
+		static  const  EntityId  entityId2 = entityManager.CreateEntity( "Test2Entity" );
+		static  Entity*  entity = entityManager.GetEntity( entityId );
 		static  D3D11Utility::IDirect3DRenderer  pd3dRenderer;
 		static  BOOL  isInit = true;
 		if ( isInit ) 
@@ -22,9 +27,10 @@ void  GameUtility::GameLoop()
 				D3D11Utility::Renderable::SetConstantBuffer();
 
 				entity->SetTag( "entity" );
-				//entity->AddComponent<Camera>( &camera );
-				//Camera*  cam = entity->GetComponent<Camera>();
-				ComponentManager::GetComponent<Camera>( entityId, Camera::STATIC_COMPONENT_ID );
+				Camera*  camera = new  Camera;
+				entity->AddComponent( camera );
+				Camera*  cam = entity->GetComponent<Camera>();
+				Renderable*  asd = entity->GetComponent<Renderable>();
 				isInit = false;
 		}
 

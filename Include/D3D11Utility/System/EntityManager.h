@@ -9,6 +9,7 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
+#include  <D3D11Utility\Interface.h>
 #include  <list>
 #include  <vector>
 
@@ -36,7 +37,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				EntityManager()
+				EntityManager() = delete;
+				EntityManager( ComponentManager*  pComponentManagerInstance ) :
+						m_pComponentManager( pComponentManagerInstance )
 				{}
 				~EntityManager()
 				{}
@@ -46,8 +49,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
-				static  EntityList  m_entityList;
-
+				EntityList  m_entityList;
+				ComponentManager*  m_pComponentManager = nullptr;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -59,16 +62,15 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  methods
 				//----------------------------------------------------------------------------------
-				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------
 				// public  methods
 				//----------------------------------------------------------------------------------
-				static  const  EntityId  CreateEntity( std::string  name );
-				static  const  EntityId  GetEntityId( const  Entity&  entity );
-				static  Entity*  GetEntity( const  EntityId  entityId );
-				static  void  ReleaseEntity( Entity*  entity );
+				const  EntityId  CreateEntity( std::string  name );
+				const  EntityId  GetEntityId( const  Entity&  entity );
+				Entity*  GetEntity( const  EntityId  entityId );
+				void  ReleaseEntity( Entity*  entity );
 
 		};
 

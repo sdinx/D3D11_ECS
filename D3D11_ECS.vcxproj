@@ -46,6 +46,7 @@
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexBuffer.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h" />
     <ClInclude Include="Include\D3D11Utility\IEntity.h" />
+    <ClInclude Include="Include\D3D11Utility\Interface.h" />
     <ClInclude Include="Include\D3D11Utility\Object.h" />
     <ClInclude Include="Include\D3D11Utility\Renderable.h" />
     <ClInclude Include="Include\D3D11Utility\Scene.h" />
