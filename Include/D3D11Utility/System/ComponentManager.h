@@ -69,10 +69,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				//----------------------------------------------------------------------------------
-				// func: AddComponent(const  EntityId, const  T*) : void
-				// 始めてテーブルに登録されるコンポーネントの場合,
-				// リストの末尾にIDを追加.
-				// TODO: 予め全コンポーネントに固有IDを割り振ると高速化できるかも
+				// func: AddComponent( const  EntityId,  P&&... ) : void, template<T, P>
+				// brief: 始めてテーブルに登録されるコンポーネントの場合, リストの末尾にIDを追加.
+				// param: (param) 追加するコンポーネントのコンストラクタ引数を指定.
+				// note: 予め全コンポーネントに固有IDを割り振ると高速化できるかも.
 				//----------------------------------------------------------------------------------
 				template<class  T, typename  ...P>
 				void  AddComponent( const  EntityId  entityId, P&&... param )
@@ -90,9 +90,8 @@ namespace  D3D11Utility
 				}// end AddComponent(const EntityId, T*) : void
 
 				//----------------------------------------------------------------------------------
-				// func: GetComponent(const EntityId&, const UINT) : T*
-				// コンポーネントの存在を判定しているが, 
-				// TODO: 速度向上の為, Releaseでは比較しないかも.
+				// func: GetComponent( const EntityId& ) : T*
+				// note: 速度向上の為, Releaseでは存在確認しないかも.
 				//----------------------------------------------------------------------------------
 				template<class  T>
 				T*  GetComponent( const  EntityId  entityId )
