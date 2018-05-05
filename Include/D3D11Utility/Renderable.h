@@ -86,7 +86,7 @@ namespace  D3D11Utility
 				void  Rendering()const;
 				void  SetStaticId( const  UINT  id )
 				{
-						if ( STATIC_COMPONENT_ID == -1 )
+						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
 								STATIC_COMPONENT_ID = ( int ) id;
 				}
 				void  Update()

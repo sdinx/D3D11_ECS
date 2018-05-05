@@ -100,12 +100,12 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				template<typename  T>
-				void  AddComponent( T*  component )
+				template<class  T, typename  ...P>
+				void  AddComponent( P&&...  param )
 				{
-						m_pComponentManager->AddComponent( m_entityId, component );
+						m_pComponentManager->AddComponent<T>( m_entityId, std::forward<P>( param )... );
 				}
-				template<typename  T>
+				template<class  T>
 				T*  GetComponent()const
 				{
 						return  m_pComponentManager->GetComponent<T>( m_entityId );

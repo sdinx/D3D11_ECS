@@ -74,18 +74,18 @@ namespace  D3D11Utility
 				// リストの末尾にIDを追加.
 				// TODO: 予め全コンポーネントに固有IDを割り振ると高速化できるかも
 				//----------------------------------------------------------------------------------
-				template<typename  T>
-				void  AddComponent( const  EntityId  entityId, T*  component )
+				template<class  T, typename  ...P>
+				void  AddComponent( const  EntityId  entityId, P&&... param )
 				{
 						// 初登録コンポーネントにstatic_idを割り当て
-						if ( STATIC_ID_INVALID == component->GetStaticId() )
+						if ( STATIC_ID_INVALID == T::STATIC_COMPONENT_ID )
 						{
-								component->SetStaticId( m_componentIdList.size() );
-								m_componentIdList.push_back( component->GetStaticId() );
+								T::STATIC_COMPONENT_ID = m_componentIdList.size();
+								m_componentIdList.push_back( T::STATIC_COMPONENT_ID );
 						}
 
 						// コンポーネントの追加
-						m_componentTable[entityId.entityId].push_back( new  T( *component ) );
+						m_componentTable[entityId.entityId].push_back( new  T( std::forward<P>( param )... ) );
 
 				}// end AddComponent(const EntityId, T*) : void
 
@@ -94,7 +94,7 @@ namespace  D3D11Utility
 				// コンポーネントの存在を判定しているが, 
 				// TODO: 速度向上の為, Releaseでは比較しないかも.
 				//----------------------------------------------------------------------------------
-				template<typename  T>
+				template<class  T>
 				T*  GetComponent( const  EntityId  entityId )
 				{
 						UINT  componentType = ( UINT ) T::STATIC_COMPONENT_ID;
