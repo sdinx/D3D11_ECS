@@ -97,7 +97,7 @@ namespace  D3D11Utility
 				void  SetPosition( Vector3  eyePosition );
 				void  SetStaticId( const  UINT  id )
 				{
-						if ( STATIC_COMPONENT_ID == -1 )
+						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
 								STATIC_COMPONENT_ID = ( int ) id;
 				}
 				void  SetTarget( Vector3  focusPosition );

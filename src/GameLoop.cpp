@@ -28,7 +28,9 @@ void  GameUtility::GameLoop()
 
 				entity->SetTag( "entity" );
 				Camera*  camera = new  Camera;
-				entity->AddComponent( camera );
+				Renderable*  ren = new  Renderable( PRIMITIVE_TYPE::PT_PLANE );
+				entity->AddComponent<Camera>();
+				entity->AddComponent<Renderable>( PT_PLANE );
 				Camera*  cam = entity->GetComponent<Camera>();
 				Renderable*  asd = entity->GetComponent<Renderable>();
 				isInit = false;
