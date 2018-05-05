@@ -84,6 +84,6 @@ void  VertexBuffer::BindBuffer()
 
 void  VertexBuffer::Release()
 {
-		SAFE_RELEASE( m_pVertexBuffer );
-		SAFE_DELETEARRAY( m_pVertices );
+		SafeRelease( m_pVertexBuffer );
+		SafeDeleteArray( m_pVertices );
 }

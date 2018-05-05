@@ -51,7 +51,7 @@ HRESULT  PixelShader::CreatePixelShader( LPCWSTR  szFileName )
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<PixelShader> FAILED CreatePixelShader \n" ) );
-				SAFE_RELEASE( pPSBlob );
+				SafeRelease( pPSBlob );
 				return  hr;
 		}
 
@@ -68,5 +68,5 @@ void  PixelShader::UpdateShader()
 
 void  PixelShader::Release()
 {
-		SAFE_RELEASE( m_pPixelShader );
+		SafeRelease( m_pPixelShader );
 }

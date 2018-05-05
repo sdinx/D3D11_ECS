@@ -66,7 +66,7 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 		}
 
 
-		SAFE_RELEASE( pErrorBlob );
+		SafeRelease( pErrorBlob );
 
 
 		return  hr;

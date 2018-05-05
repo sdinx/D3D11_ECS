@@ -51,7 +51,7 @@ HRESULT  GeometryShader::CreateGeometryShader( LPCWSTR  szFileName )
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<GeometryShader> FAILED CreateGeometryShader \n" ) );
-				SAFE_RELEASE( pGSBlob );
+				SafeRelease( pGSBlob );
 				return  hr;
 		}
 
@@ -68,5 +68,5 @@ void  GeometryShader::UpdateShader()
 
 void  GeometryShader::Release()
 {
-		SAFE_RELEASE( m_pGeometryShader );
+		SafeRelease( m_pGeometryShader );
 }

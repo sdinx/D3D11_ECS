@@ -51,14 +51,14 @@ HRESULT  VertexShader::CreateVertexShader( LPCWSTR  szFileName )
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<VertexShader> FAILED CreateVertexShader \n" ) );
-				SAFE_RELEASE( pVSBlob );
+				SafeRelease( pVSBlob );
 				return  hr;
 		}
 
 
 		// 入力レイアウト生成
 		hr = CreateInputLayout( pVSBlob );
-		SAFE_RELEASE( pVSBlob );
+		SafeRelease( pVSBlob );
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<VertexShader> FAILED CreateInputLayout \n" ) );
@@ -99,6 +99,6 @@ void  VertexShader::UpdateShader()
 
 void  VertexShader::Release()
 {
-		SAFE_RELEASE( m_pVertexShader );
-		SAFE_RELEASE( m_pInputLayout );
+		SafeRelease( m_pVertexShader );
+		SafeRelease( m_pInputLayout );
 }

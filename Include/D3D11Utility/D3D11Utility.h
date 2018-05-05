@@ -9,9 +9,6 @@
 //----------------------------------------------------------------------------------
 // defines
 //----------------------------------------------------------------------------------
-#define  SAFE_RELEASE(p)  { if(p != nullptr) { p->Release(); p = nullptr; } }
-#define  SAFE_DELETE(p)  { if(p != NULL) { delete p; p = nullptr; } }
-#define  SAFE_DELETEARRAY(p)  { if(p != NULL) { delete[] p; p = nullptr; } }
 #define  _CRTDBG_MAP_ALLOC 
 
 //----------------------------------------------------------------------------------
@@ -33,6 +30,35 @@
 
 namespace  D3D11Utility
 {
+
+		//----------------------------------------------------------------------------------
+		// lambda
+		//----------------------------------------------------------------------------------
+		static  auto  SafeRelease = [ ]( auto  p ) 
+		{ 
+				if ( p != nullptr )
+				{
+						p->Release();
+						p = nullptr;
+				}
+		};
+		static  auto  SafeDelete = [ ]( auto  p ) 
+		{ 
+				if ( p != nullptr )
+				{
+						delete p;
+						p = nullptr;
+				}
+		};
+		static  auto  SafeDeleteArray = [ ]( auto  p ) 
+		{
+				if ( p != nullptr ) 
+				{
+						delete[ ] p; 
+						p = nullptr;
+				} 
+		};
+
 		//----------------------------------------------------------------------------------
 		// type defined
 		//----------------------------------------------------------------------------------
@@ -60,7 +86,7 @@ namespace  D3D11Utility
 				{}
 				~CONSTANTBUFFER()
 				{
-						SAFE_RELEASE( pCB );
+						SafeRelease( pCB );
 				}
 		};// struct CONSTANTBUFFER
 
@@ -94,8 +120,8 @@ namespace  D3D11Utility
 		HRESULT  CreateConstantBuffer(ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth);
 		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
-		//ID3D11Device*  GetD3DDevice();
-		//ID3D11DeviceContext*  GetD3DDeviceContext();
+		// ID3D11Device*  GetD3DDevice();
+		// ID3D11DeviceContext*  GetD3DDeviceContext();
 
 } // namespace  D3D11Utility
 

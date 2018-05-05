@@ -391,11 +391,11 @@ VOID  IDirect3D::Release()
 
 
 		// スワップチェインを解放
-		SAFE_RELEASE( m_pSwapChain );
+		SafeRelease( m_pSwapChain );
 		// デバイスコンテキストを解放
-		SAFE_RELEASE( m_pd3dDeviceContext );
+		SafeRelease( m_pd3dDeviceContext );
 		// デバイスを解放
-		SAFE_RELEASE( m_pd3dDevice );
+		SafeRelease( m_pd3dDevice );
 
 
 		ReleaseScreen();
@@ -411,15 +411,15 @@ VOID  IDirect3D::ReleaseScreen()
 
 VOID  IDirect3D::ReleaseDefaultRenderTarget()
 {
-		SAFE_RELEASE( m_pRTShaderResourceView );
-		SAFE_RELEASE( m_pRTView );
-		SAFE_RELEASE( m_pRTTexture );
+		SafeRelease( m_pRTShaderResourceView );
+		SafeRelease( m_pRTView );
+		SafeRelease( m_pRTTexture );
 }// end ReleaseDefaultRenderTarget()
 
 
 VOID  IDirect3D::ReleaseDefaultDepthStencil()
 {
-		SAFE_RELEASE( m_pDSShaderResourceView );
-		SAFE_RELEASE( m_pDSView );
-		SAFE_RELEASE( m_pDSTexture );
+		SafeRelease( m_pDSShaderResourceView );
+		SafeRelease( m_pDSView );
+		SafeRelease( m_pDSTexture );
 }// end ReleaseDefaultDepthStencil()
