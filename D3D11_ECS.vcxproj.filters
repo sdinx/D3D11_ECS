@@ -149,5 +149,8 @@
     <ClInclude Include="Include\D3D11Utility\Interface.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\System\Timer.h">
+      <Filter>Header\D3D11Utility\System</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

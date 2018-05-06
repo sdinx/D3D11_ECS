@@ -56,6 +56,7 @@
     <ClInclude Include="Include\D3D11Utility\System\IDirect3D.h" />
     <ClInclude Include="Include\D3D11Utility\System\IDirect3DRenderer.h" />
     <ClInclude Include="Include\D3D11Utility\System\RenderManager.h" />
+    <ClInclude Include="Include\D3D11Utility\System\Timer.h" />
     <ClInclude Include="Include\D3D11Utility\Transform.h" />
     <ClInclude Include="Include\GameUtility.h" />
     <ClInclude Include="Include\IGraphicsRenderer.h" />

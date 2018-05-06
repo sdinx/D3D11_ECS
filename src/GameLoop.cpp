@@ -14,12 +14,13 @@ using namespace D3D11Utility;
 
 void  GameUtility::GameLoop()
 {
+		static  D3D11Utility::IDirect3DRenderer  pd3dRenderer;
 		static  ComponentManager  componentManager;
 		static  EntityManager  entityManager( &componentManager );
+
 		static  const  EntityId  entityId = entityManager.CreateEntity( "TestEntity" );
 		static  const  EntityId  entityId2 = entityManager.CreateEntity( "Test2Entity" );
 		static  Entity*  entity = entityManager.GetEntity( entityId );
-		static  D3D11Utility::IDirect3DRenderer  pd3dRenderer;
 		static  BOOL  isInit = true;
 		if ( isInit ) 
 		{

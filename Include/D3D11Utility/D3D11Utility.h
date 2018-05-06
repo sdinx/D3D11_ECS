@@ -34,29 +34,29 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 		// lambda
 		//----------------------------------------------------------------------------------
-		static  auto  SafeRelease = [ ]( auto  p ) 
-		{ 
+		static  auto  SafeRelease = [ ]( auto  p )
+		{
 				if ( p != nullptr )
 				{
 						p->Release();
 						p = nullptr;
 				}
 		};
-		static  auto  SafeDelete = [ ]( auto  p ) 
-		{ 
+		static  auto  SafeDelete = [ ]( auto  p )
+		{
 				if ( p != nullptr )
 				{
 						delete p;
 						p = nullptr;
 				}
 		};
-		static  auto  SafeDeleteArray = [ ]( auto  p ) 
+		static  auto  SafeDeleteArray = [ ]( auto  p )
 		{
-				if ( p != nullptr ) 
+				if ( p != nullptr )
 				{
-						delete[ ] p; 
+						delete[ ] p;
 						p = nullptr;
-				} 
+				}
 		};
 
 		//----------------------------------------------------------------------------------
@@ -69,7 +69,6 @@ namespace  D3D11Utility
 		using  Matrix4x4 = DirectX::XMFLOAT4X4;
 		using  Value = void*;
 
-
 		//----------------------------------------------------------------------------------
 		// struct
 		//----------------------------------------------------------------------------------
@@ -77,7 +76,6 @@ namespace  D3D11Utility
 		{
 				Vector3  position;
 		};// struct VERTEX
-
 		struct  CONSTANTBUFFER
 		{
 				ID3D11Buffer*  pCB;
