@@ -2,7 +2,7 @@
 // Includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
-#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\Systems\IDirect3D.h>
 #include  <string>
 
 
@@ -111,7 +111,7 @@ void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext* 
 
 FLOAT  D3D11Utility::GetAspectRatio()
 {
-		auto  d3d11 = _Singleton<IDirect3D>::GetInstance();
+		auto  d3d11 = _Singleton<Systems::IDirect3D>::GetInstance();
 
 		POINT  screen = d3d11->GetScreenSize();
 

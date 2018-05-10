@@ -3,13 +3,13 @@
 
 
 #include  <d3d11.h>
-#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\Systems\IDirect3D.h>
 #include  <D3D11Utility\D3D11Utility.h>
 
 
 INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCmdLine, INT  nCmdShow )
 {
-		auto  d3d11 = _Singleton<D3D11Utility::IDirect3D>::GetInstance();
+		auto  d3d11 = _Singleton<D3D11Utility::Systems::IDirect3D>::GetInstance();
 
 
 		if ( FAILED( d3d11->CreateScreen( D3D11Utility::SCREEN_WIDTH, D3D11Utility::SCREEN_HEIGHT, hInstance ) ) )

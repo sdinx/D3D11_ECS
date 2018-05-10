@@ -38,6 +38,7 @@ namespace  GameUtility
 		//----------------------------------------------------------------------------------
 		// functions
 		//----------------------------------------------------------------------------------
+		void  GameInit();
 		void  GameLoop();
 		template<typename  T>T  Random( T  min, T  max );
 

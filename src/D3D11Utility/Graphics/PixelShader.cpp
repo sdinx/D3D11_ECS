@@ -3,7 +3,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
-#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\Systems\IDirect3D.h>
 
 //----------------------------------------------------------------------------------
 // Defines

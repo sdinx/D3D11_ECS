@@ -23,8 +23,10 @@ namespace  D3D11Utility
 		struct  EntityId
 		{
 
-				const  unsigned  entityId;
+				unsigned  entityId;
 
+				EntityId()
+				{}
 				EntityId( const  unsigned  id ) :
 						entityId( id )
 				{}
@@ -63,20 +65,21 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
+
 				IEntity() = delete;
-				IEntity( const  unsigned  id, ComponentManager*  pComponentManagerInstance ) :
+				IEntity( const  unsigned  id, Systems::ComponentManager*  pComponentManagerInstance ) :
 						m_entityId( id ),
 						m_pComponentManager( pComponentManagerInstance )
 				{}
 				virtual  ~IEntity()
 				{}
 
-
 		private:
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
-				ComponentManager*  m_pComponentManager;
+
+				Systems::ComponentManager*  m_pComponentManager;
 
 		protected:
 				//----------------------------------------------------------------------------------
@@ -100,6 +103,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
+
 				template<class  T, typename  ...P>
 				void  AddComponent( P&&...  param )
 				{

@@ -19,11 +19,11 @@
     <Filter Include="Header\D3D11Utility\Graphics">
       <UniqueIdentifier>{d77f2c72-9ee4-4c36-bb2e-c36e7d251aa1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header\D3D11Utility\System">
-      <UniqueIdentifier>{15f0c91b-6af5-485e-a0cf-9c7028fc4cf0}</UniqueIdentifier>
+    <Filter Include="Header\D3D11Utility\Systems">
+      <UniqueIdentifier>{5d6f3f0b-44ed-45c9-877f-bef3fe7ab01a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\D3D11Utility\System">
-      <UniqueIdentifier>{df73bcb4-e66f-4b5a-b7b2-68c0776c0411}</UniqueIdentifier>
+    <Filter Include="Source\D3D11Utility\Systems">
+      <UniqueIdentifier>{06320cf2-0271-4ecb-ace9-e19d5ee8f20f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -32,12 +32,6 @@
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp">
       <Filter>Source\D3D11Utility\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\System\IDirect3D.cpp">
-      <Filter>Source\D3D11Utility\System</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\System\IDirect3DRenderer.cpp">
-      <Filter>Source\D3D11Utility\System</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Entity.cpp">
       <Filter>Source\D3D11Utility</Filter>
@@ -69,11 +63,17 @@
     <ClCompile Include="src\D3D11Utility\Graphics\GeometryShader.cpp">
       <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D11Utility\System\ComponentManager.cpp">
-      <Filter>Source\D3D11Utility\System</Filter>
+    <ClCompile Include="src\D3D11Utility\Systems\ComponentManager.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D11Utility\System\EntityManager.cpp">
-      <Filter>Source\D3D11Utility\System</Filter>
+    <ClCompile Include="src\D3D11Utility\Systems\EntityManager.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,21 +94,6 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\ComponentManager.h">
-      <Filter>Header\D3D11Utility\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\EntityManager.h">
-      <Filter>Header\D3D11Utility\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\IDirect3D.h">
-      <Filter>Header\D3D11Utility\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\IDirect3DRenderer.h">
-      <Filter>Header\D3D11Utility\System</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\RenderManager.h">
-      <Filter>Header\D3D11Utility\System</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Entity.h">
       <Filter>Header\D3D11Utility</Filter>
@@ -134,9 +119,6 @@
     <ClInclude Include="Include\D3D11Utility\D3D11Utility.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\CameraManager.h">
-      <Filter>Header\D3D11Utility\System</Filter>
-    </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
@@ -149,8 +131,26 @@
     <ClInclude Include="Include\D3D11Utility\Interface.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\System\Timer.h">
-      <Filter>Header\D3D11Utility\System</Filter>
+    <ClInclude Include="Include\D3D11Utility\IComponent.h">
+      <Filter>Header\D3D11Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\ComponentManager.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\EntityManager.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\IDirect3DRenderer.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\IDirect3D.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\Timer.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
-#include  <D3D11Utility\System\ComponentManager.h>
+#include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <string>
 
 
@@ -24,8 +24,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
+
 				Entity() = delete;
-				Entity( std::string  name, UINT  id, ComponentManager*  pComponentManagerInstance );
+				Entity( std::string  name, UINT  id, Systems::ComponentManager*  pComponentManagerInstance );
 				virtual  ~Entity();
 
 
@@ -33,6 +34,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
+
 				BOOL  m_isActive;
 				std::string  m_tag;
 				ComponentIdList  m_registerList;
@@ -53,6 +55,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
+
 				inline  BOOL  CompareTag( std::string  tag )const 
 				{
 						return  ( m_tag == tag ) ? true : false; 
@@ -84,6 +87,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// operator
 				//----------------------------------------------------------------------------------
+
 				inline  BOOL  operator==( BOOL  isActive ) const 
 				{
 						return  ( m_isActive == isActive ) ? true : false;
