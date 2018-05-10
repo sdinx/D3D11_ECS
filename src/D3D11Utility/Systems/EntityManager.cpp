@@ -1,14 +1,15 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\System\ComponentManager.h>
+#include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Entity.h>
-#include  <D3D11Utility\System\EntityManager.h>
+#include  <D3D11Utility\Systems\EntityManager.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
 using  namespace  D3D11Utility;
+using  namespace  D3D11Utility::Systems;
 
 
 const  EntityId  EntityManager::CreateEntity( std::string  name )
@@ -27,7 +28,14 @@ Entity*  EntityManager::GetEntity( const  EntityId  entityId )
 }// end GetEntity(const EntityId&) : Entity*
 
 
-void  ReleaseEntity( Entity*  entity )
+void  EntityManager::ReleaseEntity( Entity*  entity )
 {
 
 }// end ReleaseEntity(Entity*)
+
+
+void  EntityManager::Release()
+{
+		m_entityList.clear();
+		m_entityList.shrink_to_fit();
+}// end Release()

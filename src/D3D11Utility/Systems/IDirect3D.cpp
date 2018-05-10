@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\System\IDirect3D.h>
+#include  <D3D11Utility\Systems\IDirect3D.h>
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Renderable.h>
 #include  <GameUtility.h>
@@ -9,7 +9,7 @@
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
-using  namespace  D3D11Utility;
+using  namespace  D3D11Utility::Systems;
 
 
 IDirect3D::IDirect3D()
@@ -45,7 +45,6 @@ HRESULT  IDirect3D::CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE
 		m_nScreenHeight = screenHeight;
 		m_hInstance = hInstance;
 
-
 		WNDCLASSEX  wincEx = {
 				sizeof( WNDCLASSEX ), CS_CLASSDC,
 				WndProc, 0U, 0U, m_hInstance,
@@ -56,7 +55,6 @@ HRESULT  IDirect3D::CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE
 		};
 		if ( !RegisterClassEx( &wincEx ) ) { return E_FAIL; }
 
-
 		m_hWnd = CreateWindow(
 				m_szWindowClass, m_szWindowClass,
 				WS_OVERLAPPEDWINDOW,
@@ -64,9 +62,7 @@ HRESULT  IDirect3D::CreateScreen( INT  screenWidth, INT  screenHeight, HINSTANCE
 				NULL, NULL, wincEx.hInstance, NULL
 		);
 
-
 		SetWindow( m_nScreenWidth, m_nScreenHeight );
-
 
 		return  S_OK;
 }// end CreateScreen(INT, INT, HINSTANCE)
@@ -82,12 +78,10 @@ HRESULT  IDirect3D::CreateDevice()
 		INT  width = rc.right - rc.left;
 		INT  height = rc.bottom - rc.top;
 
-
 		UINT  createDeviceFlags = NULL;
 #if  defined(DEBUG)||defined(_DEBUG)
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif //  defined(DEBUG)||defined(_DEBUG)
-
 
 		// ドライバータイプ
 		D3D_DRIVER_TYPE  driverTypes[ ] = {
@@ -97,7 +91,6 @@ HRESULT  IDirect3D::CreateDevice()
 		};
 		UINT  numDriverTypes = ARRAYSIZE( driverTypes );
 
-
 		// 機能レベル
 		D3D_FEATURE_LEVEL  featureLevels[ ] = {
 				D3D_FEATURE_LEVEL_11_0,
@@ -105,7 +98,6 @@ HRESULT  IDirect3D::CreateDevice()
 				D3D_FEATURE_LEVEL_10_0,
 		};
 		UINT  numFeatureLevels = ARRAYSIZE( featureLevels );
-
 
 		// スワップチェインの設定
 		DXGI_SWAP_CHAIN_DESC  sd;
@@ -121,7 +113,6 @@ HRESULT  IDirect3D::CreateDevice()
 		sd.SampleDesc.Count = m_nMultiSampleCount;
 		sd.SampleDesc.Quality = m_nMultiSampleQuality;
 		sd.Windowed = TRUE;
-
 
 		// デバイスとスワップチェインの作成
 		for ( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
@@ -147,28 +138,23 @@ HRESULT  IDirect3D::CreateDevice()
 		if ( FAILED( hr ) )
 				return hr;
 
-
 		// バックバッファ取得
 		hr = m_pSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* ) &m_pRTTexture );
 		if ( FAILED( hr ) )
 				return hr;
-
 
 		// レンダーターゲットビューを生成
 		hr = m_pd3dDevice->CreateRenderTargetView( m_pRTTexture, NULL, &m_pRTView );
 		if ( FAILED( hr ) )
 				return hr;
 
-
 		// レンダーターゲットのシェーダリソースビューを生成
 		hr = m_pd3dDevice->CreateShaderResourceView( m_pRTTexture, NULL, &m_pRTShaderResourceView );
 		if ( FAILED( hr ) )
 				return  hr;
 
-
 		// デバイスコンテキストにレンダーターゲットを設定
 		m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
-
 
 		// ピューポートの設定
 		D3D11_VIEWPORT  vp;
@@ -179,10 +165,8 @@ HRESULT  IDirect3D::CreateDevice()
 		vp.TopLeftX = 0;
 		vp.TopLeftY = 0;
 
-
 		// デバイスコンテキストにビューポートを設定
 		m_pd3dDeviceContext->RSSetViewports( 1, &vp );
-
 
 		return  S_OK;
 
@@ -195,7 +179,6 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 
 		DXGI_FORMAT  textureFormat = m_depthStencilFormat;
 		DXGI_FORMAT  resourceFormat = m_depthStencilFormat;
-
 
 		// テクスチャとシェーダリソースビューのフォーマットを適切なものに変更
 		switch ( m_depthStencilFormat )
@@ -229,7 +212,6 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 				break;
 		}
 
-
 		// 深度ステンシルテクスチャの生成
 		D3D11_TEXTURE2D_DESC  td;
 		ZeroMemory( &td, sizeof( D3D11_TEXTURE2D_DESC ) );
@@ -245,12 +227,10 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 		td.CPUAccessFlags = 0;
 		td.MiscFlags = 0;
 
-
 		// 震度ステンシルテクスチャの生成
 		hr = m_pd3dDevice->CreateTexture2D( &td, NULL, &m_pDSTexture );
 		if ( FAILED( hr ) )
 				return  E_FAIL;
-
 
 		// 深度ステンシルビューの設定
 		D3D11_DEPTH_STENCIL_VIEW_DESC  dsvd;
@@ -266,18 +246,15 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 				dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 		}
 
-
 		// 深度ステンシルビューの生成
 		hr = m_pd3dDevice->CreateDepthStencilView( m_pDSTexture, &dsvd, &m_pDSView );
 		if ( FAILED( hr ) )
 				return  E_FAIL;
 
-
 		// シェーダリソースビューの設定
 		D3D11_SHADER_RESOURCE_VIEW_DESC  srvd;
 		ZeroMemory( &srvd, sizeof( D3D11_SHADER_RESOURCE_VIEW_DESC ) );
 		srvd.Format = resourceFormat;
-
 
 		if ( m_nMultiSampleCount == 0 )
 		{
@@ -290,12 +267,10 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 				srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		}
 
-
 		// シェーダリソースビューの生成
 		hr = m_pd3dDevice->CreateShaderResourceView( m_pDSTexture, &srvd, &m_pDSShaderResourceView );
 		if ( FAILED( hr ) )
 				return  E_FAIL;
-
 
 		return  S_OK;
 }// end CreateDefaultDepthStencil()
@@ -305,11 +280,10 @@ VOID  IDirect3D::MainLoop()
 {
 		// デバイスのポインタを名前空間のグローバル変数へ保持させる
 		D3D11Utility::SetD3DDevices( m_pd3dDevice, m_pd3dDeviceContext );
-
+		GameUtility::GameInit();
 
 		MSG msg;
 		ZeroMemory( &msg, sizeof( msg ) );
-
 
 		while ( msg.message != WM_QUIT )
 		{
@@ -318,13 +292,13 @@ VOID  IDirect3D::MainLoop()
 				{
 						TranslateMessage( &msg );
 						DispatchMessage( &msg );
-				}
+				}// end if
 				else
 				{
 						GameUtility::GameLoop();
-				}
+				}// end else
 
-		}
+		}// end while
 
 }// end MainLoop()
 
@@ -334,16 +308,13 @@ VOID  IDirect3D::SetWindow( INT  screenWidth, INT  screenHeight )
 		m_nScreenWidth = screenWidth;
 		m_nScreenHeight = screenHeight;
 
-
 		RECT rcWin, rcClt;
 		// ウィンドウサイズを再計算（Metricsだけでは、フレームデザインでクライアント領域サイズが変わってしまうので）
 		GetWindowRect( m_hWnd, &rcWin );
 		GetClientRect( m_hWnd, &rcClt );
 
-
 		int width = ( rcWin.right - rcWin.left ) - ( rcClt.right - rcClt.left ) + m_nScreenWidth;
 		int height = ( rcWin.bottom - rcWin.top ) - ( rcClt.bottom - rcClt.top ) + m_nScreenHeight;
-
 
 		SetWindowPos(
 				m_hWnd, NULL,
@@ -351,7 +322,6 @@ VOID  IDirect3D::SetWindow( INT  screenWidth, INT  screenHeight )
 				GetSystemMetrics( SM_CYSCREEN ) / 2 - height / 2,
 				width - 1, height - 1,
 				SWP_NOZORDER );
-
 
 		ShowWindow( m_hWnd, SW_SHOWDEFAULT );
 		UpdateWindow( m_hWnd );
@@ -383,12 +353,10 @@ VOID  IDirect3D::Release()
 				m_pd3dDeviceContext->Flush();
 		}
 
-
 		// レンダーターゲットを解放
 		ReleaseDefaultRenderTarget();
 		// 深度ステンシルバッファを解放
 		ReleaseDefaultDepthStencil();
-
 
 		// スワップチェインを解放
 		SafeRelease( m_pSwapChain );
@@ -396,7 +364,6 @@ VOID  IDirect3D::Release()
 		SafeRelease( m_pd3dDeviceContext );
 		// デバイスを解放
 		SafeRelease( m_pd3dDevice );
-
 
 		ReleaseScreen();
 }// end Release()

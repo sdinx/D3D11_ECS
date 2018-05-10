@@ -1,56 +1,50 @@
 //----------------------------------------------------------------------------------
-// file : EntityManager.h
-// desc : Entity class and EntityID management class
+// file : IComponent.h
+// desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_ENTITY_MANAGER_
-#define  _INCLUDED_D3D11_UTILITY_ENTITY_MANAGER_
+//----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+// TODO: 親のエンティティIDを保持させる
+
+#ifndef  _INCLUDED_D3D11_UTILITY_INTERFACE_COMPONENT_
+#define  _INCLUDED_D3D11_UTILITY_INTERFACE_COMPONENT_
 
 //----------------------------------------------------------------------------------
-// Includes
+// includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Interface.h>
-#include  <list>
-#include  <vector>
+#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\IEntity.h>
 
 
 namespace  D3D11Utility
 {
-		// TODO: Entity の生成とメッセージ処理とか考える
 
 		//----------------------------------------------------------------------------------
-		// 前提定義
+		// const variables
 		//----------------------------------------------------------------------------------
-		class  Entity;
-		struct  EntityId;
+		static  const  int  STATIC_ID_INVALID = -1;
 
-		//----------------------------------------------------------------------------------
-		// type defined
-		//----------------------------------------------------------------------------------
-		using  EntityList = std::vector<Entity*>;
-
-
-		class  EntityManager
+		class  IComponent
 		{
+				friend  class  Systems::ComponentManager;
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				EntityManager() = delete;
-				EntityManager( ComponentManager*  pComponentManagerInstance ) :
-						m_pComponentManager( pComponentManagerInstance )
+				IComponent()
 				{}
-				~EntityManager()
+				virtual  ~IComponent()
 				{}
-
 
 		private:
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
-				EntityList  m_entityList;
-				ComponentManager*  m_pComponentManager = nullptr;
+				EntityId  m_parentsEntityId;
+				Systems::ComponentManager*  m_managerInstance = nullptr;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -62,19 +56,38 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  methods
 				//----------------------------------------------------------------------------------
+				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------
 				// public  methods
 				//----------------------------------------------------------------------------------
-				const  EntityId  CreateEntity( std::string  name );
-				const  EntityId  GetEntityId( const  Entity&  entity );
-				Entity*  GetEntity( const  EntityId  entityId );
-				void  ReleaseEntity( Entity*  entity );
+				template<typename  T>
+				T*  GetComponent()const
+				{
+						return  m_managerInstance->GetComponent<T>( m_parentsEntityId );
+				}
+				volatile  const  EntityId  GetEntityId()
+				{
+						return  m_parentsEntityId;
+				}
 
-		};
+		public:
+				//----------------------------------------------------------------------------------
+				// operator
+				//----------------------------------------------------------------------------------
+				// 32bit環境での16byte アライメントの警告のためのオーバーライド
+				void*  operator  new( std::size_t  block )
+				{
+						return  _mm_malloc( block, 16 );
+				}
+				void  operator  delete( void*  ptr )
+				{
+						_mm_free( ptr );
+				}
 
-}
+		};// class IComponent
 
+}// namespace D3D11Utiltiy
 
-#endif // ! _INCLUDED_D3D11_UTILITY_ENTITY_MANAGER_
+#endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_COMPONENT_

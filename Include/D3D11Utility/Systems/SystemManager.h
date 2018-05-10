@@ -1,27 +1,28 @@
 //----------------------------------------------------------------------------------
-// file : CameraManager.h
+// file : SystemManager.h
 // desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_CAMERA_MANAGER_
-#define  _INCLUDED_D3D11_UTILITY_CAMERA_MANAGER_
-
 //----------------------------------------------------------------------------------
-// Includes
+// comments
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Camera.h>
 
+#ifndef  _INCLUDED_D3D11_UTILITY_SYSTEM_MANAGER_
+#define  _INCLUDED_D3D11_UTILITY_SYSTEM_MANAGER_
 
 namespace  D3D11Utility
 {
-
-		class  CameraManager
+		namespace  Systems
 		{
 
+				class  SystemManager
+				{
 
 
-		};
 
-}
+				};// class SystemManager
 
-#endif // ! _INCLUDED_D3D11_UTILITY_CAMERA_MANAGER_
+		}// namespace Systems
+}// namespace D3D11Utility
+
+#endif // ! _INCLUDED_D3D11_UTILITY_SYSTEM_MANAGER_
