@@ -1,46 +1,49 @@
 //----------------------------------------------------------------------------------
-// file : SystemManager.h
-// desc : 
+// file : ISystem.h
+// desc : システムのインターフェース
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_SYSTEM_MANAGER_
-#define  _INCLUDED_D3D11_UTILITY_SYSTEM_MANAGER_
+#ifndef  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#define  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
+#include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Interface.h>
-#include  <D3D11Utility\Systems\ISystem.h>
-#include  <list>
-
 
 namespace  D3D11Utility
 {
 		namespace  Systems
 		{
+				using  SystemId = int;
 
-				class  SystemManager
+				class  ISystem
 				{
+						friend  class  SystemManager;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						SystemManager( ComponentManager*  pComponentManagerInstance );
-						virtual  ~SystemManager();
+						ISystem() :
+								m_isActive( true )
+						{}
+						virtual  ~ISystem()
+						{}
 
-				private:
+				protected:
 						//----------------------------------------------------------------------------------
-						// private variables
+						// protected variables
 						//----------------------------------------------------------------------------------
 
+						BOOL  m_isActive;
 						ComponentManager*  m_pComponentManager;
-						std::list<ISystem*>  m_systemList;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -48,9 +51,9 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						/* NOTHING */
 
-				private:
+				protected:
 						//----------------------------------------------------------------------------------
-						// private methods
+						// protected methods
 						//----------------------------------------------------------------------------------
 						/* NOTHING */
 
@@ -59,33 +62,17 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						//----------------------------------------------------------------------------------
-						// func: AddSystem( P&&... ) : void, template<T, P>
-						// brief: 登録システムが重複しないように
-						// param: (param) 追加するシステムのコンストラクタ引数を指定.
-						//----------------------------------------------------------------------------------
-						template<class  T, typename  ...P>
-						T*  AddSystem( P&&...  param )
+						virtual  SystemId  GetSystemId()const = 0;
+						volatile  void  SetActive( BOOL  isActive )
 						{
-								for ( auto system : m_systemList )
-										if ( system->GetSystemId() == T::GetStaticSystemId() )
-										{
-												return  nullptr;
-										}// end if
-
-								T::SetStaticSystemId( m_systemList.size() );
-								m_systemList.push_back( new  T( std::forward<P>( param )... ) );
-								T*  system = dynamic_cast< T* >( m_systemList.back() );
-								system->m_pComponentManager = m_pComponentManager;
-
-								return  system;
+								m_isActive = isActive;
 						}
-						void  Update( float  ms );
-						void  Release();
+						virtual  void  Update( float  ms ) = 0;
 
-				};// class SystemManager
+				};// class ISystem
 
 		}// namespace Systems
 }// namespace D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_SYSTEM_MANAGER_
+
+#endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_

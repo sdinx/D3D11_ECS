@@ -12,24 +12,25 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Interface.h>
 #include  <D3D11Utility\Systems\IDirect3D.h>
+#include  <D3D11Utility\Systems\ISystem.h>
 #include  <IGraphicsRenderer.h>
 #include  <IRenderable.h>
 
 
 namespace  D3D11Utility
 {
-
 		namespace  Systems
 		{
 
-				class  IDirect3DRenderer :public  IGraphicsRenderer
+				class  IDirect3DRenderer :public  IGraphicsRenderer,  public  ISystem
 				{
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
-						IDirect3DRenderer( ComponentManager*  componentManagerInstance );
+
+						IDirect3DRenderer();
 						~IDirect3DRenderer();
 
 
@@ -37,6 +38,8 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// private  variables
 						//----------------------------------------------------------------------------------
+
+						static  SystemId  STATIC_SYSTEM_ID;
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManagerInstance;
 
@@ -57,7 +60,24 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// public  methods
 						//----------------------------------------------------------------------------------
+
+						static  void  SetStaticSystemId( SystemId  id )
+						{
+								STATIC_SYSTEM_ID = id;
+						}
+						static  SystemId  GetStaticSystemId()
+						{
+								return  STATIC_SYSTEM_ID;
+						}
+						SystemId  GetSystemId()const
+						{
+								return  STATIC_SYSTEM_ID;
+						}
 						VOID  Release();
+						VOID  Update( float  ms )
+						{
+								Rendering();
+						}
 						VOID  Rendering()const;
 
 				};// class IDirect3DRenderer

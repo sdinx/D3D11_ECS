@@ -25,6 +25,12 @@
     <Filter Include="Source\D3D11Utility\Systems">
       <UniqueIdentifier>{06320cf2-0271-4ecb-ace9-e19d5ee8f20f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\D3D11Utility\Components">
+      <UniqueIdentifier>{49d74fb0-289f-4542-8be5-1860a3760c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\D3D11Utility\Components">
+      <UniqueIdentifier>{7ffe4231-55ee-4aec-887e-f26940aca9c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp">
@@ -34,15 +40,6 @@
       <Filter>Source\D3D11Utility\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Entity.cpp">
-      <Filter>Source\D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Renderable.cpp">
-      <Filter>Source\D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Scene.cpp">
-      <Filter>Source\D3D11Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Camera.cpp">
       <Filter>Source\D3D11Utility</Filter>
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp">
@@ -75,6 +72,18 @@
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp">
       <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Camera.cpp">
+      <Filter>Source\D3D11Utility\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Scene.cpp">
+      <Filter>Source\D3D11Utility\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Renderable.cpp">
+      <Filter>Source\D3D11Utility\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -101,21 +110,6 @@
     <ClInclude Include="Include\D3D11Utility\Object.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Renderable.h">
-      <Filter>Header\D3D11Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Scene.h">
-      <Filter>Header\D3D11Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Transform.h">
-      <Filter>Header\D3D11Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Camera.h">
-      <Filter>Header\D3D11Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Component.h">
-      <Filter>Header\D3D11Utility</Filter>
-    </ClInclude>
     <ClInclude Include="Include\D3D11Utility\D3D11Utility.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
@@ -129,9 +123,6 @@
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Interface.h">
-      <Filter>Header\D3D11Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\IComponent.h">
       <Filter>Header\D3D11Utility</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\ComponentManager.h">
@@ -151,6 +142,27 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h">
       <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\ISystem.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Camera.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Component.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\IComponent.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Renderable.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Transform.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Scene.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include  <D3D11Utility\Systems\IDirect3DRenderer.h>
 #include  <GameUtility.h>
 
+
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
@@ -14,8 +15,13 @@ using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 
 
-IDirect3DRenderer::IDirect3DRenderer( ComponentManager*  componentManagerInstance ) :
-		m_componentManagerInstance( componentManagerInstance ),
+//----------------------------------------------------------------------------------
+// using  namespace
+//----------------------------------------------------------------------------------
+SystemId  IDirect3DRenderer::STATIC_SYSTEM_ID = STATIC_ID_INVALID;
+
+
+IDirect3DRenderer::IDirect3DRenderer() :
 		m_pID3D( _Singleton<IDirect3D>::GetInstance() )
 {
 
@@ -38,13 +44,9 @@ VOID  IDirect3DRenderer::Rendering()const
 {
 		m_pID3D->BeginRender();
 		{/* Begin rendering */
-				static  Camera  camera;
 				static  Renderable  mesh( PT_CUBE );
 				static  bool  init = true;
 				if ( init ) {
- 						camera.SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
-						camera.SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
-						camera.HandleMessage( GameUtility::Message( MSG_UPDATE_ALL ) );
 						init = false;
 				}
 				mesh.Rendering();

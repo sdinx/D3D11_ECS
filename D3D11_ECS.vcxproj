@@ -32,6 +32,7 @@
     <ClCompile Include="src\D3D11Utility\Systems\EntityManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp" />
+    <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\GameUtility.cpp" />
@@ -55,6 +56,7 @@
     <ClInclude Include="Include\D3D11Utility\Systems\EntityManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\IDirect3D.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\IDirect3DRenderer.h" />
+    <ClInclude Include="Include\D3D11Utility\Systems\ISystem.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
     <ClInclude Include="Include\D3D11Utility\Transform.h" />

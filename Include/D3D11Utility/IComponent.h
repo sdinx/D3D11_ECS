@@ -34,7 +34,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				IComponent()
+
+				IComponent() :
+						m_isActive( true )
 				{}
 				virtual  ~IComponent()
 				{}
@@ -43,6 +45,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
+
+				BOOL  m_isActive;
 				EntityId  m_parentsEntityId;
 				Systems::ComponentManager*  m_managerInstance = nullptr;
 
@@ -62,6 +66,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  methods
 				//----------------------------------------------------------------------------------
+
 				template<typename  T>
 				T*  GetComponent()const
 				{
@@ -71,11 +76,16 @@ namespace  D3D11Utility
 				{
 						return  m_parentsEntityId;
 				}
+				volatile  void  SetActive( BOOL  isActive )
+				{
+						m_isActive = isActive;
+				}
 
 		public:
 				//----------------------------------------------------------------------------------
 				// operator
 				//----------------------------------------------------------------------------------
+
 				// 32bit環境での16byte アライメントの警告のためのオーバーライド
 				void*  operator  new( std::size_t  block )
 				{

@@ -17,6 +17,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				class  ComponentManager;
 				class  EntityManager;
+				class  SystemManager;
 
 		}// namespace Systems
 

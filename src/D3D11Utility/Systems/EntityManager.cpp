@@ -22,6 +22,12 @@ const  EntityId  EntityManager::CreateEntity( std::string  name )
 }// end CreateEntity(const Entity*) : const EntityId&
 
 
+const  EntityId  EntityManager::FindName( std::string  name )
+{
+		return  0;
+}
+
+
 Entity*  EntityManager::GetEntity( const  EntityId  entityId )
 {
 		return  m_entityList[entityId.entityId];
