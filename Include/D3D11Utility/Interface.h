@@ -15,6 +15,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// ‘O’ñ’è‹`
 				//----------------------------------------------------------------------------------
+				class  IDirect3D;
+				class  IDirect3DRenderer;
 				class  ComponentManager;
 				class  EntityManager;
 				class  SystemManager;

@@ -19,19 +19,18 @@
 #include  <IRenderable.h>
 #include  <memory>
 
-//----------------------------------------------------------------------------------
-// namespace D3D11UItility class
-//----------------------------------------------------------------------------------
+
 namespace  D3D11Utility
 {
 
-		class  Renderable : public  Component, public  IRenderable
+		class  Renderable : virtual  public  Component, virtual  public  IRenderable
 		{
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
+
 				Renderable();
 				Renderable( PRIMITIVE_TYPE  primitiveType );
 				~Renderable()
@@ -42,13 +41,14 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
+
+				static  ComponentId  STATIC_COMPONENT_ID;
 				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
 
-				std::unique_ptr<Graphics::VertexBuffer>  m_pVertexBuffer = nullptr;
-				std::unique_ptr<Graphics::VertexShader>  m_pVertexShader = nullptr;
-				std::unique_ptr<Graphics::PixelShader>  m_pPixelShader = nullptr;
-				std::unique_ptr<Graphics::GeometryShader>  m_pGeometryShader = nullptr;
-
+				Graphics::VertexBuffer*  m_pVertexBuffer = nullptr;
+				Graphics::VertexShader*  m_pVertexShader = nullptr;
+				Graphics::PixelShader*  m_pPixelShader = nullptr;
+				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
 
 		protected:
 				//----------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public variables
 				//----------------------------------------------------------------------------------
-				static  INT  STATIC_COMPONENT_ID;// TODO: private Ç≈çÏÇËíºÇ∑
+				/* NOTHING */
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -68,27 +68,30 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				/* NOTHING */
 
-
 		public:
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-				static  void  SetConstantBuffer();
 
-				INT  GetStaticId()const
+				static  void  SetConstantBuffer();
+				static  ComponentId  GetStaticComponentId()
 				{
 						return  STATIC_COMPONENT_ID;
 				}
+				static  void  SetStaticComponentId( ComponentId  id )
+				{
+						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+						{
+								STATIC_COMPONENT_ID = id;
+								// TODO: need  to output debug string.
+						}
+				}
+
 				void  HandleMessage( const  GameUtility::Message&  msg )
 				{}
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
 				void  Rendering()const;
-				void  SetStaticId( const  UINT  id )
-				{
-						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
-								STATIC_COMPONENT_ID = ( int ) id;
-				}
 				void  Update()
 				{}
 

@@ -39,6 +39,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private  variables
 				//----------------------------------------------------------------------------------
+				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -56,11 +57,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public  methods
 				//----------------------------------------------------------------------------------
-				virtual  INT  GetStaticId()const = 0;
-				virtual  void  SetStaticId( const  UINT  id ) = 0;
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
 				virtual  void  Update() = 0;
+				virtual  void  Rendering()const {};
 
 		public:
 				//----------------------------------------------------------------------------------

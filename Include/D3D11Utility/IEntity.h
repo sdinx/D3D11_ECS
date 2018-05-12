@@ -23,37 +23,37 @@ namespace  D3D11Utility
 		struct  EntityId
 		{
 
-				unsigned  entityId;
+				unsigned  index;
 
 				EntityId()
 				{}
 				EntityId( const  unsigned  id ) :
-						entityId( id )
+						index( id )
 				{}
 
 				inline  bool  operator==( EntityId  id )const
 				{
-						return  ( entityId == id.entityId ) ? true : false;
+						return  ( index == id.index ) ? true : false;
 				}
 				inline  bool  operator!=( EntityId  id )const
 				{
-						return  ( entityId != id.entityId ) ? true : false;
+						return  ( index != id.index ) ? true : false;
 				}
 				inline  bool  operator<( EntityId  id )const
 				{
-						return  ( entityId < id.entityId ) ? true : false;
+						return  ( index < id.index ) ? true : false;
 				}
 				inline  bool  operator>( EntityId  id )const
 				{
-						return  ( entityId > id.entityId ) ? true : false;
+						return  ( index > id.index ) ? true : false;
 				}
 				inline  bool  operator<=( EntityId  id )const
 				{
-						return  ( entityId <= id.entityId ) ? true : false;
+						return  ( index <= id.index ) ? true : false;
 				}
 				inline  bool  operator>=( EntityId  id )const
 				{
-						return  ( entityId >= id.entityId ) ? true : false;
+						return  ( index >= id.index ) ? true : false;
 				}
 
 		};// struct EntityId

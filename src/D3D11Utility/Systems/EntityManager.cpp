@@ -30,7 +30,7 @@ const  EntityId  EntityManager::FindName( std::string  name )
 
 Entity*  EntityManager::GetEntity( const  EntityId  entityId )
 {
-		return  m_entityList[entityId.entityId];
+		return  m_entityList[entityId.index];
 }// end GetEntity(const EntityId&) : Entity*
 
 

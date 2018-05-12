@@ -40,9 +40,9 @@ ComponentManager::~ComponentManager()
 // brief: コンポネントテーブルのサイズを一つ追加する
 // brief: EntityListとComponentTableの要素数は共通する
 //----------------------------------------------------------------------------------
-void  ComponentManager::AddEntity( const  EntityId  entityId )
+void  ComponentManager::AddEntity( const  EntityId  entity )
 {
-		m_componentTable.resize( entityId.entityId + 1 );
+		m_entityComponetIdTable.resize( entity.index + 1 );
 }
 
 
@@ -51,7 +51,13 @@ void  ComponentManager::AddEntity( const  EntityId  entityId )
  //----------------------------------------------------------------------------------
 void  ComponentManager::Release()
 {
-		m_componentIdList.clear();
+		for ( auto entityTable : m_entityComponetIdTable )
+				entityTable.clear();
+
+		m_entityComponetIdTable.clear();
+
+		for ( auto componentTable : m_componentTable )
+				componentTable.clear();
 
 		m_componentTable.clear();
 		m_componentTable.shrink_to_fit();
@@ -70,6 +76,7 @@ void  ComponentManager::Update()
 		for ( ; i < listSize; i++ )
 				for ( auto& component : m_componentTable[i] )
 				{
-						component->Update();
+						if ( component != nullptr )
+								component->Update();
 				}
 }// end Update()

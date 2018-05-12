@@ -29,7 +29,6 @@ INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCm
 		// スマートポインタなので自動的に開放される
 		// d3d11->Release();
 
-
 		return  0;
 
 }

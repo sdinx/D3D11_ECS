@@ -9,7 +9,6 @@
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
-// TODO: コンポーネントテーブルを用意する必要あり
 // TODO: 自作ハッシュテーブルでキャッシュミスを減らしたアクセスの高速化が必要
 
 //----------------------------------------------------------------------------------
@@ -29,8 +28,7 @@ namespace  D3D11Utility
 		// type defined
 		//----------------------------------------------------------------------------------
 
-		using  ComponentId = int;
-		using  ComponentIdList = std::vector<ComponentId>;
+		using  EntityComponentTable = std::vector<std::vector<ComponentId>>;
 		using  ComponentTable = std::vector<std::vector<Component*>>;
 
 
@@ -39,6 +37,8 @@ namespace  D3D11Utility
 
 				class  ComponentManager
 				{
+						// note: 一時的にフレンドクラス化
+						friend  class  IDirect3DRenderer;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ namespace  D3D11Utility
 						// private  variables
 						//----------------------------------------------------------------------------------
 
-						ComponentIdList  m_componentIdList;
+						EntityComponentTable  m_entityComponetIdTable;
 						ComponentTable  m_componentTable;
 
 
@@ -81,44 +81,63 @@ namespace  D3D11Utility
 						// note: 予め全コンポーネントに固有IDを割り振ると高速化できるかも.
 						//----------------------------------------------------------------------------------
 						template<class  T, typename  ...P>
-						void  AddComponent( const  EntityId  entityId, P&&... param )
+						void  AddComponent( const  EntityId  entity, P&&... param )
 						{
+								const  UINT  entityId = entity.index;
+								UINT  nComponentPosition = 0;
+								ComponentId  componentId = T::GetStaticComponentId();
+								
 								// 初登録コンポーネントにstatic_idを割り当て
-								if ( STATIC_ID_INVALID == T::STATIC_COMPONENT_ID )
+								if ( componentId == STATIC_ID_INVALID )
 								{
-										T::STATIC_COMPONENT_ID = m_componentIdList.size();
-										m_componentIdList.push_back( T::STATIC_COMPONENT_ID );
+										componentId = m_componentTable.size();
+										T::SetStaticComponentId( componentId );
+										m_componentTable.resize( componentId + 1 );
 								}
 
-								// コンポーネントの追加
-								m_componentTable[entityId.entityId].push_back( new  T( std::forward<P>( param )... ) );
-								T*  component = dynamic_cast< T* >( m_componentTable[entityId.entityId].back() );
-								component->m_parentsEntityId = entityId;
+								// コンポーネントの格納される位置
+								nComponentPosition = m_componentTable[componentId].size();
+
+								// コンポーネントIDテーブルのサイズ拡張
+								if ( componentId >= ( int ) m_entityComponetIdTable[entityId].size() )
+										m_entityComponetIdTable[entityId].resize( componentId + 1, STATIC_ID_INVALID );
+
+								// 既にコンポーネントが存在している
+								else  if ( m_entityComponetIdTable[entityId][componentId] != STATIC_ID_INVALID )
+										return;
+
+								m_entityComponetIdTable[entityId][componentId] = nComponentPosition;
+
+								// コンポーネント生成
+								Component*  component = new  T( std::forward<P>( param )... );
+								component->m_parentsEntityId = entity;
 								component->m_managerInstance = this;
+								component->m_componentId = componentId;
+
+								m_componentTable[componentId].push_back( component );
+								// TODO: need to output debug string.
+
 
 						}// end AddComponent(const EntityId, T*) : void
 
 						//----------------------------------------------------------------------------------
 						// func: GetComponent( const EntityId& ) : T*
-						// note: 速度向上の為, Releaseでは存在確認しないかも.
 						// note: 型チェックのために動的キャストにしているが静的キャストにするかもしれない.
 						//----------------------------------------------------------------------------------
 						template<class  T>
-						T*  GetComponent( const  EntityId  entityId )
+						T*  GetComponent( const  EntityId  entity )
 						{
-								UINT  componentType = ( UINT ) T::STATIC_COMPONENT_ID;
+								const  UINT  entityId = entity.index;
+								const  ComponentId  componentId = T::GetStaticComponentId();
 
-								// エンティティの存在確認
-								if ( m_componentTable.size() > entityId.entityId )
+								// エンティティとコンポーネントの存在確認
+								if ( m_entityComponetIdTable.size() > entityId && m_entityComponetIdTable[entityId].size() > ( UINT ) componentId )
 								{
-										// コンポーネントの存在確認
-										for ( auto component : m_componentTable[entityId.entityId] )
-												if ( component->GetStaticId() == T::STATIC_COMPONENT_ID )
-												{
-														return  dynamic_cast< T* >( component );
-												}
+										const  UINT  numComponent = m_entityComponetIdTable[entityId][componentId];
+										return  dynamic_cast< T* >( m_componentTable[componentId][numComponent] );
 								}
 
+								// TODO: need to output debug string.
 								return  nullptr;
 						}// end GetComponent(const EntityId) : T*
 
@@ -129,26 +148,37 @@ namespace  D3D11Utility
 						 // brief: 外して処理速度の改善を図ったりする.
 						 //----------------------------------------------------------------------------------
 						template<typename  T>
-						void  RemoveComponent( const  EntityId  entityId )
+						void  RemoveComponent( const  EntityId  entity )
 						{
-								UINT  componentType = ( UINT ) T::STATIC_COMPONENT_ID;
-								UINT  nFind = 0;
+								const  UINT  entityId = entityId.index;
+								const  ComponentId  componentId = T::GetStaticComponentId();
 
-								// エンティティの存在確認
-								if ( m_componentTable.size() > entityId.entityId )
+								// エンティティとコンポーネントの存在確認
+								if ( m_entityComponetIdTable.size() > entityId && m_entityComponetIdTable[entityId].size() > componentId )
 								{
-										// コンポーネントの存在確認
-										for ( auto component : m_componentTable[entityId.entityId] )
-												if ( component->GetStaticId() == T::STATIC_COMPONENT_ID )
-												{
-														m_componentTable[entityId.entityId].erase( m_componentTable[entityId.entityId].begin() + nFind );
-														break;
-												}
-										nFind++;
+										const  UINT  numComponent = m_entityComponetIdTable[entityId][componentId];
+										m_entityComponetIdTable[entityId][componentId] = STATIC_ID_INVALID;
+										m_componentTable[componentId].erase( m_componentTable[componentId].begin() + numComponent );
 								}
+
 						}// end RemoveComponent(const  EntityId) : void
 
-						void  AddEntity( const  EntityId  entityId );
+						//----------------------------------------------------------------------------------
+						// func: GetComponents() : std::vector<Component*>, template<T>
+						// brief: 指定したコンポーネント型の配列を返す
+						// TODO: 配列を直接返さずに行えるように変更する必要がある
+						//----------------------------------------------------------------------------------
+						template  <class  T>
+						std::vector<Component*>  GetComponents()
+						{
+								ComponentId  componentId = T::GetStaticComponentId();
+
+								//if ( componentId == STATIC_ID_INVALID );// need to output debug string
+
+								return  m_componentTable[componentId];
+						}
+
+						void  AddEntity( const  EntityId  entity );
 						void  Release();
 						void  Update();
 

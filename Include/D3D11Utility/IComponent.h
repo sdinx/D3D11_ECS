@@ -21,9 +21,10 @@
 namespace  D3D11Utility
 {
 
-		//----------------------------------------------------------------------------------
-		// const variables
-		//----------------------------------------------------------------------------------
+		/* type defined */
+		using  ComponentId = int;
+
+		/* const variables */
 		static  const  int  STATIC_ID_INVALID = -1;
 
 		class  IComponent
@@ -47,8 +48,15 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				BOOL  m_isActive;
+				ComponentId  m_componentId = -1;
 				EntityId  m_parentsEntityId;
 				Systems::ComponentManager*  m_managerInstance = nullptr;
+
+		protected:
+				//----------------------------------------------------------------------------------
+				// protected  variables
+				//----------------------------------------------------------------------------------
+				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------

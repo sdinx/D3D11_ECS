@@ -16,31 +16,37 @@ using namespace D3D11Utility::Systems;
 using namespace GameUtility;
 
 
-static  ComponentManager  componentManager;
-static  std::unique_ptr<SystemManager>  pSystemManager;
+static  std::unique_ptr<ComponentManager>  componentManager;
+static  std::unique_ptr<IDirect3DRenderer>  pd3dRenderer;
 static  std::unique_ptr<EntityManager>  pEntityManager;
+static  std::unique_ptr<SystemManager>  pSystemManager;
+
+//----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+// note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある
 
 
 void  GameUtility::GameInit()
 {
-		pSystemManager.reset( new  SystemManager( &componentManager ) );
-		pSystemManager->AddSystem<IDirect3DRenderer>();
-		pEntityManager.reset( new  EntityManager( &componentManager ) );
+		componentManager.reset( new  ComponentManager() );
+		pd3dRenderer.reset( new  IDirect3DRenderer( componentManager.get() ) );
+		pSystemManager.reset( new  SystemManager( componentManager.get() ) );
+		pEntityManager.reset( new  EntityManager( componentManager.get() ) );
 
 		static  const  EntityId  entityId = pEntityManager->CreateEntity( "TestEntity" );
 		static  const  EntityId  entityId2 = pEntityManager->CreateEntity( "Test2Entity" );
 		Entity*  entity = pEntityManager->GetEntity( entityId );
 		Entity*  entity2 = pEntityManager->GetEntity( entityId2 );
 
-		D3D11Utility::Camera::SetConstantBuffer();
-		D3D11Utility::Renderable::SetConstantBuffer();
+		Camera::SetConstantBuffer();
+		Renderable::SetConstantBuffer();
 
 		entity->SetTag( "entity" );
-		Camera*  camera = new  Camera;
-		Renderable*  ren = new  Renderable( PRIMITIVE_TYPE::PT_PLANE );
+
 		entity->AddComponent<Camera>();
 		entity->AddComponent<Renderable>( PT_PLANE );
-		entity2->AddComponent<Renderable>( PT_PLANE );
+		entity2->AddComponent<Renderable>( PT_CUBE );
 
 		Camera*  cam = entity->GetComponent<Camera>();
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
@@ -49,10 +55,14 @@ void  GameUtility::GameInit()
 		Renderable*  asd = entity->GetComponent<Renderable>();
 		Renderable*  asd2 = entity2->GetComponent<Renderable>();
 		Renderable*  asb = cam->GetComponent<Renderable>();
+
+		Renderable*  camera = ( asd + 1 );
+
 }
 
 
 void  GameUtility::GameLoop()
 {
 		pSystemManager->Update( 0 );
+		pd3dRenderer->Rendering();
 }

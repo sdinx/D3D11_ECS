@@ -35,6 +35,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
+
 				Camera();
 				Camera(Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
@@ -44,6 +45,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
+
+				static  ComponentId  STATIC_COMPONENT_ID;
 				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
 				BOOL  m_isEnable = false;
 
@@ -58,7 +61,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public variables
 				//----------------------------------------------------------------------------------
-				static  INT  STATIC_COMPONENT_ID;// TODO: private Ç≈çÏÇËíºÇ∑
+				/* NOTHING */
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -70,7 +73,20 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
+
 				static  void  SetConstantBuffer();
+				static  ComponentId  GetStaticComponentId()
+				{
+						return  STATIC_COMPONENT_ID;
+				}
+				static  void  SetStaticComponentId( ComponentId  id )
+				{
+						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+						{
+								STATIC_COMPONENT_ID = id;
+								// TODO: need  to output debug string.
+						}
+				}
 
 				Matrix4x4  GetMatrix4x4Projection()
 				{
@@ -88,18 +104,9 @@ namespace  D3D11Utility
 				{
 						return  DirectX::XMLoadFloat4x4( &m_view );
 				}
-				INT  GetStaticId()const
-				{
-						return  STATIC_COMPONENT_ID;
-				}
 				void  HandleMessage( const  GameUtility::Message&  msg );
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
 				void  SetPosition( Vector3  eyePosition );
-				void  SetStaticId( const  UINT  id )
-				{
-						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
-								STATIC_COMPONENT_ID = ( int ) id;
-				}
 				void  SetTarget( Vector3  focusPosition );
 				void  SetUp( Vector3  upDirection );
 				void  Update();

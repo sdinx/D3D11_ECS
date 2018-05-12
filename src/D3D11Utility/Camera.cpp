@@ -11,7 +11,7 @@ using  namespace  D3D11Utility;
 //----------------------------------------------------------------------------------
 // static  variables
 //----------------------------------------------------------------------------------
-INT  Camera::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
+ComponentId  Camera::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 std::unique_ptr<CONSTANTBUFFER>  Camera::s_pCBuffer = nullptr;
 
 //----------------------------------------------------------------------------------

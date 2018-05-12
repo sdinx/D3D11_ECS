@@ -17,7 +17,7 @@ using  namespace  DirectX;
 //----------------------------------------------------------------------------------
 // static variables
 //----------------------------------------------------------------------------------
-INT  Renderable::STATIC_COMPONENT_ID = -1;
+ComponentId  Renderable::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 std::unique_ptr<CONSTANTBUFFER>  Renderable::s_pCBuffer = nullptr;
 
 
@@ -31,16 +31,18 @@ struct  ConstantBufferForPerFrame
 
 
 Renderable::Renderable()
-{}
+{
+
+}
 
 
 Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 {
 		m_isRendering = true;
 
-		m_pVertexShader = std::unique_ptr<VertexShader>( new  VertexShader() );
-		m_pPixelShader = std::unique_ptr<PixelShader>( new  PixelShader() );
-		m_pGeometryShader = std::unique_ptr<GeometryShader>( new  GeometryShader() );
+		m_pVertexShader = new  VertexShader();
+		m_pPixelShader = new  PixelShader();
+		m_pGeometryShader = new  GeometryShader();
 
 		VERTEX  vertices[ ] = {
 				Vector3( 0.0f,0.5f,0.0f ),
@@ -49,7 +51,7 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		};
 		UINT  numVertices = ARRAYSIZE( vertices );
 
-		m_pVertexBuffer = std::unique_ptr<VertexBuffer>( new  VertexBuffer( vertices, numVertices ) );
+		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
 		XMStoreFloat4x4( &m_localWorld, XMMatrixTranslation( 0, 0, 0 ) );
 }

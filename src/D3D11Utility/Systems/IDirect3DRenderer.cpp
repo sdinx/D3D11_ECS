@@ -15,13 +15,8 @@ using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 
 
-//----------------------------------------------------------------------------------
-// using  namespace
-//----------------------------------------------------------------------------------
-SystemId  IDirect3DRenderer::STATIC_SYSTEM_ID = STATIC_ID_INVALID;
-
-
-IDirect3DRenderer::IDirect3DRenderer() :
+IDirect3DRenderer::IDirect3DRenderer( ComponentManager*  pComponentManagerInstance ) :
+		m_componentManager( pComponentManagerInstance ),
 		m_pID3D( _Singleton<IDirect3D>::GetInstance() )
 {
 
@@ -34,24 +29,18 @@ IDirect3DRenderer::~IDirect3DRenderer()
 }
 
 
-VOID  IDirect3DRenderer::Release()
+void  IDirect3DRenderer::Release()
 {
 
 }
 
 
-VOID  IDirect3DRenderer::Rendering()const
+void  IDirect3DRenderer::Rendering()const
 {
 		m_pID3D->BeginRender();
 		{/* Begin rendering */
-				static  Renderable  mesh( PT_CUBE );
-				static  bool  init = true;
-				if ( init ) {
-						init = false;
-				}
-				mesh.Rendering();
 
-				for ( auto renderable : m_renderObjects )
+				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 						renderable->Rendering();
 
 		}/* Done rendering */
