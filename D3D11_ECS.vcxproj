@@ -65,6 +65,10 @@
     <ClInclude Include="Include\IRenderable.h" />
     <ClInclude Include="Include\Singleton.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="ChangeLog.txt" />
+    <Text Include="Readme.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{79520549-072D-4C15-8377-E7F8C22FA0FF}</ProjectGuid>

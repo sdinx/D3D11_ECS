@@ -165,4 +165,8 @@
       <Filter>Header\D3D11Utility\Components</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="Readme.txt" />
+    <Text Include="ChangeLog.txt" />
+  </ItemGroup>
 </Project>
