@@ -84,6 +84,12 @@
     <ClCompile Include="src\D3D11Utility\Renderable.cpp">
       <Filter>Source\D3D11Utility\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\XInputController.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Transform.cpp">
+      <Filter>Source\D3D11Utility\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -163,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Scene.h">
       <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\XInputController.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

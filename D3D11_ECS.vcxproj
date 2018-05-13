@@ -33,9 +33,11 @@
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
+    <ClCompile Include="src\D3D11Utility\Transform.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\GameUtility.cpp" />
+    <ClCompile Include="src\XInputController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\D3D11Utility\Camera.h" />
@@ -64,6 +66,7 @@
     <ClInclude Include="Include\IGraphicsRenderer.h" />
     <ClInclude Include="Include\IRenderable.h" />
     <ClInclude Include="Include\Singleton.h" />
+    <ClInclude Include="Include\XInputController.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ChangeLog.txt" />
