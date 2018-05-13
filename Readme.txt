@@ -24,6 +24,7 @@
 // AddComponent関数の引数は追加するコンポーネントのコンストラクタ引数.
 // Entity::GetComponent関数でエンティティのコンポーネントを取得できる ( 例: entity->GetComponent<Transform>() ).
 // GetComponent関数は失敗すると nullptr が返る為コンポーネントの存在の確認ができる.
+// コンポーネントからのGetComponentは自身の親エンティティIDを渡す必要がある ( 例: GetComponent<Transform>( m_parentsEntityId ) ).
 
 
 /* コンポーネントの実装方法について */
@@ -59,7 +60,7 @@
 // あくまでもシステム自身が管理するコンポーネントだけを扱うようにする.
 // テンプレート関数のComponentManager::GetComponents関数を使ってコンポーネントを取得する.
 // システムクラスのインスタンスの作成は必ず SystemManager::AddSystem関数 から行う.
-// 同一システムを重複追加しては禁止.
+// 同一システムの重複追加は禁止.
 
 
 /* コンポーネント管理クラスの実装について */
