@@ -111,7 +111,7 @@ namespace  D3D11Utility
 								// コンポーネント生成
 								Component*  component = new  T( std::forward<P>( param )... );
 								component->m_parentsEntityId = entity;
-								component->m_managerInstance = this;
+								component->m_pComponentManager = this;
 								component->m_componentId = componentId;
 
 								m_componentTable[componentId].push_back( component );

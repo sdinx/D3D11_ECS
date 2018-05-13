@@ -41,7 +41,10 @@ void  IDirect3DRenderer::Rendering()const
 		{/* Begin rendering */
 
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
+				{
+						renderable->Update();
 						renderable->Rendering();
+				}// end for
 
 		}/* Done rendering */
 		m_pID3D->EndRender();

@@ -37,7 +37,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				IComponent() :
-						m_isActive( true )
+						m_isActive( true ),
+						m_isUpdating( true )
 				{}
 				virtual  ~IComponent()
 				{}
@@ -47,16 +48,17 @@ namespace  D3D11Utility
 				// private  variables
 				//----------------------------------------------------------------------------------
 
-				BOOL  m_isActive;
 				ComponentId  m_componentId = -1;
-				EntityId  m_parentsEntityId;
-				Systems::ComponentManager*  m_managerInstance = nullptr;
 
 		protected:
 				//----------------------------------------------------------------------------------
 				// protected  variables
 				//----------------------------------------------------------------------------------
-				/* NOTHING */
+
+				BOOL  m_isActive;
+				BOOL  m_isUpdating;
+				EntityId  m_parentsEntityId;
+				Systems::ComponentManager*  m_pComponentManager = nullptr;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -78,7 +80,7 @@ namespace  D3D11Utility
 				template<typename  T>
 				T*  GetComponent()const
 				{
-						return  m_managerInstance->GetComponent<T>( m_parentsEntityId );
+						return  m_pComponentManager->GetComponent<T>( m_parentsEntityId );
 				}
 				volatile  const  EntityId  GetEntityId()
 				{
@@ -87,6 +89,14 @@ namespace  D3D11Utility
 				volatile  void  SetActive( BOOL  isActive )
 				{
 						m_isActive = isActive;
+				}
+				volatile  BOOL&  GetActive()
+				{
+						return  m_isActive;
+				}
+				volatile  void  SetUpdating( BOOL  isUpdating )
+				{
+						m_isActive = isUpdating;
 				}
 
 		public:

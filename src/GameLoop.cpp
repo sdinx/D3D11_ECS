@@ -5,6 +5,7 @@
 #include  <D3D11Utility\Systems\IDirect3DRenderer.h>
 #include  <D3D11Utility\Camera.h>
 #include  <D3D11Utility\Renderable.h>
+#include  <D3D11Utility\Transform.h>
 
 #include  <GameUtility.h>
 #include  <D3D11Utility\Entity.h>
@@ -46,6 +47,7 @@ void  GameUtility::GameInit()
 
 		entity->AddComponent<Camera>();
 		entity->AddComponent<Renderable>( PT_PLANE );
+		entity->AddComponent<Transform>();
 		entity2->AddComponent<Renderable>( PT_CUBE );
 
 		Camera*  cam = entity->GetComponent<Camera>();
@@ -57,7 +59,6 @@ void  GameUtility::GameInit()
 		Renderable*  asb = cam->GetComponent<Renderable>();
 
 		Renderable*  camera = ( asd + 1 );
-
 }
 
 

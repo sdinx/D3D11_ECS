@@ -3,6 +3,8 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Transform.h>
+#include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <DirectXMath.h>
 
 
@@ -69,6 +71,9 @@ void  Renderable::SetConstantBuffer()
 
 void  Renderable::Rendering()const
 {
+		if ( m_isActive == false )
+				return;
+
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
 		m_pGeometryShader->UpdateShader();
@@ -81,4 +86,19 @@ void  Renderable::Rendering()const
 		pd3dDeviceContext->GSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 
 		m_pVertexBuffer->BindBuffer();
+}
+
+
+void  Renderable::Update()
+{
+		if ( m_isUpdating == false )
+				return;
+
+		Transform*  transform = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
+		if ( transform == nullptr )
+				return;
+
+		Vector3&  pos = transform->GetPosition();
+
+		pos.x = 100;
 }

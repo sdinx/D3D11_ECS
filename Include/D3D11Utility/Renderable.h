@@ -92,9 +92,7 @@ namespace  D3D11Utility
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
 				void  Rendering()const;
-				void  Update()
-				{}
-
+				void  Update();
 
 		};
 
