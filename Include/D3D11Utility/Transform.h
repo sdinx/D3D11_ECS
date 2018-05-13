@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------------
-// File : Transform.h
-// Desc : 
+// file : Transform.h
+// desc : コンテナとして列計算に必要な位置や回転や大きさ
+// などの情報を持っているコンポーネント
 //----------------------------------------------------------------------------------
 
 #ifndef  _INCLUDED_D3D11_UTILITY_TRANSFORM_
@@ -20,13 +21,29 @@ namespace  D3D11Utility
 		{
 				// TODO: オブジェクトに必要な座標や行列情報の変数を用意
 
+		public:
+				//----------------------------------------------------------------------------------
+				// other
+				//----------------------------------------------------------------------------------
+
+				Transform() :
+						m_position( 0, 0, 0 ),
+						m_rotation( 0, 0, 0 ),
+						m_scale( 0, 0, 0 )
+				{
+
+				}
+
 		private:
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
+
+				static  ComponentId  STATIC_COMPONENT_ID;
 				Vector3  m_position;
 				Vector3  m_rotation;
 				Vector3  m_scale;
+				Matrix4x4  m_localWorld;
 
 
 		public:
@@ -46,13 +63,64 @@ namespace  D3D11Utility
 				// public methods
 				//----------------------------------------------------------------------------------
 
+				static  ComponentId  GetStaticComponentId()
+				{
+						return  STATIC_COMPONENT_ID;
+				}
+				static  void  SetStaticComponentId( ComponentId  id )
+				{
+						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+						{
+								STATIC_COMPONENT_ID = id;
+								// TODO: need  to output debug string.
+						}
+				}
+
+				void  HandleMessage( const  GameUtility::Message&  msg )
+				{}
+				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
+				{}
+				void  Update()
+				{}
+
+				Vector3&  GetPosition()
+				{
+						return  m_position;
+				}
+				Vector3&  GetRotation()
+				{
+						return  m_rotation;
+				}
+				Vector3&  GetScale()
+				{
+						return  m_scale;
+				}
+				Matrix4x4&  GetLocalWorld()
+				{
+						return  m_localWorld;
+				}
+				void  SetPosition( Vector3  position )
+				{
+						m_position = position;
+				}
+				void  SetRotation( Vector3  rotation )
+				{
+						m_position = rotation;
+				}
+				void  SetScale( Vector3  scale )
+				{
+						m_position = scale;
+				}
+				void  SetLocalWorld( Matrix4x4  localWorld )
+				{
+						m_localWorld = localWorld;
+				}
 
 		public:
 				//----------------------------------------------------------------------------------
 				// operator
 				//----------------------------------------------------------------------------------
-
-
+				/* NOTHING */
 
 		};
 
