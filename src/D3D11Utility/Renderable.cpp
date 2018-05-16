@@ -29,6 +29,7 @@ std::unique_ptr<CONSTANTBUFFER>  Renderable::s_pCBuffer = nullptr;
 struct  ConstantBufferForPerFrame
 {
 		Matrix4x4  world;
+		Vector4  meshColor;
 };
 
 
@@ -80,6 +81,8 @@ void  Renderable::Rendering()const
 
 		ConstantBufferForPerFrame  cbuffer;
 		cbuffer.world = m_localWorld;
+		cbuffer.meshColor = m_meshColor;
+
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
 		pd3dDeviceContext->VSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 		pd3dDeviceContext->PSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
@@ -94,6 +97,7 @@ void  Renderable::Update()
 		if ( m_isUpdating == false )
 				return;
 
+
 		Transform*  transform = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
 		if ( transform == nullptr )
 				return;
@@ -101,4 +105,10 @@ void  Renderable::Update()
 		Vector3&  pos = transform->GetPosition();
 
 		pos.x = 100;
+}
+
+
+void  Renderable::SetColor( Vector4  v4Color )
+{
+		m_meshColor = v4Color;
 }

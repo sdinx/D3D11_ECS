@@ -26,9 +26,9 @@ struct  ConstantBufferForPerFrame
 
 Camera::Camera()
 {
-		m_eyePosition = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		m_focusTarget = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
-		m_upDirection = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
+		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
+		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
@@ -38,9 +38,9 @@ Camera::Camera()
 
 Camera::Camera( Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ )
 {
-		m_eyePosition = DirectX::XMLoadFloat3( &eyePosition );
-		m_focusTarget = DirectX::XMLoadFloat3( &focusPosition );
-		m_upDirection = DirectX::XMLoadFloat3( &upDirection );
+		m_eyePosition = eyePosition;
+		m_focusTarget = focusPosition;
+		m_upDirection = upDirection;
 
 		UpdateView();
 		UpdateProjection( FovAngleY, AspectHByW, NearZ, FarZ );
@@ -101,19 +101,19 @@ void  Camera::SetConstantBuffer()
 
 void  Camera::SetPosition( Vector3  eyePosition )
 {
-		m_eyePosition = DirectX::XMLoadFloat3( &eyePosition );
+		m_eyePosition = eyePosition;
 }
 
 
 void  Camera::SetTarget( Vector3  focusPosition )
 {
-		m_focusTarget = DirectX::XMLoadFloat3( &focusPosition );
+		m_focusTarget = focusPosition;
 }
 
 
 void  Camera::SetUp( Vector3  upDirection )
 {
-		m_upDirection = DirectX::XMLoadFloat3( &upDirection );
+		m_upDirection = upDirection;
 }
 
 
@@ -125,7 +125,12 @@ void  Camera::Update()
 
 void  Camera::UpdateView()
 {
-		DirectX::XMStoreFloat4x4( &m_view, DirectX::XMMatrixLookAtLH( m_eyePosition, m_focusTarget, m_upDirection ) );
+		DirectX::XMStoreFloat4x4(
+				&m_view,
+				DirectX::XMMatrixLookAtLH( 
+						DirectX::XMLoadFloat3( &m_eyePosition ),
+						DirectX::XMLoadFloat3( &m_focusTarget ),
+						DirectX::XMLoadFloat3( &m_upDirection ) ) );
 }
 
 
@@ -148,9 +153,9 @@ void  Camera::UpdateConstantBuffer()
 
 void  Camera::Release()
 {
-		m_eyePosition = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		m_focusTarget = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
-		m_upDirection = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
+		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
+		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );

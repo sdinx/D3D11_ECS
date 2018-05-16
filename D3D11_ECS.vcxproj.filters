@@ -173,6 +173,12 @@
     <ClInclude Include="Include\XInputController.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Graphics\Texture.h">
+      <Filter>Header\D3D11Utility\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Readme.txt" />

@@ -54,7 +54,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// protected variables
 				//----------------------------------------------------------------------------------
+
 				Matrix4x4  m_localWorld;
+				Vector4  m_meshColor;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -93,6 +95,8 @@ namespace  D3D11Utility
 				{}
 				void  Rendering()const;
 				void  Update();
+
+				void  SetColor( Vector4  v4Color );
 
 		};
 

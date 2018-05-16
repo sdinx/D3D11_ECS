@@ -6,15 +6,15 @@
 #include  <D3D11Utility\Camera.h>
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Transform.h>
+#include  <XInputController.h>
 
-#include  <GameUtility.h>
 #include  <D3D11Utility\Entity.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\EntityManager.h>
 #include  <D3D11Utility\Systems\SystemManager.h>
-using namespace D3D11Utility;
-using namespace D3D11Utility::Systems;
-using namespace GameUtility;
+using  namespace  D3D11Utility;
+using  namespace  D3D11Utility::Systems;
+using  namespace  GameUtility;
 
 
 static  std::unique_ptr<ComponentManager>  componentManager;
@@ -27,7 +27,7 @@ static  std::unique_ptr<SystemManager>  pSystemManager;
 //----------------------------------------------------------------------------------
 // note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある
 
-
+static Camera*  s_camera = nullptr;
 void  GameUtility::GameInit()
 {
 		componentManager.reset( new  ComponentManager() );
@@ -48,7 +48,7 @@ void  GameUtility::GameInit()
 		entity->AddComponent<Camera>();
 		entity->AddComponent<Renderable>( PT_PLANE );
 		entity->AddComponent<Transform>();
-		entity2->AddComponent<Renderable>( PT_CUBE );
+		//entity2->AddComponent<Renderable>( PT_CUBE );
 
 		Camera*  cam = entity->GetComponent<Camera>();
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
@@ -57,13 +57,38 @@ void  GameUtility::GameInit()
 		Renderable*  asd = entity->GetComponent<Renderable>();
 		Renderable*  asd2 = entity2->GetComponent<Renderable>();
 		Renderable*  asb = cam->GetComponent<Renderable>();
-
+		asd->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
 		Renderable*  camera = ( asd + 1 );
+		s_camera = cam;
 }
 
 
 void  GameUtility::GameLoop()
 {
+		Vector3&  pos = s_camera->GetPosition();
+
+		UpdateController();
 		pSystemManager->Update( 0 );
 		pd3dRenderer->Rendering();
+
+		if ( GetControllerButtonPress( XIP_D_UP ) )
+		{
+				pos.y += 0.001f;
+		}
+		else if ( GetControllerButtonPress( XIP_D_DOWN ) )
+		{
+				pos.y -= 0.001f;
+		}
+		if ( GetControllerButtonPress( XIP_D_RIGHT ) )
+		{
+				pos.x += 0.001f;
+		}
+		else if ( GetControllerButtonPress( XIP_D_LEFT ) )
+		{
+				pos.x -= 0.001f;
+		}
+		if ( GetControllerButtonPress( XIP_ANY ) )
+				s_camera->HandleMessage( Message( MSG_UPDATE_ALL ) );
+
+
 }
