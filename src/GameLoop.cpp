@@ -27,7 +27,7 @@ static  std::unique_ptr<SystemManager>  pSystemManager;
 //----------------------------------------------------------------------------------
 // note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある
 
-
+#include  <fbxsdk.h>
 void  GameUtility::GameInit()
 {
 		componentManager.reset( new  ComponentManager() );
@@ -58,7 +58,14 @@ void  GameUtility::GameInit()
 		Renderable*  asd2 = entity2->GetComponent<Renderable>();
 		Renderable*  asb = cam->GetComponent<Renderable>();
 
-		Renderable*  camera = ( asd + 1 );
+
+		FbxManager*  fbxManager = FbxManager::Create();
+		FbxScene*  fbxScene = FbxScene::Create( fbxManager, "fbxscene" );
+		FbxString  fileName( "humanoid.fbx" );
+		FbxImporter*  fbxImporter = FbxImporter::Create( fbxManager, "imp" );
+		fbxImporter->Initialize( fileName.Buffer(), -1, fbxManager->GetIOSettings() );
+		fbxImporter->Import( fbxScene );
+		fbxImporter->Destroy();
 }
 
 

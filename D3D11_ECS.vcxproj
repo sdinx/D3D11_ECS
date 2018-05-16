@@ -33,6 +33,7 @@
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
+    <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Transform.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
@@ -60,7 +61,9 @@
     <ClInclude Include="Include\D3D11Utility\Systems\IDirect3DRenderer.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\ISystem.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
+    <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
+    <ClInclude Include="Include\D3D11Utility\Texture.h" />
     <ClInclude Include="Include\D3D11Utility\Transform.h" />
     <ClInclude Include="Include\GameUtility.h" />
     <ClInclude Include="Include\IGraphicsRenderer.h" />
@@ -126,14 +129,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x86\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -145,6 +150,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -171,6 +177,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
