@@ -90,6 +90,9 @@
     <ClCompile Include="src\D3D11Utility\Transform.cpp">
       <Filter>Source\D3D11Utility\Components</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -172,6 +175,12 @@
     </ClInclude>
     <ClInclude Include="Include\XInputController.h">
       <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Texture.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
