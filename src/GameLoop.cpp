@@ -53,14 +53,22 @@ void  GameUtility::GameInit()
 		Camera*  cam = entity->GetComponent<Camera>();
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
 		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
-		cam->HandleMessage( GameUtility::Message( MSG_UPDATE_ALL ) );
+		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 		Renderable*  asd = entity->GetComponent<Renderable>();
 		Renderable*  asd2 = entity2->GetComponent<Renderable>();
 		Renderable*  asb = cam->GetComponent<Renderable>();
 
+		Transform*  trans = entity->GetComponent<Transform>();
+		Vector3&  move = trans->GetPosition();
+
+		move.x += 5.0f;
+
+		asd->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 
 		FbxManager*  fbxManager = FbxManager::Create();
 		FbxScene*  fbxScene = FbxScene::Create( fbxManager, "fbxscene" );
+		FbxManager*  fbxManager2 = FbxManager::Create();
+		FbxScene*  fbxScene2 = FbxScene::Create( fbxManager, "fbxscene2" );
 		FbxString  fileName( "humanoid.fbx" );
 		FbxImporter*  fbxImporter = FbxImporter::Create( fbxManager, "imp" );
 		fbxImporter->Initialize( fileName.Buffer(), -1, fbxManager->GetIOSettings() );

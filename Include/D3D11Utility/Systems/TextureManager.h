@@ -11,7 +11,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Interface.h>
-#include  <D3D11Utility\Texture.h>
+#include  <D3D11Utility\Graphics\Texture.h>
 #include  <string>
 #include  <vector>
 

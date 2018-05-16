@@ -2,7 +2,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Systems\TextureManager.h>
-#include  <D3D11Utility\Texture.h>
+#include  <D3D11Utility\Graphics\Texture.h>
 #include  <wrl/client.h>
 #include  <cassert>
 #include  <memory>

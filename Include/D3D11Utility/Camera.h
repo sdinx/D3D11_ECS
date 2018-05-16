@@ -20,13 +20,6 @@
 namespace  D3D11Utility
 {
 
-		enum  MSG_CAMERA
-		{
-				MSG_NONE = 0,
-				MSG_UPDATE_VIEW,
-				MSG_UPDATE_CBUFFER,
-				MSG_UPDATE_ALL,
-		};// enum MSG_CAMERA
 
 		class  Camera :public  Component
 		{
@@ -40,6 +33,13 @@ namespace  D3D11Utility
 				Camera(Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
 
+		enum  MSG_CAMERA
+		{
+				MSG_NONE = 0,
+				MSG_UPDATE_VIEW,
+				MSG_UPDATE_CBUFFER,
+				MSG_UPDATE_ALL,
+		};// enum MSG_CAMERA
 
 		private:
 				//----------------------------------------------------------------------------------

@@ -47,6 +47,7 @@
     <ClInclude Include="Include\D3D11Utility\Entity.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\GeometryShader.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h" />
+    <ClInclude Include="Include\D3D11Utility\Graphics\Texture.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexBuffer.h" />
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h" />
     <ClInclude Include="Include\D3D11Utility\IComponent.h" />
@@ -63,7 +64,6 @@
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
-    <ClInclude Include="Include\D3D11Utility\Texture.h" />
     <ClInclude Include="Include\D3D11Utility\Transform.h" />
     <ClInclude Include="Include\GameUtility.h" />
     <ClInclude Include="Include\IGraphicsRenderer.h" />
