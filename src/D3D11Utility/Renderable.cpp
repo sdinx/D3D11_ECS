@@ -6,6 +6,7 @@
 #include  <D3D11Utility\Transform.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <DirectXMath.h>
+#include  <fbxsdk.h>
 
 
 //----------------------------------------------------------------------------------
@@ -42,7 +43,55 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		UINT  numVertices = CreatePrimitive( PRMTV_2D_SQUARE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices );
 		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
+		INT  indices[ ] = { 0,1,2,1,2,3 };
+		UINT  numIndex = ARRAYSIZE( indices );
+		m_pVertexBuffer->CreateIndexBuffer( indices, numIndex );
+
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
+}
+
+
+Renderable::Renderable( LPCSTR  fbxString )
+{
+		m_isRendering = true;
+
+		m_pVertexShader = new  VertexShader();
+		m_pPixelShader = new  PixelShader();
+		m_pGeometryShader = new  GeometryShader();
+
+
+		FbxManager*  fbxManager = FbxManager::Create();
+		m_fbxScene = FbxScene::Create( fbxManager, "fbxscene" );
+		FbxString  fileName( fbxString );
+		FbxImporter*  fbxImporter = FbxImporter::Create( fbxManager, "imp" );
+		fbxImporter->Initialize( fileName.Buffer(), -1, fbxManager->GetIOSettings() );
+		fbxImporter->Import( m_fbxScene );
+
+		FbxMesh*  mesh;
+		INT  i = 0;
+		INT  maxChildCounts = m_fbxScene->GetRootNode()->GetChildCount();
+
+		for ( i = 0; i < maxChildCounts; i++ )
+				if ( m_fbxScene->GetRootNode()->GetChild( i )->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh )
+						mesh = m_fbxScene->GetRootNode()->GetChild( i )->GetMesh();
+
+		INT  numVertices = mesh->GetControlPointsCount();
+		VERTEX*  vertices = new  VERTEX[numVertices];
+		for ( i = 0; i < ( int ) numVertices; i++ )
+		{
+				vertices[i].position.x = ( float ) mesh->GetControlPointAt( i )[0];
+				vertices[i].position.y = ( float ) mesh->GetControlPointAt( i )[1];
+				vertices[i].position.z = ( float ) mesh->GetControlPointAt( i )[2];
+		}
+
+		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) numVertices );
+		m_pVertexBuffer->CreateIndexBuffer( mesh->GetPolygonVertices(), mesh->GetPolygonVertexCount() );
+
+		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
+
+		SafeDestroy( fbxImporter );
+		//SafeDestroy( m_fbxScene );
+		//SafeDestroy( fbxManager );
 }
 
 
@@ -82,13 +131,13 @@ void  Renderable::Rendering()const
 
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
-		m_pGeometryShader->UpdateShader();
+		//m_pGeometryShader->UpdateShader();
 
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &m_cbuffer, 0, 0 );
 
 		pd3dDeviceContext->VSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 		pd3dDeviceContext->PSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
-		pd3dDeviceContext->GSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
+		//pd3dDeviceContext->GSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 
 		m_pVertexBuffer->BindBuffer();
 }

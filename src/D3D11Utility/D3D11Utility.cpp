@@ -46,11 +46,11 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 
 		if ( FAILED( hr ) )
 		{
-				std::string  directory = "../";
-				directory += (LPSTR)szFileName;
+				std::wstring  directory = L"../";
+				directory += szFileName;
 
 				hr = D3DCompileFromFile(
-						( LPCWSTR ) directory.c_str(),
+						directory.c_str(),
 						NULL,
 						D3D_COMPILE_STANDARD_FILE_INCLUDE,
 						szEntryPoint,

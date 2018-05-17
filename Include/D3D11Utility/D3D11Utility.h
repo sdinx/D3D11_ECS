@@ -24,6 +24,7 @@
 //----------------------------------------------------------------------------------
 #include <crtdbg.h>
 #include <cstdlib> 
+#include  <string>
 #include  <d3d11.h>
 #include  <d3dcompiler.h>
 #include  <DirectXMath.h>
@@ -40,6 +41,14 @@ namespace  D3D11Utility
 				if ( p != nullptr )
 				{
 						p->Release();
+						p = nullptr;
+				}
+		};
+		static  auto  SafeDestroy = [ ]( auto  p )
+		{
+				if ( p != nullptr )
+				{
+						p->Destroy();
 						p = nullptr;
 				}
 		};

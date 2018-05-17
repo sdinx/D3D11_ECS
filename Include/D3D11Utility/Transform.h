@@ -125,11 +125,11 @@ namespace  D3D11Utility
 				}
 				void  SetRotation( Vector3  rotation )
 				{
-						m_position = rotation;
+						m_rotation = rotation;
 				}
 				void  SetScale( Vector3  scale )
 				{
-						m_position = scale;
+						m_scale = scale;
 				}
 				void  SetLocalWorld( Matrix4x4  localWorld )
 				{

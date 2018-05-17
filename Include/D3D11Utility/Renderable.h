@@ -19,7 +19,7 @@
 #include  <IRenderable.h>
 #include  <memory>
 
-
+namespace  fbxsdk { class  FbxScene; }
 namespace  D3D11Utility
 {
 
@@ -38,6 +38,7 @@ namespace  D3D11Utility
 
 				Renderable();
 				Renderable( PRIMITIVE_TYPE  primitiveType );
+				Renderable( LPCSTR  fbxString );
 				~Renderable()
 				{}
 
@@ -59,6 +60,7 @@ namespace  D3D11Utility
 				Graphics::VertexShader*  m_pVertexShader = nullptr;
 				Graphics::PixelShader*  m_pPixelShader = nullptr;
 				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
+				fbxsdk::FbxScene*  m_fbxScene = nullptr;
 
 		public:
 				//----------------------------------------------------------------------------------

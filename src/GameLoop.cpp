@@ -50,7 +50,8 @@ void  GameUtility::GameInit()
 		entity->AddComponent<Camera>();
 		entity->AddComponent<Renderable>( PRMTV_PLANE );
 		entity->AddComponent<Transform>();
-		//entity2->AddComponent<Renderable>( PT_CUBE );
+		entity2->AddComponent<Renderable>( "humanoid.fbx" );
+		entity2->AddComponent<Transform>();
 
 		Camera*  cam = entity->GetComponent<Camera>();
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
@@ -70,19 +71,23 @@ void  GameUtility::GameInit()
 		move.x += 0.5f;
 		rot.z += ToRadian( 0 );
 		scale.y += 0.5f;
+
+
+		Transform*  trans2 = entity2->GetComponent<Transform>();
+		Vector3&  scale2 = trans2->GetScale();
+		Vector3&  pos2 = trans2->GetPosition();
+
+		pos2.y -= 30.0f;
+		pos2.z += 250.0f;
+
+
+
+		asd2->SetColor( Vector4( 1, 0, 0.5f, 0 ) );
+		asd2->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 		
 		asd->SetColor( Vector4( 1, 1, 0, 0 ) );
 		asd->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 
-		FbxManager*  fbxManager = FbxManager::Create();
-		FbxScene*  fbxScene = FbxScene::Create( fbxManager, "fbxscene" );
-		FbxString  fileName( "humanoid.fbx" );
-		FbxImporter*  fbxImporter = FbxImporter::Create( fbxManager, "imp" );
-		fbxImporter->Initialize( fileName.Buffer(), -1, fbxManager->GetIOSettings() );
-		fbxImporter->Import( fbxScene );
-		fbxImporter->Destroy();
-		fbxScene->Destroy();
-		fbxManager->Destroy();
 		asd->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
 		s_camera = cam;
 }

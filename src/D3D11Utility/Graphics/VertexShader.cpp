@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------
 // Defines
 //----------------------------------------------------------------------------------
-#define  DEFAULT_SHADER  L"Default.fx"
+#define  DEFAULT_SHADER  L"Shader/Default.fx"
 #define  DEFAULT_FUNCTION  "VSFunc"
 #define  DEFAULT_VERSION  "vs_5_0"
 
