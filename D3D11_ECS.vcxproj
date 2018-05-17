@@ -24,6 +24,7 @@
     <ClCompile Include="src\D3D11Utility\Entity.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\GeometryShader.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\PixelShader.cpp" />
+    <ClCompile Include="src\D3D11Utility\Graphics\Texture.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
     <ClCompile Include="src\D3D11Utility\Renderable.cpp" />

@@ -76,6 +76,7 @@ namespace  D3D11Utility
 		struct  VERTEX
 		{
 				Vector3  position;
+				//Vector2  texcoord;
 		};// struct VERTEX
 		struct  CONSTANTBUFFER
 		{
@@ -94,9 +95,12 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 		enum  PRIMITIVE_TYPE
 		{
-				PT_CUBE = 0,
-				PT_PLANE,
-				PT_SPHERE,
+				PRMTV_CUBE = 0,
+				PRMTV_PLANE,
+				PRMTV_SPHERE,
+				PRMTV_2D_TRIANGLE,
+				PRMTV_2D_SQUARE,
+				PRMTV_2D_CIRCLE,
 		}; // enum POLYGON_TYPE
 
 		//----------------------------------------------------------------------------------
@@ -117,6 +121,7 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 		HRESULT  CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel, ID3DBlob**  ppBlobOut );
 		HRESULT  CreateConstantBuffer(ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth);
+		UINT  CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices );
 		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
 		// ID3D11Device*  GetD3DDevice();

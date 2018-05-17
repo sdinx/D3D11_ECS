@@ -37,7 +37,6 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 {
 		HRESULT  hr = S_OK;
 
-
 		// 頂点バッファに頂点データを設定
 		D3D11_BUFFER_DESC  bd;
 		ZeroMemory( &bd, sizeof( D3D11_BUFFER_DESC ) );
@@ -46,13 +45,11 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
-
 		// サブリソースの設定
 		D3D11_SUBRESOURCE_DATA  initData;
 		ZeroMemory( &initData, sizeof( D3D11_SUBRESOURCE_DATA ) );
 		initData.pSysMem = m_pVertices;
 		
-
 		// 頂点バッファの生成
 		hr = pd3dDevice->CreateBuffer( &bd, &initData, &m_pVertexBuffer );
 		if ( FAILED( hr ) )
@@ -61,10 +58,8 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 				return  hr;
 		}
 
-
 		m_nStride = sizeof( VERTEX );
 		m_nOffset = 0;
-
 
 		return  hr;
 }

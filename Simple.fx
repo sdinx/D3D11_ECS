@@ -54,7 +54,7 @@ GSPSInput VSFunc( VSInput input )
 //-----------------------------------------------------------------------------------
 //! @brief      ジオメトリシェーダエントリーポイント
 //-----------------------------------------------------------------------------------
-[maxvertexcount(3)]
+[maxvertexcount(4)]
 void GSFunc( triangle GSPSInput input[3], inout TriangleStream<GSPSInput> stream )
 {
 		GSPSInput output;

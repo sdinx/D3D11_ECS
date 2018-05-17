@@ -109,6 +109,61 @@ void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext* 
 }
 
 
+UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices )
+{
+		FLOAT  sx = size.x / 2.0f;
+		FLOAT  sy = size.y / 2.0f;
+		FLOAT  sz = size.z / 2.0f;
+		UINT  numVertices = 0;
+
+		switch ( primitiveType )
+		{
+		case  PRMTV_CUBE:
+				{
+
+				}// end case PRMTV_CUBE
+				break;
+		case PRMTV_PLANE:
+				{
+
+				}// end case PRMTV_PLANE
+				break;
+		case  PRMTV_SPHERE:
+				{
+
+				}// end case PRMTV_SPHERE
+		case PRMTV_2D_TRIANGLE:
+				{
+						numVertices = 3;
+						ppVertices = new  VERTEX[numVertices];
+						ppVertices[0].position = Vector3( position.x, position.y + sy, position.z );
+						ppVertices[1].position = Vector3( position.x + sx, position.y - sy, position.z );
+						ppVertices[2].position = Vector3( position.x - sx, position.y - sy, position.z );
+
+				}// end case PRMTV_PLANE
+				break;
+		case  PRMTV_2D_SQUARE:
+				{
+						numVertices = 4;
+						ppVertices = new  VERTEX[numVertices];
+						ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z );
+						ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z );
+						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
+						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
+
+				}// end case PRMTV_SPHERE
+				break;
+		case  PRMTV_2D_CIRCLE:
+				{
+
+				}// end case PRMTV_CUBE
+				break;
+		}// end switch
+
+		return  numVertices;
+}
+
+
 FLOAT  D3D11Utility::GetAspectRatio()
 {
 		auto  d3d11 = _Singleton<Systems::IDirect3D>::GetInstance();

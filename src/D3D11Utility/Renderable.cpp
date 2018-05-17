@@ -38,13 +38,8 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		m_pPixelShader = new  PixelShader();
 		m_pGeometryShader = new  GeometryShader();
 
-		VERTEX  vertices[ ] = {
-				Vector3( 0.0f,0.5f,0.0f ),
-				Vector3( 0.5f,-0.5f,0.0f ),
-				Vector3( -0.5f,-0.5f,0.0f ),
-		};
-		UINT  numVertices = ARRAYSIZE( vertices );
-
+		VERTEX*  vertices;
+		UINT  numVertices = CreatePrimitive( PRMTV_2D_SQUARE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices );
 		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
@@ -122,5 +117,5 @@ void  Renderable::UpdateConstantBuffer( Matrix4x4  world )
 
 void  Renderable::SetColor( Vector4  v4Color )
 {
-		m_meshColor = v4Color;
+		m_cbuffer.meshColor = v4Color;
 }

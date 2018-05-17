@@ -28,6 +28,7 @@ namespace  D3D11Utility
 				struct  ConstantBufferForPerFrame
 				{
 						Matrix4x4  world;
+						Vector4  meshColor;
 				};
 
 		public:
@@ -58,7 +59,6 @@ namespace  D3D11Utility
 				Graphics::VertexShader*  m_pVertexShader = nullptr;
 				Graphics::PixelShader*  m_pPixelShader = nullptr;
 				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
-				Vector4  m_meshColor;
 
 		public:
 				//----------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ void  GameUtility::GameInit()
 		entity->SetTag( "entity" );
 
 		entity->AddComponent<Camera>();
-		entity->AddComponent<Renderable>( PT_PLANE );
+		entity->AddComponent<Renderable>( PRMTV_PLANE );
 		entity->AddComponent<Transform>();
 		//entity2->AddComponent<Renderable>( PT_CUBE );
 
@@ -68,9 +68,10 @@ void  GameUtility::GameInit()
 
 		pos.z += 0.5f;
 		move.x += 0.5f;
-		rot.z += ToRadian( 90 );
+		rot.z += ToRadian( 0 );
 		scale.y += 0.5f;
-
+		
+		asd->SetColor( Vector4( 1, 1, 0, 0 ) );
 		asd->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 
 		FbxManager*  fbxManager = FbxManager::Create();

@@ -93,6 +93,9 @@
     <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp">
       <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Graphics\Texture.cpp">
+      <Filter>Source\D3D11Utility\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">

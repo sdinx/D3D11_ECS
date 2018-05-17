@@ -64,6 +64,9 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
+						void  SetTexture();
+						void  Release();
+
 				};// class Texture
 
 		}// namespace Graphics
