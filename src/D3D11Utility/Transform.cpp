@@ -26,6 +26,7 @@ void  Transform::Update()
 		mtxRotate = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &m_rotation ) );
 		mtxScale = XMMatrixScalingFromVector( XMLoadFloat3( &m_scale ) );
 
+
 		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxTrans, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );

@@ -61,6 +61,7 @@ enum ControllerNumber{
 #define XIP_RSB				XINPUT_GAMEPAD_RIGHT_THUMB		// 右スティックボタン
 #define XIP_LB				XINPUT_GAMEPAD_LEFT_SHOULDER	// Lボタン
 #define XIP_RB				XINPUT_GAMEPAD_RIGHT_SHOULDER	// Rボタン
+#define XIP_ANY			( 0xffff )
 
 /* 左右識別 */
 #define XIP_LEFT			"XIP_LEFT"			// 左

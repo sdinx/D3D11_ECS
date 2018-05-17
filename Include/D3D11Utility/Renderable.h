@@ -58,6 +58,7 @@ namespace  D3D11Utility
 				Graphics::VertexShader*  m_pVertexShader = nullptr;
 				Graphics::PixelShader*  m_pPixelShader = nullptr;
 				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
+				Vector4  m_meshColor;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -96,6 +97,7 @@ namespace  D3D11Utility
 				void  Rendering()const;
 				void  Update();
 				void  UpdateConstantBuffer( Matrix4x4  world );
+				void  SetColor( Vector4  v4Color );
 
 		};
 

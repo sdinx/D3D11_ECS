@@ -3,11 +3,16 @@
 // desc: テクスチャの作成と管理を行う
 //----------------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+/* NOTHING */
+
 #ifndef  _INCLUDED_D3D11_UTILITY_TEXTURE_MANAGER_
 #define  _INCLUDED_D3D11_UTILITY_TEXTURE_MANAGER_
 
 //----------------------------------------------------------------------------------
-// Include
+// include
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Interface.h>
@@ -38,6 +43,7 @@ namespace  D3D11Utility
 
 		namespace  Systems
 		{
+				using  SystemId = int;
 
 				class  TextureManager
 				{
@@ -55,7 +61,7 @@ namespace  D3D11Utility
 						// private variables
 						//----------------------------------------------------------------------------------
 
-						std::vector<Texture*>  m_textures;
+						std::vector<Graphics::Texture*>  m_textures;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -74,16 +80,15 @@ namespace  D3D11Utility
 						Image*  LoadImageFile( const  std::string  &filename );
 #endif// UNICODE
 
-
 				public:
 						//----------------------------------------------------------------------------------
 						// public methods
 						//----------------------------------------------------------------------------------
 
 #if  defined( _UNICODE ) || ( UNICODE )
-						TextureId  CreateTexture( const  std::wstring  &filename );
+						Graphics::TextureId  CreateTexture( const  std::wstring  &filename );
 #else// Multibyte
-						TextureId  CreateTexture( const  std::string  &filename );
+						Graphics::TextureId  CreateTexture( const  std::string  &filename );
 #endif// UNICODE
 
 						void  Release();
@@ -92,5 +97,6 @@ namespace  D3D11Utility
 
 		}// namespace Systems
 }// namespace D3D11Utility
+
 
 #endif // ! _INCLUDED_D3D11_UTILITY_TEXTURE_MANAGER_

@@ -16,6 +16,14 @@
 
 namespace  D3D11Utility
 {
+		static  auto  ToDegree = [ ]( auto  rad )
+		{
+				return  ( float ) rad*180.0f / DirectX::XM_PI;
+		};
+		static  auto  ToRadian = [ ]( auto  deg )
+		{
+				return  DirectX::XM_PI*( float ) deg / 180.0f;
+		};
 
 		class  Transform :public  Component
 		{
@@ -30,7 +38,7 @@ namespace  D3D11Utility
 						m_position( 0, 0, 0 ),
 						m_translation( 0, 0, 0 ),
 						m_rotation( 0, 0, 0 ),
-						m_scale( 0, 0, 0 )
+						m_scale( 1, 1, 1 )
 				{
 
 				}

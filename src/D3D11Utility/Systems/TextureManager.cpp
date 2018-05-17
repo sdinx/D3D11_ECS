@@ -92,9 +92,9 @@ Image*  TextureManager::LoadImageFile( const  std::string  &filename )
 
 
 #if  defined( _UNICODE ) || ( UNICODE )
-TextureId  TextureManager::CreateTexture( const  std::wstring  &filename )
+Graphics::TextureId  TextureManager::CreateTexture( const  std::wstring  &filename )
 #else// Multibyte
-TextureId  TextureManager::CreateTexture( const  std::string  &filename )
+Graphics::TextureId  TextureManager::CreateTexture( const  std::string  &filename )
 #endif// UNICODE
 {
 		Image*  image = LoadImageFile( filename );

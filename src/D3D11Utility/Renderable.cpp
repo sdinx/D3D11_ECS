@@ -70,6 +70,7 @@ void  Renderable::HandleMessage( const  Message&  msg )
 						Transform*  transform = GetComponent<Transform>();
 						if ( transform == nullptr )
 								return;
+						transform->Update();
 						UpdateConstantBuffer( transform->GetLocalWorld() );
 				}// end case MSG_UPDATE_CBUFFER
 				break;
@@ -89,6 +90,7 @@ void  Renderable::Rendering()const
 		m_pGeometryShader->UpdateShader();
 
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &m_cbuffer, 0, 0 );
+
 		pd3dDeviceContext->VSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 		pd3dDeviceContext->PSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
 		pd3dDeviceContext->GSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
@@ -102,17 +104,23 @@ void  Renderable::Update()
 		if ( m_isUpdating == false )
 				return;
 
+
 		Transform*  transform = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
 		if ( transform == nullptr )
 				return;
 		transform->Update();
-		Vector3&  pos = transform->GetPosition();
 
-		pos.x = 100;
+		HandleMessage( MSG_UPDATE_CBUFFER );
 }
 
 
 void  Renderable::UpdateConstantBuffer( Matrix4x4  world )
 {
 		m_cbuffer.world = world;
+}
+
+
+void  Renderable::SetColor( Vector4  v4Color )
+{
+		m_meshColor = v4Color;
 }
