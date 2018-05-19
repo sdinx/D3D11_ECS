@@ -16,6 +16,14 @@
 
 namespace  D3D11Utility
 {
+		static  auto  ToDegree = [ ]( auto  rad )
+		{
+				return  ( float ) rad*180.0f / DirectX::XM_PI;
+		};
+		static  auto  ToRadian = [ ]( auto  deg )
+		{
+				return  DirectX::XM_PI*( float ) deg / 180.0f;
+		};
 
 		class  Transform :public  Component
 		{
@@ -28,8 +36,9 @@ namespace  D3D11Utility
 
 				Transform() :
 						m_position( 0, 0, 0 ),
+						m_translation( 0, 0, 0 ),
 						m_rotation( 0, 0, 0 ),
-						m_scale( 0, 0, 0 )
+						m_scale( 1, 1, 1 )
 				{
 
 				}
@@ -41,6 +50,7 @@ namespace  D3D11Utility
 
 				static  ComponentId  STATIC_COMPONENT_ID;
 				Vector3  m_position;
+				Vector3  m_translation;
 				Vector3  m_rotation;
 				Vector3  m_scale;
 				Matrix4x4  m_localWorld;
@@ -63,6 +73,7 @@ namespace  D3D11Utility
 				// public methods
 				//----------------------------------------------------------------------------------
 
+				/* static */
 				static  ComponentId  GetStaticComponentId()
 				{
 						return  STATIC_COMPONENT_ID;
@@ -76,16 +87,21 @@ namespace  D3D11Utility
 						}
 				}
 
+				/* derived virtual */
 				void  HandleMessage( const  GameUtility::Message&  msg )
 				{}
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
-				void  Update()
-				{}
+				void  Update();
 
+				/* Setter and Getter */
 				Vector3&  GetPosition()
 				{
 						return  m_position;
+				}
+				Vector3&  GetTranslation()
+				{
+						return  m_translation;
 				}
 				Vector3&  GetRotation()
 				{
@@ -103,13 +119,17 @@ namespace  D3D11Utility
 				{
 						m_position = position;
 				}
+				void  SetTranslation( Vector3  translation )
+				{
+						m_translation = translation;
+				}
 				void  SetRotation( Vector3  rotation )
 				{
-						m_position = rotation;
+						m_rotation = rotation;
 				}
 				void  SetScale( Vector3  scale )
 				{
-						m_position = scale;
+						m_scale = scale;
 				}
 				void  SetLocalWorld( Matrix4x4  localWorld )
 				{

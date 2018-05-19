@@ -3,29 +3,29 @@
 //-----------------------------------------------------------------------------------
 cbuffer CBuffer : register( b0 )
 {
-		float4x4  View;
-		float4x4  Proj;
+		float4x4  view;
+		float4x4  proj;
 };
 
 cbuffer CObject : register( b1 )
 {
-		float4x4  World;
+		float4x4  world;
 		float4  meshColor;
 };
 
 //-----------------------------------------------------------------------------------
 // Texture variables
 //-----------------------------------------------------------------------------------
-Texture2D  diffuseTexture;
-SamplerState  diffuseTextureSampler;
+Texture2D  diffuseTexture : register( t0 );
+SamplerState  diffuseTextureSampler : register( s0 );
 
 //-----------------------------------------------------------------------------------
 // VSInput structure
 //-----------------------------------------------------------------------------------
 struct VSInput
 {
-    float3  Position : POSITION;
-		//float2  Tex : TEXCOORD0;
+		float4  position : POSITION;
+		//float2  texcoord : TEXCOORD0;
 };
 
 //-----------------------------------------------------------------------------------
@@ -33,8 +33,8 @@ struct VSInput
 //-----------------------------------------------------------------------------------
 struct GSPSInput
 {
-    float4  Position : SV_POSITION;
-		//float2  Tex : TEXCOORD0;
+		float4  position : SV_POSITION;
+		//float2  texcoord : TEXCOORD0;
 };
 
 //-----------------------------------------------------------------------------------
@@ -42,51 +42,53 @@ struct GSPSInput
 //-----------------------------------------------------------------------------------
 GSPSInput VSFunc( VSInput input )
 {
-    GSPSInput output = (GSPSInput)0;
+		GSPSInput output = ( GSPSInput ) 0;
 
-    // 入力データをそのまま流す
-    output.Position = float4( input.Position, 1.0f );
-		//output.Tex = input.Tex;
+		// ワールド空間に変換
+		output.position = mul( world, input.position );
 
-    return output;
+		// ビュー空間に変換
+		output.position = mul( view, output.position );
+
+		// 射影空間に変換
+		output.position = mul( proj, output.position );
+
+		return output;
 }
 
 //-----------------------------------------------------------------------------------
 //! @brief      ジオメトリシェーダエントリーポイント
 //-----------------------------------------------------------------------------------
-[maxvertexcount(4)]
-void GSFunc( triangle GSPSInput input[3], inout TriangleStream<GSPSInput> stream )
+[maxvertexcount( 3 )]
+void GSFunc( triangle  GSPSInput  input[3], inout  TriangleStream<GSPSInput>  stream )
 {
 		GSPSInput output;
 
-    for( int i=0; i<3; ++i )
-    {
-        output = (GSPSInput)0;
+		for ( int i = 0; i < 3; ++i )
+		{
+				output = ( GSPSInput ) 0;
 
-        // ワールド空間に変換
-        float4 worldPos = mul( World, input[ i ].Position );
+				// ワールド空間に変換
+				output.position = mul( world, input[i].position );
 
-        // ビュー空間に変換
-        float4 viewPos  = mul( View,  worldPos );
+				// ビュー空間に変換
+				output.position = mul( view, output.position );
 
-        // 射影空間に変換
-        float4 projPos  = mul( Proj,  viewPos );
+				// 射影空間に変換
+				output.position = mul( proj, output.position );
 
-        // 出力値設定
-        output.Position = projPos;
-
-        // ストリームに追加
-        stream.Append( output );
-    }
-    stream.RestartStrip();
+				// ストリームに追加
+				stream.Append( output );
+		}
+		stream.RestartStrip();
 }
 
 //------------------------------------------------------------------------------------
 //! @brief      ピクセルシェーダエントリーポイント
 //------------------------------------------------------------------------------------
-float4 PSFunc( GSPSInput input ) : SV_TARGET0
+float4 PSFunc( GSPSInput input ) : SV_TARGET
 {
 		//float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.Tex );
 
-		return  meshColor;// *texel;
+		return  meshColor;
 }

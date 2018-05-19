@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------
 // Defines
 //----------------------------------------------------------------------------------
-#define  DEFAULT_SHADER  L"Simple.fx"
+#define  DEFAULT_SHADER  L"Shader/Default.fx"
 #define  DEFAULT_FUNCTION  "PSFunc"
 #define  DEFAULT_VERSION  "ps_5_0"
 

@@ -19,12 +19,17 @@
 #include  <IRenderable.h>
 #include  <memory>
 
-
+namespace  fbxsdk { class  FbxScene; }
 namespace  D3D11Utility
 {
 
 		class  Renderable : virtual  public  Component, virtual  public  IRenderable
 		{
+				struct  ConstantBufferForPerFrame
+				{
+						Matrix4x4  world;
+						Vector4  meshColor;
+				};
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -33,9 +38,14 @@ namespace  D3D11Utility
 
 				Renderable();
 				Renderable( PRIMITIVE_TYPE  primitiveType );
+				Renderable( LPCSTR  fbxString );
 				~Renderable()
 				{}
 
+				enum  MSG_RENDERABLE
+				{
+						MSG_UPDATE_CBUFFER,
+				};// enum MSG_RENDERABLE
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -43,18 +53,15 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
+				static  const  UINT  s_nConstantBufferSlot = 1;
+				static  ID3D11Buffer  *s_pConstantBuffer;
 
+				ConstantBufferForPerFrame  m_cbuffer;
 				Graphics::VertexBuffer*  m_pVertexBuffer = nullptr;
 				Graphics::VertexShader*  m_pVertexShader = nullptr;
 				Graphics::PixelShader*  m_pPixelShader = nullptr;
 				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
-
-		protected:
-				//----------------------------------------------------------------------------------
-				// protected variables
-				//----------------------------------------------------------------------------------
-				Matrix4x4  m_localWorld;
+				fbxsdk::FbxScene*  m_fbxScene = nullptr;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -87,12 +94,13 @@ namespace  D3D11Utility
 						}
 				}
 
-				void  HandleMessage( const  GameUtility::Message&  msg )
-				{}
+				void  HandleMessage( const  GameUtility::Message&  msg );
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
 				void  Rendering()const;
 				void  Update();
+				void  UpdateConstantBuffer( Matrix4x4  world );
+				void  SetColor( Vector4  v4Color );
 
 		};
 

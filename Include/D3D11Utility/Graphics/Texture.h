@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
-// file: TextureManager.h
-// desc: テクスチャの作成と管理を行う
+// file: Texture.h
+// desc: テクスチャのサイズやイメージなどの情報を持ったクラス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -8,60 +8,44 @@
 //----------------------------------------------------------------------------------
 /* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_TEXTURE_MANAGER_
-#define  _INCLUDED_D3D11_UTILITY_TEXTURE_MANAGER_
+#ifndef  _INCLUDED_D3D11_UTILITY_TEXTURE_
+#define  _INCLUDED_D3D11_UTILITY_TEXTURE_
 
 //----------------------------------------------------------------------------------
-// include
+// includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Interface.h>
-#include  <D3D11Utility\Graphics\Texture.h>
-#include  <string>
-#include  <vector>
 
 
 namespace  D3D11Utility
 {
-		struct Image
-		{
-				Image() :
-						nWidth( 0 ),
-						nHeight( 0 ),
-						nPixelBytes( 0 )
-				{}
-				Image( INT  w, INT  h, INT  pb ) :
-						nWidth( w ),
-						nHeight( h ),
-						nPixelBytes( pb )
-				{}
-				std::vector<BYTE>  byBuffer;
-				INT  nWidth;
-				INT  nHeight;
-				INT  nPixelBytes;
-		};// struct Image
+		const  int  TEXTURE_ID_INVALID = -1;
 
-		namespace  Systems
+		namespace  Graphics
 		{
-				using  SystemId = int;
+				using  TextureId = int;
 
-				class  TextureManager
+				class  Texture
 				{
+						friend  class  Systems::TextureManager;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						TextureManager();
-						virtual  ~TextureManager();
+						Texture();
+						virtual  ~Texture();
 
 				private:
 						//----------------------------------------------------------------------------------
 						// private variables
 						//----------------------------------------------------------------------------------
 
-						std::vector<Graphics::Texture*>  m_textures;
+						ID3D11Texture2D*  m_texture = nullptr;
+						ID3D11ShaderResourceView*  m_SRView = nullptr;
+						ID3D11SamplerState*  m_sampler = nullptr;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -73,30 +57,20 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// private methods
 						//----------------------------------------------------------------------------------
-
-#if  defined( _UNICODE ) || ( UNICODE )
-						Image*  LoadImageFile( const  std::wstring  &filename );
-#else// Multibyte
-						Image*  LoadImageFile( const  std::string  &filename );
-#endif// UNICODE
+						/* NOTHING */
 
 				public:
 						//----------------------------------------------------------------------------------
 						// public methods
 						//----------------------------------------------------------------------------------
 
-#if  defined( _UNICODE ) || ( UNICODE )
-						Graphics::TextureId  CreateTexture( const  std::wstring  &filename );
-#else// Multibyte
-						Graphics::TextureId  CreateTexture( const  std::string  &filename );
-#endif// UNICODE
-
+						void  SetTexture();
 						void  Release();
 
-				};// class TextureManager
+				};// class Texture
 
-		}// namespace Systems
+		}// namespace Graphics
 }// namespace D3D11Utility
 
 
-#endif // ! _INCLUDED_D3D11_UTILITY_TEXTURE_MANAGER_
+#endif // ! _INCLUDED_D3D11_UTILITY_TEXTURE_

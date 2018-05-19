@@ -46,11 +46,11 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 
 		if ( FAILED( hr ) )
 		{
-				std::string  directory = "../";
-				directory += (LPSTR)szFileName;
+				std::wstring  directory = L"../";
+				directory += szFileName;
 
 				hr = D3DCompileFromFile(
-						( LPCWSTR ) directory.c_str(),
+						directory.c_str(),
 						NULL,
 						D3D_COMPILE_STANDARD_FILE_INCLUDE,
 						szEntryPoint,
@@ -73,9 +73,8 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 }
 
 
-HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth )
+HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer*&  ppCB, size_t  byteWidth )
 {
-		static  UINT  maxConstantBuffer = 0;
 		HRESULT  hr = S_OK;
 
 
@@ -89,15 +88,12 @@ HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer**  ppCB, UINT&  nOutSl
 
 
 		// 定数バッファの設定
-		hr = pd3dDevice->CreateBuffer( &bd, NULL, ppCB );
+		hr = pd3dDevice->CreateBuffer( &bd, NULL, &ppCB );
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<D3D11Utility> FAILED CreateBuffer (constant buffer) \n" ) );
 				return  hr;
 		}
-		nOutSlot = maxConstantBuffer;
-		maxConstantBuffer++;
-
 
 		return  hr;
 }
@@ -106,6 +102,61 @@ void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext* 
 {
 		D3D11Utility::pd3dDevice = pDevice;
 		D3D11Utility::pd3dDeviceContext = pDeviceContext;
+}
+
+
+UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices )
+{
+		FLOAT  sx = size.x / 2.0f;
+		FLOAT  sy = size.y / 2.0f;
+		FLOAT  sz = size.z / 2.0f;
+		UINT  numVertices = 0;
+
+		switch ( primitiveType )
+		{
+		case  PRMTV_CUBE:
+				{
+
+				}// end case PRMTV_CUBE
+				break;
+		case PRMTV_PLANE:
+				{
+
+				}// end case PRMTV_PLANE
+				break;
+		case  PRMTV_SPHERE:
+				{
+
+				}// end case PRMTV_SPHERE
+		case PRMTV_2D_TRIANGLE:
+				{
+						numVertices = 3;
+						ppVertices = new  VERTEX[numVertices];
+						ppVertices[0].position = Vector3( position.x, position.y + sy, position.z );
+						ppVertices[1].position = Vector3( position.x + sx, position.y - sy, position.z );
+						ppVertices[2].position = Vector3( position.x - sx, position.y - sy, position.z );
+
+				}// end case PRMTV_PLANE
+				break;
+		case  PRMTV_2D_SQUARE:
+				{
+						numVertices = 4;
+						ppVertices = new  VERTEX[numVertices];
+						ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z );
+						ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z );
+						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
+						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
+
+				}// end case PRMTV_SPHERE
+				break;
+		case  PRMTV_2D_CIRCLE:
+				{
+
+				}// end case PRMTV_CUBE
+				break;
+		}// end switch
+
+		return  numVertices;
 }
 
 

@@ -2,17 +2,21 @@
 // Include
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Camera.h>
+#include  <D3D11Utility\Transform.h>
+#include  <D3D11Utility\Systems\ComponentManager.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
 using  namespace  D3D11Utility;
+using  namespace  DirectX;
 
 //----------------------------------------------------------------------------------
 // static  variables
 //----------------------------------------------------------------------------------
 ComponentId  Camera::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
-std::unique_ptr<CONSTANTBUFFER>  Camera::s_pCBuffer = nullptr;
+const  UINT  Camera::s_nConstantBufferSlot;
+ID3D11Buffer*  Camera::s_pConstantBuffer = nullptr;
 
 //----------------------------------------------------------------------------------
 // struct
@@ -26,9 +30,9 @@ struct  ConstantBufferForPerFrame
 
 Camera::Camera()
 {
-		m_eyePosition = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		m_focusTarget = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
-		m_upDirection = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
+		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
+		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
@@ -38,9 +42,9 @@ Camera::Camera()
 
 Camera::Camera( Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ )
 {
-		m_eyePosition = DirectX::XMLoadFloat3( &eyePosition );
-		m_focusTarget = DirectX::XMLoadFloat3( &focusPosition );
-		m_upDirection = DirectX::XMLoadFloat3( &upDirection );
+		m_eyePosition = eyePosition;
+		m_focusTarget = focusPosition;
+		m_upDirection = upDirection;
 
 		UpdateView();
 		UpdateProjection( FovAngleY, AspectHByW, NearZ, FarZ );
@@ -59,6 +63,14 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 		{
 		case  MSG_UPDATE_VIEW:
 				{
+						Transform*  trans = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
+						if ( trans != nullptr )
+						{
+								trans->Update();
+								XMMATRIX  localWorld = XMLoadFloat4x4( &trans->GetLocalWorld() );
+
+								XMStoreFloat4x4( &m_view, XMMatrixMultiply( XMLoadFloat4x4( &m_view ), localWorld ) );
+						}// end if
 						UpdateView();
 				}
 				break;
@@ -91,29 +103,28 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg, Value  var )
 
 void  Camera::SetConstantBuffer()
 {
-		if ( s_pCBuffer == nullptr )
+		if ( s_pConstantBuffer == nullptr )
 		{
-				s_pCBuffer = std::unique_ptr<CONSTANTBUFFER>( new  CONSTANTBUFFER );
-				CreateConstantBuffer( &s_pCBuffer->pCB, s_pCBuffer->nCBSlot, sizeof( ConstantBufferForPerFrame ) );
+				CreateConstantBuffer( s_pConstantBuffer, sizeof( ConstantBufferForPerFrame ) );
 		}
 }
 
 
 void  Camera::SetPosition( Vector3  eyePosition )
 {
-		m_eyePosition = DirectX::XMLoadFloat3( &eyePosition );
+		m_eyePosition = eyePosition;
 }
 
 
 void  Camera::SetTarget( Vector3  focusPosition )
 {
-		m_focusTarget = DirectX::XMLoadFloat3( &focusPosition );
+		m_focusTarget = focusPosition;
 }
 
 
 void  Camera::SetUp( Vector3  upDirection )
 {
-		m_upDirection = DirectX::XMLoadFloat3( &upDirection );
+		m_upDirection = upDirection;
 }
 
 
@@ -125,7 +136,13 @@ void  Camera::Update()
 
 void  Camera::UpdateView()
 {
-		DirectX::XMStoreFloat4x4( &m_view, DirectX::XMMatrixLookAtLH( m_eyePosition, m_focusTarget, m_upDirection ) );
+		DirectX::XMStoreFloat4x4(
+				&m_view,
+				DirectX::XMMatrixLookAtLH( 
+						DirectX::XMLoadFloat3( &m_eyePosition ),
+						DirectX::XMLoadFloat3( &m_focusTarget ),
+						DirectX::XMLoadFloat3( &m_upDirection ) ) );
+
 }
 
 
@@ -140,17 +157,22 @@ void  Camera::UpdateConstantBuffer()
 		ConstantBufferForPerFrame  cbuffer;
 		cbuffer.view = GetMatrix4x4View();
 		cbuffer.projection = GetMatrix4x4Projection();
-		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
-		pd3dDeviceContext->VSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
-		pd3dDeviceContext->GSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &cbuffer, 0, 0 );
+		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+
+		//D3D11_MAPPED_SUBRESOURCE  pdata;
+		//pd3dDeviceContext->Map( s_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata );
+		//memcpy_s( pdata.pData, pdata.RowPitch, ( void* ) ( &cbuffer ), sizeof( cbuffer ) );
+		//pd3dDeviceContext->Unmap( s_pConstantBuffer, 0 );
 }
 
 
 void  Camera::Release()
 {
-		m_eyePosition = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		m_focusTarget = DirectX::XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
-		m_upDirection = DirectX::XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
+		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
+		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
+		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );

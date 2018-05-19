@@ -8,7 +8,7 @@
 //----------------------------------------------------------------------------------
 // Defines
 //----------------------------------------------------------------------------------
-#define  DEFAULT_SHADER  L"Simple.fx"
+#define  DEFAULT_SHADER  L"Shader/Default.fx"
 #define  DEFAULT_FUNCTION  "GSFunc"
 #define  DEFAULT_VERSION  "gs_5_0"
 

@@ -20,13 +20,6 @@
 namespace  D3D11Utility
 {
 
-		enum  MSG_CAMERA
-		{
-				MSG_NONE = 0,
-				MSG_UPDATE_VIEW,
-				MSG_UPDATE_CBUFFER,
-				MSG_UPDATE_ALL,
-		};// enum MSG_CAMERA
 
 		class  Camera :public  Component
 		{
@@ -40,6 +33,13 @@ namespace  D3D11Utility
 				Camera(Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
 
+		enum  MSG_CAMERA
+		{
+				MSG_NONE = 0,
+				MSG_UPDATE_VIEW,
+				MSG_UPDATE_CBUFFER,
+				MSG_UPDATE_ALL,
+		};// enum MSG_CAMERA
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -47,14 +47,15 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
+				static  const  UINT  s_nConstantBufferSlot = 0;
+				static  ID3D11Buffer  *s_pConstantBuffer;
 				BOOL  m_isEnable = false;
 
 				Matrix4x4  m_view;
 				Matrix4x4  m_projection;
-				DirectX::XMVECTOR  m_eyePosition;
-				DirectX::XMVECTOR  m_focusTarget;
-				DirectX::XMVECTOR  m_upDirection;
+				Vector3  m_eyePosition;
+				Vector3  m_focusTarget;
+				Vector3  m_upDirection;
 
 
 		public:
@@ -88,24 +89,36 @@ namespace  D3D11Utility
 						}
 				}
 
-				Matrix4x4  GetMatrix4x4Projection()
+				Matrix4x4&  GetMatrix4x4Projection()
 				{
 						return  m_projection;
 				}
-				Matrix4x4  GetMatrix4x4View()
+				Matrix4x4&  GetMatrix4x4View()
 				{
 						return  m_view;
 				}
-				DirectX::XMMATRIX  GetMatrixProjection()
+				DirectX::XMMATRIX&  GetMatrixProjection()
 				{
 						return  DirectX::XMLoadFloat4x4( &m_projection );
 				}
-				DirectX::XMMATRIX  GetMatrixView()
+				DirectX::XMMATRIX&  GetMatrixView()
 				{
 						return  DirectX::XMLoadFloat4x4( &m_view );
 				}
 				void  HandleMessage( const  GameUtility::Message&  msg );
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
+				Vector3&  GetPosition()
+				{
+						return  m_eyePosition;
+				}
+				Vector3&  GetTarget()
+				{
+						return  m_focusTarget;
+				}
+				Vector3&  GetUp()
+				{
+						return  m_upDirection;
+				}
 				void  SetPosition( Vector3  eyePosition );
 				void  SetTarget( Vector3  focusPosition );
 				void  SetUp( Vector3  upDirection );

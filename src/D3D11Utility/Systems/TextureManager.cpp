@@ -2,7 +2,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Systems\TextureManager.h>
-#include  <D3D11Utility\Texture.h>
+#include  <D3D11Utility\Graphics\Texture.h>
 #include  <wrl/client.h>
 #include  <cassert>
 #include  <memory>
@@ -92,9 +92,9 @@ Image*  TextureManager::LoadImageFile( const  std::string  &filename )
 
 
 #if  defined( _UNICODE ) || ( UNICODE )
-TextureId  TextureManager::CreateTexture( const  std::wstring  &filename )
+Graphics::TextureId  TextureManager::CreateTexture( const  std::wstring  &filename )
 #else// Multibyte
-TextureId  TextureManager::CreateTexture( const  std::string  &filename )
+Graphics::TextureId  TextureManager::CreateTexture( const  std::string  &filename )
 #endif// UNICODE
 {
 		Image*  image = LoadImageFile( filename );
