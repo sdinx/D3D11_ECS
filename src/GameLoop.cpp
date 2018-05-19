@@ -12,6 +12,7 @@
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\EntityManager.h>
 #include  <D3D11Utility\Systems\SystemManager.h>
+#include  <D3D11Utility\Systems\TextureManager.h>
 using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
@@ -21,6 +22,7 @@ static  std::unique_ptr<ComponentManager>  componentManager;
 static  std::unique_ptr<IDirect3DRenderer>  pd3dRenderer;
 static  std::unique_ptr<EntityManager>  pEntityManager;
 static  std::unique_ptr<SystemManager>  pSystemManager;
+static  std::unique_ptr<TextureManager>  pTextureManager;
 
 //----------------------------------------------------------------------------------
 // comments
@@ -37,6 +39,9 @@ void  GameUtility::GameInit()
 		pd3dRenderer.reset( new  IDirect3DRenderer( componentManager.get() ) );
 		pSystemManager.reset( new  SystemManager( componentManager.get() ) );
 		pEntityManager.reset( new  EntityManager( componentManager.get() ) );
+		pTextureManager.reset( new  TextureManager );
+
+		Graphics::TextureId  texId = pTextureManager->CreateTexture( TEXT( "res/0.png" ) );
 
 		static  const  EntityId  entityId = pEntityManager->CreateEntity( "TestEntity" );
 		static  const  EntityId  entityId2 = pEntityManager->CreateEntity( "Test2Entity" );
@@ -52,7 +57,7 @@ void  GameUtility::GameInit()
 
 		entity->AddComponent<Renderable>( PRMTV_PLANE );
 		entity->AddComponent<Transform>();
-		entity2->AddComponent<Renderable>( "humanoid.fbx" );
+		entity2->AddComponent<Renderable>( "WaterMill_No1.fbx" );
 		entity2->AddComponent<Transform>();
 		camEntity->AddComponent<Camera>();
 		camEntity->AddComponent<Transform>();
@@ -64,6 +69,7 @@ void  GameUtility::GameInit()
 
 		Renderable*  asd = entity->GetComponent<Renderable>();
 		Renderable*  asd2 = entity2->GetComponent<Renderable>();
+		asd->SetTextureId( texId, pTextureManager.get() );
 
 		Transform*  trans = entity->GetComponent<Transform>();
 		Vector3&  pos = trans->GetPosition();
@@ -102,6 +108,7 @@ void  GameUtility::GameInit()
 void  GameUtility::GameLoop()
 {
 		Vector3&  pos = s_camera->GetPosition();
+		Vector3&  tar = s_camera->GetTarget();
 		Vector3&  move = s_camTrans->GetTranslation();
 
 		UpdateController();
@@ -109,9 +116,15 @@ void  GameUtility::GameLoop()
 		pd3dRenderer->Rendering();
 
 		if ( GetControllerButtonPress( XIP_RB ) )
+		{
 				pos.z += 0.001f;
+				tar.z += 0.001f;
+		}
 		if ( GetControllerButtonPress( XIP_LB ) )
+		{
 				pos.z -= 0.001f;
+				tar.z -= 0.001f;
+		}
 		if ( GetControllerButtonPress( XIP_D_UP ) )
 		{
 				pos.y -= 0.001f;

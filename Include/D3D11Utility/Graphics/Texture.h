@@ -35,7 +35,9 @@ namespace  D3D11Utility
 						// other
 						//----------------------------------------------------------------------------------
 
-						Texture();
+						Texture()
+						{}
+						Texture( ID3D11Texture2D*  texture, ID3D11ShaderResourceView*  shaderResourceView, ID3D11SamplerState*  sampler );
 						virtual  ~Texture();
 
 				private:
@@ -44,7 +46,7 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						ID3D11Texture2D*  m_texture = nullptr;
-						ID3D11ShaderResourceView*  m_SRView = nullptr;
+						ID3D11ShaderResourceView*  m_shaderResourceView = nullptr;
 						ID3D11SamplerState*  m_sampler = nullptr;
 
 				public:

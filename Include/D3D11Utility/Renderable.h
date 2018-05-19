@@ -11,6 +11,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
 #include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Graphics\Texture.h>
 #include  <D3D11Utility\Graphics\VertexBuffer.h>
 #include  <D3D11Utility\Graphics\VertexShader.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
@@ -19,9 +20,17 @@
 #include  <IRenderable.h>
 #include  <memory>
 
-namespace  fbxsdk { class  FbxScene; }
+
 namespace  D3D11Utility
 {
+
+		struct  FbxTextureInfo
+		{
+				std::string  name;
+				std::list<std::string>  textureNameList;
+				std::list<Vector2>  texcoordList;
+		};
+
 
 		class  Renderable : virtual  public  Component, virtual  public  IRenderable
 		{
@@ -57,10 +66,12 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				ConstantBufferForPerFrame  m_cbuffer;
+				Graphics::TextureId  m_textureId = TEXTURE_ID_INVALID;
 				Graphics::VertexBuffer*  m_pVertexBuffer = nullptr;
 				Graphics::VertexShader*  m_pVertexShader = nullptr;
 				Graphics::PixelShader*  m_pPixelShader = nullptr;
 				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
+				Systems::TextureManager*  m_textureManager = nullptr;
 				fbxsdk::FbxScene*  m_fbxScene = nullptr;
 
 		public:
@@ -73,7 +84,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private methods
 				//----------------------------------------------------------------------------------
-				/* NOTHING */
+
+				FbxTextureInfo  FbxLoadTexcoord( FbxMesh*  fbxMesh );
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -101,7 +113,7 @@ namespace  D3D11Utility
 				void  Update();
 				void  UpdateConstantBuffer( Matrix4x4  world );
 				void  SetColor( Vector4  v4Color );
-
+				void  SetTextureId( Graphics::TextureId  textureId,  Systems::TextureManager*  textureManagerInstance = nullptr );
 		};
 
 }

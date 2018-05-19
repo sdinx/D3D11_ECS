@@ -147,6 +147,12 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
 						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
 
+
+						ppVertices[0].texcoord = Vector2( 0, 0 );
+						ppVertices[1].texcoord = Vector2( 1, 0 );
+						ppVertices[2].texcoord = Vector2( 1, 1 );
+						ppVertices[3].texcoord = Vector2( 0, 1 );
+
 				}// end case PRMTV_SPHERE
 				break;
 		case  PRMTV_2D_CIRCLE:

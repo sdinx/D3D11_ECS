@@ -33,9 +33,10 @@ namespace  D3D11Utility
 				Image( INT  w, INT  h, INT  pb ) :
 						nWidth( w ),
 						nHeight( h ),
-						nPixelBytes( pb )
+						nPixelBytes( pb ),
+						byBuffers( w*h*pb )
 				{}
-				std::vector<BYTE>  byBuffer;
+				std::vector<BYTE>  byBuffers;
 				INT  nWidth;
 				INT  nHeight;
 				INT  nPixelBytes;
@@ -91,6 +92,7 @@ namespace  D3D11Utility
 						Graphics::TextureId  CreateTexture( const  std::string  &filename );
 #endif// UNICODE
 
+						void  SetTexture( Graphics::TextureId  textureId );
 						void  Release();
 
 				};// class TextureManager

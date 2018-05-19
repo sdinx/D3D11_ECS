@@ -25,7 +25,7 @@ SamplerState  diffuseTextureSampler : register( s0 );
 struct VSInput
 {
 		float4  position : POSITION;
-		//float2  texcoord : TEXCOORD0;
+		float2  texcoord : TEXCOORD0;
 };
 
 //-----------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ struct VSInput
 struct GSPSInput
 {
 		float4  position : SV_POSITION;
-		//float2  texcoord : TEXCOORD0;
+		float2  texcoord : TEXCOORD0;
 };
 
 //-----------------------------------------------------------------------------------
@@ -52,6 +52,9 @@ GSPSInput VSFunc( VSInput input )
 
 		// 射影空間に変換
 		output.position = mul( proj, output.position );
+
+		// テクスチャ座標のセット
+		output.texcoord = input.texcoord;
 
 		return output;
 }
@@ -88,7 +91,7 @@ void GSFunc( triangle  GSPSInput  input[3], inout  TriangleStream<GSPSInput>  st
 //------------------------------------------------------------------------------------
 float4 PSFunc( GSPSInput input ) : SV_TARGET
 {
-		//float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.Tex );
+		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.texcoord );
 
-		return  meshColor;
+		return  meshColor * texel;
 }

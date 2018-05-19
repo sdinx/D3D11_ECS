@@ -2,7 +2,6 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Systems\TextureManager.h>
-#include  <D3D11Utility\Graphics\Texture.h>
 #include  <wrl/client.h>
 #include  <cassert>
 #include  <memory>
@@ -16,24 +15,37 @@ using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 
 
+
+TextureManager::TextureManager()
+{
+
+}
+
+
+TextureManager::~TextureManager()
+{
+		m_textures.clear();
+}
+
+
 #if  defined( _UNICODE ) || ( UNICODE )
 Image*  TextureManager::LoadImageFile( const  std::wstring  &filename )
+{
 #else// Multibyte
 Image*  TextureManager::LoadImageFile( const  std::string  &filename )
-#endif// UNICODE
 {
-		IWICImagingFactory *m_factory;
+#endif// UNICODE
+		IWICImagingFactory  *iwicImageFactory;
 		HRESULT hr = CoCreateInstance(
 				CLSID_WICImagingFactory,
 				nullptr,
 				CLSCTX_INPROC_SERVER,
-				IID_PPV_ARGS( &m_factory )
+				IID_PPV_ARGS( &iwicImageFactory )
 		);
 
-		// decoder作ってファイルを渡す
-		Microsoft::WRL::ComPtr<IWICBitmapDecoder> decoder;
-		hr = m_factory->CreateDecoderFromFilename( filename.c_str(), 0
-				, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &decoder );
+		// decoderを作ってファイルを渡す
+		Microsoft::WRL::ComPtr<IWICBitmapDecoder>  decoder;
+		hr = iwicImageFactory->CreateDecoderFromFilename( filename.c_str(), 0, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &decoder );
 		if ( FAILED( hr ) ) {
 				return  nullptr;
 		}
@@ -64,7 +76,7 @@ Image*  TextureManager::LoadImageFile( const  std::string  &filename )
 		if ( pixelFormat != GUID_WICPixelFormat32bppRGBA ) {
 				// 変換する
 				Microsoft::WRL::ComPtr<IWICFormatConverter> FC;
-				hr = m_factory->CreateFormatConverter( &FC );
+				hr = iwicImageFactory->CreateFormatConverter( &FC );
 				if ( FAILED( hr ) ) {
 						return  nullptr;
 				}
@@ -77,29 +89,37 @@ Image*  TextureManager::LoadImageFile( const  std::string  &filename )
 				}
 
 				// copy
-				auto image = new  Image( width, height, 4 );
-				FC->CopyPixels( 0, image->nPixelBytes, image->byBuffer.size(), &image->byBuffer[0] );
-				return image;
+				Image*  image = new  Image( width, height, 4 );
+				FC->CopyPixels( 0, image->nPixelBytes*image->nWidth, image->byBuffers.size(), &image->byBuffers[0] );
+				return  image;
 		}
 		else {
 				// copy
-				auto image = new  Image( width, height, 4 );
-				frame->CopyPixels( 0, image->nPixelBytes, image->byBuffer.size(), &image->byBuffer[0] );
-				return image;
+				Image*  image = new  Image( width, height, 4 );
+				frame->CopyPixels( 0, image->nPixelBytes*image->nWidth, image->byBuffers.size(), &image->byBuffers[0] );
+				return  image;
 
 		}
+
+		return  nullptr;
 }
 
 
 #if  defined( _UNICODE ) || ( UNICODE )
 Graphics::TextureId  TextureManager::CreateTexture( const  std::wstring  &filename )
+{
 #else// Multibyte
 Graphics::TextureId  TextureManager::CreateTexture( const  std::string  &filename )
-#endif// UNICODE
 {
+#endif// UNICODE
+		ID3D11Texture2D*  texture = nullptr;
+		ID3D11ShaderResourceView*  shaderResourceView = nullptr;
+		ID3D11SamplerState*  sampler = nullptr;
 		Image*  image = LoadImageFile( filename );
+		if ( image == nullptr )
+				return  TEXTURE_ID_INVALID;
 
-		D3D11_TEXTURE2D_DESC desc;
+		D3D11_TEXTURE2D_DESC  desc;
 		desc.Width = image->nWidth;
 		desc.Height = image->nHeight;
 		desc.MipLevels = 1;
@@ -112,28 +132,28 @@ Graphics::TextureId  TextureManager::CreateTexture( const  std::string  &filenam
 		desc.CPUAccessFlags = 0;
 		desc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA initData;
-		initData.pSysMem = &image->byBuffer[0];
+		D3D11_SUBRESOURCE_DATA  initData;
+		initData.pSysMem = &image->byBuffers[0];
 		initData.SysMemPitch = image->nWidth * image->nPixelBytes;
-		initData.SysMemSlicePitch = image->byBuffer.size();
+		initData.SysMemSlicePitch = image->byBuffers.size();
 
-		auto hr = pd3dDevice->CreateTexture2D( &desc, &initData, &m_textures.back()->m_texture );
+		auto hr = pd3dDevice->CreateTexture2D( &desc, &initData, &texture );
 		if ( FAILED( hr ) ) {
 				return  TEXTURE_ID_INVALID;
 		}// end if
 
-		D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = { };
+		D3D11_SHADER_RESOURCE_VIEW_DESC  SRVDesc = { };
 		SRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		SRVDesc.Texture2D.MipLevels = 1;
 
-		hr = pd3dDevice->CreateShaderResourceView( m_textures.back()->m_texture, &SRVDesc, &m_textures.back()->m_SRView );
+		hr = pd3dDevice->CreateShaderResourceView( texture, &SRVDesc, &shaderResourceView );
 		if ( FAILED( hr ) )
 		{
 				return  TEXTURE_ID_INVALID;
 		}// end if
 
-		D3D11_SAMPLER_DESC samplerDesc;
+		D3D11_SAMPLER_DESC  samplerDesc;
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
 		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -149,13 +169,26 @@ Graphics::TextureId  TextureManager::CreateTexture( const  std::string  &filenam
 		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		// Create the texture sampler state.
-		hr = pd3dDevice->CreateSamplerState( &samplerDesc, &m_textures.back()->m_sampler );
+		hr = pd3dDevice->CreateSamplerState( &samplerDesc, &sampler );
 		if ( FAILED( hr ) )
 		{
 				return  TEXTURE_ID_INVALID;
 		}// end if
 
+		// テクスチャの追加
+		m_textures.push_back( new  Graphics::Texture( texture, shaderResourceView, sampler ) );
+
+		// 要素番号を返却
 		return  ( m_textures.size() - 1 );
+}
+
+
+void  TextureManager::SetTexture( Graphics::TextureId  textureId )
+{
+		if ( textureId >= ( int ) m_textures.size() )
+				return;
+
+		m_textures[textureId]->SetTexture();
 }
 
 

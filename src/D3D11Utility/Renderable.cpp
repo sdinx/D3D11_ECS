@@ -5,6 +5,7 @@
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Transform.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
+#include  <D3D11Utility\Systems\TextureManager.h>
 #include  <DirectXMath.h>
 #include  <fbxsdk.h>
 
@@ -78,7 +79,7 @@ Renderable::Renderable( LPCSTR  fbxString )
 				{
 						mesh = m_fbxScene->GetRootNode()->GetChild( i )->GetMesh();
 						break;
-				}
+				}// end if
 
 		INT  numVertices = mesh->GetControlPointsCount();
 		VERTEX*  vertices = new  VERTEX[numVertices];
@@ -87,7 +88,7 @@ Renderable::Renderable( LPCSTR  fbxString )
 				vertices[i].position.x = ( float ) mesh->GetControlPointAt( i )[0];
 				vertices[i].position.y = ( float ) mesh->GetControlPointAt( i )[1];
 				vertices[i].position.z = ( float ) mesh->GetControlPointAt( i )[2];
-		}
+		}// end for
 
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) numVertices );
 		m_pVertexBuffer->CreateIndexBuffer( mesh->GetPolygonVertices(), mesh->GetPolygonVertexCount() );
@@ -95,8 +96,8 @@ Renderable::Renderable( LPCSTR  fbxString )
 		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
 
 		SafeDestroy( fbxImporter );
-		//SafeDestroy( m_fbxScene );
-		//SafeDestroy( fbxManager );
+		SafeDestroy( m_fbxScene );
+		SafeDestroy( fbxManager );
 		delete[ ]  vertices;
 }
 
@@ -133,6 +134,9 @@ void  Renderable::Rendering()const
 {
 		if ( m_isActive == false )
 				return;
+
+		if ( m_textureId != TEXTURE_ID_INVALID )
+				m_textureManager->SetTexture( m_textureId );
 
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
@@ -172,4 +176,77 @@ void  Renderable::UpdateConstantBuffer( Matrix4x4  world )
 void  Renderable::SetColor( Vector4  v4Color )
 {
 		m_cbuffer.meshColor = v4Color;
+}
+
+
+void  Renderable::SetTextureId( Graphics::TextureId  textureId, Systems::TextureManager*  textureManagerInstance )
+{
+		if ( textureManagerInstance != nullptr )
+				m_textureManager = textureManagerInstance;
+
+
+		m_textureId = textureId;
+}
+
+
+FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
+{
+		FbxTextureInfo  fbxTextureInfo;
+
+		//--- UVセット数を取得 ---//
+		int UVLayerCount = fbxMesh->GetElementUVCount();
+		for ( int i = 0; UVLayerCount > i; i++ ) {
+				//--- UVバッファを取得 ---//
+				FbxGeometryElementUV* UV = fbxMesh->GetElementUV( i );
+
+				//--- マッピングモードの取得
+				FbxGeometryElement::EMappingMode mapping = UV->GetMappingMode();
+				//--- リファレンスモードの取得 ---//
+				FbxGeometryElement::EReferenceMode reference = UV->GetReferenceMode();
+
+				//--- UV数を取得 ---//
+				int uvCount = UV->GetDirectArray().GetCount();
+
+				//--- マッピングモードの判別 ---//
+				switch ( mapping ) {
+				case FbxGeometryElement::eByControlPoint:
+						break;
+
+				case FbxGeometryElement::eByPolygonVertex:
+						//--- リファレンスモードの判別 ---//
+						switch ( reference ) {
+						case FbxGeometryElement::eDirect:
+								break;
+						case FbxGeometryElement::eIndexToDirect:
+								{
+										FbxLayerElementArrayTemplate<int>*  texcoordIndex = &UV->GetIndexArray();
+										int uvIndexCount = texcoordIndex->GetCount();
+
+										//--- UVを保持 ---// 
+										Vector2 temp;
+										for ( int i = 0; uvIndexCount > i; i++ ) {
+
+												temp.x = ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[0];
+
+												temp.y = 1.0f - ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[1];
+
+												fbxTextureInfo.texcoordList.push_back( temp );
+										}
+
+										//--- UVSet名を取得 ---//
+										fbxTextureInfo.name = UV->GetName();
+								}
+								break;
+						default:
+								break;
+						}
+						break;
+				case FbxGeometryElement::eByEdge:
+						break;
+				case FbxGeometryElement::eByPolygon:
+						break;
+				default:
+						break;
+				}
+		}
 }
