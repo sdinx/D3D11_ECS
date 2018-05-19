@@ -73,9 +73,8 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 }
 
 
-HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth )
+HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer*&  ppCB, size_t  byteWidth )
 {
-		static  UINT  maxConstantBuffer = 0;
 		HRESULT  hr = S_OK;
 
 
@@ -89,15 +88,12 @@ HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer**  ppCB, UINT&  nOutSl
 
 
 		// 定数バッファの設定
-		hr = pd3dDevice->CreateBuffer( &bd, NULL, ppCB );
+		hr = pd3dDevice->CreateBuffer( &bd, NULL, &ppCB );
 		if ( FAILED( hr ) )
 		{
 				OutputDebugString( TEXT( "<D3D11Utility> FAILED CreateBuffer (constant buffer) \n" ) );
 				return  hr;
 		}
-		nOutSlot = maxConstantBuffer;
-		maxConstantBuffer++;
-
 
 		return  hr;
 }

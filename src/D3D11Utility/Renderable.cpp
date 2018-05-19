@@ -22,7 +22,8 @@ using  namespace  DirectX;
 // static variables
 //----------------------------------------------------------------------------------
 ComponentId  Renderable::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
-std::unique_ptr<CONSTANTBUFFER>  Renderable::s_pCBuffer = nullptr;
+const  UINT  Renderable::s_nConstantBufferSlot;
+ID3D11Buffer*  Renderable::s_pConstantBuffer = nullptr;
 
 
 Renderable::Renderable()
@@ -43,11 +44,12 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		UINT  numVertices = CreatePrimitive( PRMTV_2D_SQUARE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices );
 		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
-		INT  indices[ ] = { 0,1,2,1,2,3 };
+		INT  indices[ ] = { 0,1,2,0,2,3 };
 		UINT  numIndex = ARRAYSIZE( indices );
 		m_pVertexBuffer->CreateIndexBuffer( indices, numIndex );
-
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
+
+		delete[ ]  vertices;
 }
 
 
@@ -95,15 +97,15 @@ Renderable::Renderable( LPCSTR  fbxString )
 		SafeDestroy( fbxImporter );
 		//SafeDestroy( m_fbxScene );
 		//SafeDestroy( fbxManager );
+		delete[ ]  vertices;
 }
 
 
 void  Renderable::SetConstantBuffer()
 {
-		if ( s_pCBuffer == nullptr )
+		if ( s_pConstantBuffer == nullptr )
 		{
-				s_pCBuffer = std::unique_ptr<CONSTANTBUFFER>( new  CONSTANTBUFFER );
-				CreateConstantBuffer( &s_pCBuffer->pCB, s_pCBuffer->nCBSlot, sizeof( ConstantBufferForPerFrame ) );
+				CreateConstantBuffer( s_pConstantBuffer, sizeof( ConstantBufferForPerFrame ) );
 		}
 }
 
@@ -136,11 +138,11 @@ void  Renderable::Rendering()const
 		m_pPixelShader->UpdateShader();
 		//m_pGeometryShader->UpdateShader();
 
-		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &m_cbuffer, 0, 0 );
+		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &m_cbuffer, 0, 0 );
 
-		pd3dDeviceContext->VSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
-		pd3dDeviceContext->PSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
-		//pd3dDeviceContext->GSSetConstantBuffers( 1, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		//pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 
 		m_pVertexBuffer->BindBuffer();
 }

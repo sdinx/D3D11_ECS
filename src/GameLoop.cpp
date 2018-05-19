@@ -52,7 +52,7 @@ void  GameUtility::GameInit()
 
 		entity->AddComponent<Renderable>( PRMTV_PLANE );
 		entity->AddComponent<Transform>();
-		entity2->AddComponent<Renderable>( "Cup_No1.fbx" );
+		entity2->AddComponent<Renderable>( "humanoid.fbx" );
 		entity2->AddComponent<Transform>();
 		camEntity->AddComponent<Camera>();
 		camEntity->AddComponent<Transform>();
@@ -84,7 +84,7 @@ void  GameUtility::GameInit()
 		pos2.y -= 3.0f;
 		pos2.z += 5.0f;
 
-
+		scale2 = Vector3( .5f, .5f, .5f );
 
 		asd2->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 		asd2->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );

@@ -87,17 +87,6 @@ namespace  D3D11Utility
 				Vector3  position;
 				//Vector2  texcoord;
 		};// struct VERTEX
-		struct  CONSTANTBUFFER
-		{
-				ID3D11Buffer*  pCB;
-				UINT  nCBSlot;
-				CONSTANTBUFFER()
-				{}
-				~CONSTANTBUFFER()
-				{
-						SafeRelease( pCB );
-				}
-		};// struct CONSTANTBUFFER
 
 		//----------------------------------------------------------------------------------
 		// enum
@@ -129,7 +118,7 @@ namespace  D3D11Utility
 		// functions
 		//----------------------------------------------------------------------------------
 		HRESULT  CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel, ID3DBlob**  ppBlobOut );
-		HRESULT  CreateConstantBuffer(ID3D11Buffer**  ppCB, UINT&  nOutSlot, size_t  byteWidth);
+		HRESULT  CreateConstantBuffer(ID3D11Buffer*&  ppCB, size_t  byteWidth);
 		UINT  CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices );
 		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
