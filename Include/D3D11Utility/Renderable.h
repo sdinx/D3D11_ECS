@@ -53,7 +53,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
+				static  const  UINT  s_nConstantBufferSlot = 1;
+				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				ConstantBufferForPerFrame  m_cbuffer;
 				Graphics::VertexBuffer*  m_pVertexBuffer = nullptr;

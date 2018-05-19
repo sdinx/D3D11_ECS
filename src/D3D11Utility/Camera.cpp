@@ -15,7 +15,8 @@ using  namespace  DirectX;
 // static  variables
 //----------------------------------------------------------------------------------
 ComponentId  Camera::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
-std::unique_ptr<CONSTANTBUFFER>  Camera::s_pCBuffer = nullptr;
+const  UINT  Camera::s_nConstantBufferSlot;
+ID3D11Buffer*  Camera::s_pConstantBuffer = nullptr;
 
 //----------------------------------------------------------------------------------
 // struct
@@ -102,10 +103,9 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg, Value  var )
 
 void  Camera::SetConstantBuffer()
 {
-		if ( s_pCBuffer == nullptr )
+		if ( s_pConstantBuffer == nullptr )
 		{
-				s_pCBuffer = std::unique_ptr<CONSTANTBUFFER>( new  CONSTANTBUFFER );
-				CreateConstantBuffer( &s_pCBuffer->pCB, s_pCBuffer->nCBSlot, sizeof( ConstantBufferForPerFrame ) );
+				CreateConstantBuffer( s_pConstantBuffer, sizeof( ConstantBufferForPerFrame ) );
 		}
 }
 
@@ -157,14 +157,14 @@ void  Camera::UpdateConstantBuffer()
 		ConstantBufferForPerFrame  cbuffer;
 		cbuffer.view = GetMatrix4x4View();
 		cbuffer.projection = GetMatrix4x4Projection();
-		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
-		pd3dDeviceContext->VSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
-		pd3dDeviceContext->GSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
+		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &cbuffer, 0, 0 );
+		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 
 		//D3D11_MAPPED_SUBRESOURCE  pdata;
-		//pd3dDeviceContext->Map( s_pCBuffer->pCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata );
+		//pd3dDeviceContext->Map( s_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata );
 		//memcpy_s( pdata.pData, pdata.RowPitch, ( void* ) ( &cbuffer ), sizeof( cbuffer ) );
-		//pd3dDeviceContext->Unmap( s_pCBuffer->pCB, 0 );
+		//pd3dDeviceContext->Unmap( s_pConstantBuffer, 0 );
 }
 
 

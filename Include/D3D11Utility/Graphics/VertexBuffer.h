@@ -44,7 +44,7 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						// プリミティブの種類
-						D3D_PRIMITIVE_TOPOLOGY  primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+						D3D_PRIMITIVE_TOPOLOGY  primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 						// 頂点数
 						UINT  m_numVertexCounts;
 						// インデックスデータ数

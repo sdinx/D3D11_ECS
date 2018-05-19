@@ -47,7 +47,8 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  std::unique_ptr<CONSTANTBUFFER>  s_pCBuffer;
+				static  const  UINT  s_nConstantBufferSlot = 0;
+				static  ID3D11Buffer  *s_pConstantBuffer;
 				BOOL  m_isEnable = false;
 
 				Matrix4x4  m_view;
