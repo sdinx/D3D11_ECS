@@ -2,11 +2,14 @@
 // Include
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Camera.h>
+#include  <D3D11Utility\Transform.h>
+#include  <D3D11Utility\Systems\ComponentManager.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
 //----------------------------------------------------------------------------------
 using  namespace  D3D11Utility;
+using  namespace  DirectX;
 
 //----------------------------------------------------------------------------------
 // static  variables
@@ -59,6 +62,14 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 		{
 		case  MSG_UPDATE_VIEW:
 				{
+						Transform*  trans = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
+						if ( trans != nullptr )
+						{
+								trans->Update();
+								XMMATRIX  localWorld = XMLoadFloat4x4( &trans->GetLocalWorld() );
+
+								XMStoreFloat4x4( &m_view, XMMatrixMultiply( XMLoadFloat4x4( &m_view ), localWorld ) );
+						}// end if
 						UpdateView();
 				}
 				break;
@@ -131,6 +142,7 @@ void  Camera::UpdateView()
 						DirectX::XMLoadFloat3( &m_eyePosition ),
 						DirectX::XMLoadFloat3( &m_focusTarget ),
 						DirectX::XMLoadFloat3( &m_upDirection ) ) );
+
 }
 
 
@@ -148,6 +160,11 @@ void  Camera::UpdateConstantBuffer()
 		pd3dDeviceContext->UpdateSubresource( s_pCBuffer->pCB, 0, nullptr, &cbuffer, 0, 0 );
 		pd3dDeviceContext->VSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
 		pd3dDeviceContext->GSSetConstantBuffers( 0, 1, &s_pCBuffer->pCB );
+
+		//D3D11_MAPPED_SUBRESOURCE  pdata;
+		//pd3dDeviceContext->Map( s_pCBuffer->pCB, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata );
+		//memcpy_s( pdata.pData, pdata.RowPitch, ( void* ) ( &cbuffer ), sizeof( cbuffer ) );
+		//pd3dDeviceContext->Unmap( s_pCBuffer->pCB, 0 );
 }
 
 

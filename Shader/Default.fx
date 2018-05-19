@@ -24,7 +24,7 @@ SamplerState  diffuseTextureSampler : register( s0 );
 //-----------------------------------------------------------------------------------
 struct VSInput
 {
-		float3  position : POSITION;
+		float4  position : POSITION;
 		//float2  texcoord : TEXCOORD0;
 };
 
@@ -44,10 +44,8 @@ GSPSInput VSFunc( VSInput input )
 {
 		GSPSInput output = ( GSPSInput ) 0;
 
-		output.position = float4( input.position, 1.0f );
-
 		// ワールド空間に変換
-		output.position = mul( world, output.position );
+		output.position = mul( world, input.position );
 
 		// ビュー空間に変換
 		output.position = mul( view, output.position );
@@ -88,7 +86,7 @@ void GSFunc( triangle  GSPSInput  input[3], inout  TriangleStream<GSPSInput>  st
 //------------------------------------------------------------------------------------
 //! @brief      ピクセルシェーダエントリーポイント
 //------------------------------------------------------------------------------------
-float4 PSFunc( GSPSInput input ) : SV_TARGET0
+float4 PSFunc( GSPSInput input ) : SV_TARGET
 {
 		//float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.Tex );
 

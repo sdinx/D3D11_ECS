@@ -73,7 +73,10 @@ Renderable::Renderable( LPCSTR  fbxString )
 
 		for ( i = 0; i < maxChildCounts; i++ )
 				if ( m_fbxScene->GetRootNode()->GetChild( i )->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh )
+				{
 						mesh = m_fbxScene->GetRootNode()->GetChild( i )->GetMesh();
+						break;
+				}
 
 		INT  numVertices = mesh->GetControlPointsCount();
 		VERTEX*  vertices = new  VERTEX[numVertices];

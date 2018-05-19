@@ -133,8 +133,10 @@ namespace  D3D11Utility
 								// エンティティとコンポーネントの存在確認
 								if ( m_entityComponetIdTable.size() > entityId && m_entityComponetIdTable[entityId].size() > ( UINT ) componentId )
 								{
-										const  UINT  numComponent = m_entityComponetIdTable[entityId][componentId];
-										return  dynamic_cast< T* >( m_componentTable[componentId][numComponent] );
+										const  INT  numComponents = m_entityComponetIdTable[entityId][componentId];
+										if ( numComponents == STATIC_ID_INVALID )
+												return  nullptr;
+										return  dynamic_cast< T* >( m_componentTable[componentId][numComponents] );
 								}
 
 								// TODO: need to output debug string.

@@ -29,6 +29,7 @@ static  std::unique_ptr<SystemManager>  pSystemManager;
 
 #include  <fbxsdk.h>
 static Camera*  s_camera = nullptr;
+static Transform*  s_camTrans = nullptr;
 
 void  GameUtility::GameInit()
 {
@@ -39,27 +40,30 @@ void  GameUtility::GameInit()
 
 		static  const  EntityId  entityId = pEntityManager->CreateEntity( "TestEntity" );
 		static  const  EntityId  entityId2 = pEntityManager->CreateEntity( "Test2Entity" );
+		static  const  EntityId  camId = pEntityManager->CreateEntity( "camera" );
 		Entity*  entity = pEntityManager->GetEntity( entityId );
 		Entity*  entity2 = pEntityManager->GetEntity( entityId2 );
+		Entity*  camEntity = pEntityManager->GetEntity( camId );
 
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
 
 		entity->SetTag( "entity" );
 
-		entity->AddComponent<Camera>();
 		entity->AddComponent<Renderable>( PRMTV_PLANE );
 		entity->AddComponent<Transform>();
-		entity2->AddComponent<Renderable>( "humanoid.fbx" );
+		entity2->AddComponent<Renderable>( "Cup_No1.fbx" );
 		entity2->AddComponent<Transform>();
+		camEntity->AddComponent<Camera>();
+		camEntity->AddComponent<Transform>();
 
-		Camera*  cam = entity->GetComponent<Camera>();
+		Camera*  cam = camEntity->GetComponent<Camera>();
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
 		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
+
 		Renderable*  asd = entity->GetComponent<Renderable>();
 		Renderable*  asd2 = entity2->GetComponent<Renderable>();
-		Renderable*  asb = cam->GetComponent<Renderable>();
 
 		Transform*  trans = entity->GetComponent<Transform>();
 		Vector3&  pos = trans->GetPosition();
@@ -77,12 +81,12 @@ void  GameUtility::GameInit()
 		Vector3&  scale2 = trans2->GetScale();
 		Vector3&  pos2 = trans2->GetPosition();
 
-		pos2.y -= 30.0f;
-		pos2.z += 250.0f;
+		pos2.y -= 3.0f;
+		pos2.z += 5.0f;
 
 
 
-		asd2->SetColor( Vector4( 1, 0, 0.5f, 0 ) );
+		asd2->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 		asd2->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 		
 		asd->SetColor( Vector4( 1, 1, 0, 0 ) );
@@ -90,35 +94,43 @@ void  GameUtility::GameInit()
 
 		asd->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
 		s_camera = cam;
+
+		s_camTrans = camEntity->GetComponent<Transform>();
 }
 
 
 void  GameUtility::GameLoop()
 {
 		Vector3&  pos = s_camera->GetPosition();
+		Vector3&  move = s_camTrans->GetTranslation();
 
 		UpdateController();
 		pSystemManager->Update( 0 );
 		pd3dRenderer->Rendering();
 
+		if ( GetControllerButtonPress( XIP_RB ) )
+				pos.z += 0.001f;
+		if ( GetControllerButtonPress( XIP_LB ) )
+				pos.z -= 0.001f;
 		if ( GetControllerButtonPress( XIP_D_UP ) )
-		{
-				pos.y += 0.001f;
-		}
-		else if ( GetControllerButtonPress( XIP_D_DOWN ) )
 		{
 				pos.y -= 0.001f;
 		}
-		if ( GetControllerButtonPress( XIP_D_RIGHT ) )
+		else if ( GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				pos.x += 0.001f;
+				pos.y += 0.001f;
 		}
-		else if ( GetControllerButtonPress( XIP_D_LEFT ) )
+		if ( GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
 				pos.x -= 0.001f;
 		}
+		else if ( GetControllerButtonPress( XIP_D_LEFT ) )
+		{
+				pos.x += 0.001f;
+		}
 		if ( GetControllerButtonPress( XIP_ANY ) )
+		{
 				s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
-
+		}
 
 }
