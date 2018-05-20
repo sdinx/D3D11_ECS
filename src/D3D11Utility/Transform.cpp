@@ -19,16 +19,23 @@ ComponentId  Transform::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 
 void  Transform::Update()
 {
-		XMMATRIX  mtxPos, mtxTrans, mtxRotate, mtxScale;
+		XMMATRIX  mtxPos, mtxAngle, mtxTrans, mtxRotate, mtxScale;
 
 		mtxPos = XMMatrixTranslationFromVector( XMLoadFloat3( &m_position ) );
+		mtxAngle = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &m_angle ) );
 		mtxTrans = XMMatrixTranslationFromVector( XMLoadFloat3( &m_translation ) );
 		mtxRotate = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &m_rotation ) );
 		mtxScale = XMMatrixScalingFromVector( XMLoadFloat3( &m_scale ) );
 
-		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
+		XMStoreFloat4x4( &m_localWorld, mtxTrans );
+		XMStoreFloat4x4( &m_localWorld, mtxRotate );
+		XMStoreFloat4x4( &m_localWorld, mtxScale );
+		XMStoreFloat4x4( &m_localWorld, mtxPos );
+		mtxAngle = XMMatrixMultiply( mtxAngle, XMMatrixTranslation( 0, 0, 0 ) );
 		mtxPos = XMMatrixMultiply( mtxTrans, mtxPos );
+		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
+		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
 
 		// ワールド行列の更新
 		XMStoreFloat4x4( &m_localWorld, mtxPos );

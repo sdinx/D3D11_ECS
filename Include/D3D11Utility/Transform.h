@@ -36,6 +36,7 @@ namespace  D3D11Utility
 
 				Transform() :
 						m_position( 0, 0, 0 ),
+						m_angle( 0, 0, 0 ),
 						m_translation( 0, 0, 0 ),
 						m_rotation( 0, 0, 0 ),
 						m_scale( 1, 1, 1 )
@@ -50,6 +51,7 @@ namespace  D3D11Utility
 
 				static  ComponentId  STATIC_COMPONENT_ID;
 				Vector3  m_position;
+				Vector3  m_angle;
 				Vector3  m_translation;
 				Vector3  m_rotation;
 				Vector3  m_scale;
@@ -99,6 +101,10 @@ namespace  D3D11Utility
 				{
 						return  m_position;
 				}
+				Vector3&  GetAngle()
+				{
+						return  m_angle;
+				}
 				Vector3&  GetTranslation()
 				{
 						return  m_translation;
@@ -118,6 +124,10 @@ namespace  D3D11Utility
 				void  SetPosition( Vector3  position )
 				{
 						m_position = position;
+				}
+				void  SetAngle( Vector3  angle )
+				{
+						m_angle = angle;
 				}
 				void  SetTranslation( Vector3  translation )
 				{
