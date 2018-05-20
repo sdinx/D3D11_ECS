@@ -71,6 +71,7 @@ Renderable::Renderable( LPCSTR  fbxString )
 		fbxImporter->Import( m_fbxScene );
 
 		FbxMesh*  mesh;
+
 		INT  i = 0;
 		INT  maxChildCounts = m_fbxScene->GetRootNode()->GetChildCount();
 
@@ -193,60 +194,80 @@ FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
 {
 		FbxTextureInfo  fbxTextureInfo;
 
-		//--- UVセット数を取得 ---//
+		// UVセット数を取得
 		int UVLayerCount = fbxMesh->GetElementUVCount();
-		for ( int i = 0; UVLayerCount > i; i++ ) {
-				//--- UVバッファを取得 ---//
+		for ( int i = 0; UVLayerCount > i; i++ ) 
+		{
+				// UVバッファを取得
 				FbxGeometryElementUV* UV = fbxMesh->GetElementUV( i );
 
-				//--- マッピングモードの取得
+				// マッピングモードの取得
 				FbxGeometryElement::EMappingMode mapping = UV->GetMappingMode();
-				//--- リファレンスモードの取得 ---//
+				// リファレンスモードの取得
 				FbxGeometryElement::EReferenceMode reference = UV->GetReferenceMode();
 
-				//--- UV数を取得 ---//
+				// UV数を取得
 				int uvCount = UV->GetDirectArray().GetCount();
 
-				//--- マッピングモードの判別 ---//
-				switch ( mapping ) {
+				// マッピングモードの判別
+				switch ( mapping ) 
+				{
 				case FbxGeometryElement::eByControlPoint:
-						break;
+								/* NOTHING */
+								break;
 
 				case FbxGeometryElement::eByPolygonVertex:
-						//--- リファレンスモードの判別 ---//
-						switch ( reference ) {
-						case FbxGeometryElement::eDirect:
-								break;
-						case FbxGeometryElement::eIndexToDirect:
+						{
+								// リファレンスモードの判別
+								switch ( reference )
 								{
-										FbxLayerElementArrayTemplate<int>*  texcoordIndex = &UV->GetIndexArray();
-										int uvIndexCount = texcoordIndex->GetCount();
+								case  FbxGeometryElement::eDirect:
+										/* NOTHING */
+										break;
 
-										//--- UVを保持 ---// 
-										Vector2 temp;
-										for ( int i = 0; uvIndexCount > i; i++ ) {
+								case  FbxGeometryElement::eIndexToDirect:
+										{
+												FbxLayerElementArrayTemplate<int>*  texcoordIndex = &UV->GetIndexArray();
+												int  uvIndexCount = texcoordIndex->GetCount();
 
-												temp.x = ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[0];
+												// UVを保持
+												Vector2 temp;
+												for ( int i = 0; uvIndexCount > i; i++ ) {
 
-												temp.y = 1.0f - ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[1];
+														temp.x = ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[0];
 
-												fbxTextureInfo.texcoordList.push_back( temp );
-										}
+														temp.y = 1.0f - ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[1];
 
-										//--- UVSet名を取得 ---//
-										fbxTextureInfo.name = UV->GetName();
-								}
-								break;
-						default:
-								break;
-						}
+														fbxTextureInfo.texcoordList.push_back( temp );
+												}
+
+												// UVSet名を取得
+												fbxTextureInfo.name = UV->GetName();
+										}// case FbxGeometryElement::eIndexToDirect
+										break;
+								default:
+										/* NOTHING */
+										break;
+								}// end switch
+
+						}// case FbxGeometryElement::eByPolygonVertex
 						break;
+
 				case FbxGeometryElement::eByEdge:
+						/* NOTHING */
 						break;
+
 				case FbxGeometryElement::eByPolygon:
+						/* NOTHING */
 						break;
+
 				default:
-						break;
-				}
-		}
+						/* NOTHING */
+								break;
+
+				}// end switch
+
+		}// end for
+
+		return  fbxTextureInfo;
 }

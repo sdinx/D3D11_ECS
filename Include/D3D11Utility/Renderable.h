@@ -85,7 +85,7 @@ namespace  D3D11Utility
 				// private methods
 				//----------------------------------------------------------------------------------
 
-				FbxTextureInfo  FbxLoadTexcoord( FbxMesh*  fbxMesh );
+				FbxTextureInfo  FbxLoadTexcoord( fbxsdk::FbxMesh*  fbxMesh );
 
 		public:
 				//----------------------------------------------------------------------------------

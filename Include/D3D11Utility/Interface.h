@@ -6,6 +6,12 @@
 #ifndef  _INCLUDED_D3D11_UTILITY_INTERFACE_
 #define  _INCLUDED_D3D11_UTILITY_INTERFACE_
 
+//----------------------------------------------------------------------------------
+// defined
+//----------------------------------------------------------------------------------
+#define  STATIC_ID_INVALID  ( -1 )
+
+
 namespace  D3D11Utility
 {
 
@@ -21,6 +27,7 @@ namespace  D3D11Utility
 				class  EntityManager;
 				class  SystemManager;
 				class  TextureManager;
+				class  PhysicalSystem;
 
 		}// namespace Systems
 
@@ -36,7 +43,8 @@ namespace  D3D11Utility
 
 namespace  fbxsdk 
 {
-		class  FbxScene; 
+		class  FbxScene;
+		class  FbxMesh;
 }// namespace fbxsdk
 
 #endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_

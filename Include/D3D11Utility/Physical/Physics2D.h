@@ -1,50 +1,47 @@
 //----------------------------------------------------------------------------------
-// file : ISystem.h
-// desc : システムのインターフェース
+// file : IPhysical.h
+// desc : 物理クラスのインターフェース
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
+/* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
-#define  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
+#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
-#include  <D3D11Utility\Interface.h>
+#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\Physical\IPhysics.h>
+
 
 namespace  D3D11Utility
 {
-		namespace  Systems
+		namespace  Physical
 		{
-				using  SystemId = int;
-				static  const  SystemId  SYSTEM_ID_INVALID = STATIC_ID_INVALID;
 
-				class  ISystem
+				class  IPhysical :public  Component, public  IPhysics
 				{
-						friend  class  SystemManager;
+						friend  class  Systems::PhysicalSystem;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						ISystem() :
-								m_isActive( true )
+						IPhysical()
 						{}
-						virtual  ~ISystem()
+						virtual  ~IPhysical()
 						{}
 
-				protected:
+				private:
 						//----------------------------------------------------------------------------------
 						// protected variables
 						//----------------------------------------------------------------------------------
 
-						BOOL  m_isActive;
-						ComponentManager*  m_pComponentManager;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -52,9 +49,9 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						/* NOTHING */
 
-				protected:
+				private:
 						//----------------------------------------------------------------------------------
-						// protected methods
+						// private methods
 						//----------------------------------------------------------------------------------
 						/* NOTHING */
 
@@ -63,17 +60,26 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						virtual  SystemId  GetSystemId()const = 0;
-						volatile  void  SetActive( BOOL  isActive )
+						static  ComponentId  GetStaticComponentId()
 						{
-								m_isActive = isActive;
+								return  IPhysics::STATIC_COMPONENT_ID;
 						}
-						virtual  void  Update( float  ms ) = 0;
+						static  void  SetStaticComponentId( ComponentId  id )
+						{
+								if ( IPhysics::STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+								{
+										IPhysics::STATIC_COMPONENT_ID = id;
+										// TODO: need  to output debug string.
+								}
+						}
 
-				};// class ISystem
+						virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
+						virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
+						virtual  void  Update() = 0;
 
-		}// namespace Systems
+				};// class IPhysical
+
+		}// namespace Physical
 }// namespace D3D11Utility
 
-
-#endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_

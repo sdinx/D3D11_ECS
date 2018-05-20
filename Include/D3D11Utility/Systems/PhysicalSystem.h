@@ -1,50 +1,46 @@
 //----------------------------------------------------------------------------------
-// file : ISystem.h
-// desc : システムのインターフェース
+// file : PhysicalSystem.h
+// desc : 物理オブジェクトの管理クラス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
+/* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
-#define  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#ifndef  _INCLUDED_D3D11_UTILITY_SYSTEMS_PHYSICAL_SYSTEM_
+#define  _INCLUDED_D3D11_UTILITY_SYSTEMS_PHYSICAL_SYSTEM_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
-#include  <D3D11Utility\Interface.h>
+#include  <D3D11Utility/Systems/ISystem.h>
+#include  <D3D11Utility\Physical\IPhysics.h>
+
 
 namespace  D3D11Utility
 {
 		namespace  Systems
 		{
-				using  SystemId = int;
-				static  const  SystemId  SYSTEM_ID_INVALID = STATIC_ID_INVALID;
 
-				class  ISystem
+				class  PhysicalSystem :public  ISystem
 				{
-						friend  class  SystemManager;
-
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						ISystem() :
-								m_isActive( true )
+						PhysicalSystem()
 						{}
-						virtual  ~ISystem()
+						virtual  ~PhysicalSystem()
 						{}
 
-				protected:
+				private:
 						//----------------------------------------------------------------------------------
-						// protected variables
+						// private variables
 						//----------------------------------------------------------------------------------
 
-						BOOL  m_isActive;
-						ComponentManager*  m_pComponentManager;
+						static  SystemId  STATIC_SYSTEM_ID;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -52,9 +48,9 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						/* NOTHING */
 
-				protected:
+				private:
 						//----------------------------------------------------------------------------------
-						// protected methods
+						// private methods
 						//----------------------------------------------------------------------------------
 						/* NOTHING */
 
@@ -63,17 +59,25 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						virtual  SystemId  GetSystemId()const = 0;
-						volatile  void  SetActive( BOOL  isActive )
+						static  SystemId  GetStaticSystemId()
 						{
-								m_isActive = isActive;
+								return  STATIC_SYSTEM_ID;
 						}
-						virtual  void  Update( float  ms ) = 0;
+						static  void  SetStaticSystemId( SystemId  systemId )
+						{
+								if ( STATIC_SYSTEM_ID == STATIC_ID_INVALID )
+										STATIC_SYSTEM_ID = systemId;
+						}
 
-				};// class ISystem
+						SystemId  GetSystemId()const
+						{
+								return  STATIC_SYSTEM_ID;
+						}
+						void  Update( float  ms );
+
+				};// class PhysicalSystem
 
 		}// namespace Systems
 }// namespace D3D11Utility
 
-
-#endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#endif // ! _INCLUDED_D3D11_UTILITY_SYSTEMS_PHYSICAL_SYSTEM_

@@ -25,7 +25,7 @@ namespace  D3D11Utility
 		using  ComponentId = int;
 
 		/* const variables */
-		static  const  int  STATIC_ID_INVALID = -1;
+		static  const  int  COMPONENT_ID_INVALID = STATIC_ID_INVALID;
 
 		class  IComponent
 		{

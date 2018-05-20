@@ -88,7 +88,7 @@ namespace  D3D11Utility
 								ComponentId  componentId = T::GetStaticComponentId();
 								
 								// 初登録コンポーネントにstatic_idを割り当て
-								if ( componentId == STATIC_ID_INVALID )
+								if ( componentId == COMPONENT_ID_INVALID )
 								{
 										componentId = m_componentTable.size();
 										T::SetStaticComponentId( componentId );
@@ -100,10 +100,10 @@ namespace  D3D11Utility
 
 								// コンポーネントIDテーブルのサイズ拡張
 								if ( componentId >= ( int ) m_entityComponetIdTable[entityId].size() )
-										m_entityComponetIdTable[entityId].resize( componentId + 1, STATIC_ID_INVALID );
+										m_entityComponetIdTable[entityId].resize( componentId + 1, COMPONENT_ID_INVALID );
 
 								// 既にコンポーネントが存在している
-								else  if ( m_entityComponetIdTable[entityId][componentId] != STATIC_ID_INVALID )
+								else  if ( m_entityComponetIdTable[entityId][componentId] != COMPONENT_ID_INVALID )
 										return;
 
 								m_entityComponetIdTable[entityId][componentId] = nComponentPosition;
@@ -134,7 +134,7 @@ namespace  D3D11Utility
 								if ( m_entityComponetIdTable.size() > entityId && m_entityComponetIdTable[entityId].size() > ( UINT ) componentId )
 								{
 										const  INT  numComponents = m_entityComponetIdTable[entityId][componentId];
-										if ( numComponents == STATIC_ID_INVALID )
+										if ( numComponents == COMPONENT_ID_INVALID )
 												return  nullptr;
 										return  dynamic_cast< T* >( m_componentTable[componentId][numComponents] );
 								}
@@ -159,7 +159,7 @@ namespace  D3D11Utility
 								if ( m_entityComponetIdTable.size() > entityId && m_entityComponetIdTable[entityId].size() > componentId )
 								{
 										const  UINT  numComponent = m_entityComponetIdTable[entityId][componentId];
-										m_entityComponetIdTable[entityId][componentId] = STATIC_ID_INVALID;
+										m_entityComponetIdTable[entityId][componentId] = COMPONENT_ID_INVALID;
 										m_componentTable[componentId].erase( m_componentTable[componentId].begin() + numComponent );
 								}
 

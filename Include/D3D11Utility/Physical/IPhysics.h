@@ -1,41 +1,41 @@
 //----------------------------------------------------------------------------------
-// file : ISystem.h
-// desc : システムのインターフェース
+// file : IPhysics.h
+// desc : 物理クラスのインターフェース
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
+/* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
-#define  _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_INTERFACE_PHYSICS_
+#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_INTERFACE_PHYSICS_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\IComponent.h>
 #include  <D3D11Utility\Interface.h>
+
 
 namespace  D3D11Utility
 {
-		namespace  Systems
+		namespace  Physical
 		{
-				using  SystemId = int;
-				static  const  SystemId  SYSTEM_ID_INVALID = STATIC_ID_INVALID;
 
-				class  ISystem
+				class  IPhysics
 				{
-						friend  class  SystemManager;
+						friend  class  Systems::PhysicalSystem;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						ISystem() :
-								m_isActive( true )
+						IPhysics()
 						{}
-						virtual  ~ISystem()
+						virtual  ~IPhysics()
 						{}
 
 				protected:
@@ -43,8 +43,10 @@ namespace  D3D11Utility
 						// protected variables
 						//----------------------------------------------------------------------------------
 
-						BOOL  m_isActive;
-						ComponentManager*  m_pComponentManager;
+						static  ComponentId  STATIC_COMPONENT_ID;
+
+						FLOAT  m_velocity;
+						FLOAT  m_gravity;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -63,17 +65,22 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						virtual  SystemId  GetSystemId()const = 0;
-						volatile  void  SetActive( BOOL  isActive )
+						static  ComponentId  GetStaticComponentId()
 						{
-								m_isActive = isActive;
+								return  STATIC_COMPONENT_ID;
 						}
-						virtual  void  Update( float  ms ) = 0;
+						static  void  SetStaticComponentId( ComponentId  id )
+						{
+								if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+								{
+										STATIC_COMPONENT_ID = id;
+										// TODO: need  to output debug string.
+								}
+						}
 
-				};// class ISystem
+				};// class IPhysics
 
-		}// namespace Systems
+		}// namespace Physical
 }// namespace D3D11Utility
 
-
-#endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_SYSTEM_
+#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_INTERFACE_PHYSICS_

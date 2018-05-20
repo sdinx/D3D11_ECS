@@ -31,6 +31,12 @@
     <Filter Include="Source\D3D11Utility\Components">
       <UniqueIdentifier>{7ffe4231-55ee-4aec-887e-f26940aca9c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header\D3D11Utility\Physical">
+      <UniqueIdentifier>{6ddad8b5-3ab0-455c-932e-ebfe9166b1c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\D3D11Utility\Physical">
+      <UniqueIdentifier>{51a2476e-c04b-4ee9-9696-a96766c73d46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp">
@@ -95,6 +101,15 @@
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Graphics\Texture.cpp">
       <Filter>Source\D3D11Utility\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\PhysicalSystem.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\IPhysical.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\ColliderBox2D.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +199,19 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Graphics\Texture.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Texture.h" />
+    <ClInclude Include="Include\D3D11Utility\Systems\PhysicalSystem.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\Physics2D.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\IPhysics.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox2D.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,6 @@ static  std::unique_ptr<TextureManager>  pTextureManager;
 //----------------------------------------------------------------------------------
 // note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある
 
-#include  <fbxsdk.h>
 static Camera*  s_camera = nullptr;
 static Transform*  s_camTrans = nullptr;
 
@@ -57,7 +56,7 @@ void  GameUtility::GameInit()
 
 		entity->AddComponent<Renderable>( PRMTV_PLANE );
 		entity->AddComponent<Transform>();
-		entity2->AddComponent<Renderable>( "WaterMill_No1.fbx" );
+		entity2->AddComponent<Renderable>( "Cup_No1.fbx" );
 		entity2->AddComponent<Transform>();
 		camEntity->AddComponent<Camera>();
 		camEntity->AddComponent<Transform>();
@@ -101,7 +100,7 @@ void  GameUtility::GameInit()
 		asd->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
 		s_camera = cam;
 
-		s_camTrans = camEntity->GetComponent<Transform>();
+		s_camTrans = trans2;//camEntity->GetComponent<Transform>();
 }
 
 
@@ -110,6 +109,8 @@ void  GameUtility::GameLoop()
 		Vector3&  pos = s_camera->GetPosition();
 		Vector3&  tar = s_camera->GetTarget();
 		Vector3&  move = s_camTrans->GetTranslation();
+		Vector3&  rot = s_camTrans->GetRotation();
+		FLOAT  rotate = 0;
 
 		UpdateController();
 		pSystemManager->Update( 0 );
@@ -119,11 +120,13 @@ void  GameUtility::GameLoop()
 		{
 				pos.z += 0.001f;
 				tar.z += 0.001f;
+				rotate -= ToRadian( 1 );
 		}
 		if ( GetControllerButtonPress( XIP_LB ) )
 		{
 				pos.z -= 0.001f;
 				tar.z -= 0.001f;
+				rotate += ToRadian( 1 );
 		}
 		if ( GetControllerButtonPress( XIP_D_UP ) )
 		{
@@ -136,14 +139,17 @@ void  GameUtility::GameLoop()
 		if ( GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
 				pos.x -= 0.001f;
+				move.x += 0.001f;
 		}
 		else if ( GetControllerButtonPress( XIP_D_LEFT ) )
 		{
 				pos.x += 0.001f;
+				move.x -= 0.001f;
 		}
 		if ( GetControllerButtonPress( XIP_ANY ) )
 		{
-				s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
+				rot.z += ToRadian( rotate );
+				//s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 		}
 
 }
