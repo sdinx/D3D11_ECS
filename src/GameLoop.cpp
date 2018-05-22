@@ -43,8 +43,9 @@ void  GameUtility::GameInit()
 		pSystemManager.reset( new  SystemManager( componentManager.get() ) );
 		pEntityManager.reset( new  EntityManager( componentManager.get() ) );
 		pTextureManager.reset( new  TextureManager );
-
+		
 		Graphics::TextureId  texId = pTextureManager->CreateTexture( TEXT( "res/0.png" ) );
+		Graphics::TextureId  texId2 = pTextureManager->CreateTexture( TEXT( "WaterMill_BaseColor.png" ) );
 
 		static  const  EntityId  playerId = pEntityManager->CreateEntity( "Player" );
 		static  const  EntityId  backGroundId = pEntityManager->CreateEntity( "BackGround" );
@@ -103,6 +104,7 @@ void  GameUtility::GameInit()
 		Vector3&  waterWheelRotat = s_waterWheelTrans->GetRotation();
 		waterWheelRotat.x = ToRadian( 90 );
 		waterWheelRotat.y = ToRadian( -60 );
+		waterWheelRender->SetTextureId( texId2, pTextureManager.get() );
 
 
 		/* Init Player */

@@ -91,8 +91,16 @@ Renderable::Renderable( LPCSTR  fbxString )
 				vertices[i].position.z = ( float ) mesh->GetControlPointAt( i )[2];
 		}// end for
 
+		FbxTextureInfo  texInfo = FbxLoadTexcoord( mesh );
+
+		for ( auto texcoord : texInfo.texcoordList )
+		{
+
+		}
+
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) numVertices );
 		m_pVertexBuffer->CreateIndexBuffer( mesh->GetPolygonVertices(), mesh->GetPolygonVertexCount() );
+
 
 		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
 
@@ -193,18 +201,25 @@ void  Renderable::SetTextureId( Graphics::TextureId  textureId, Systems::Texture
 FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
 {
 		FbxTextureInfo  fbxTextureInfo;
+		Vector2  temp;
+		FbxGeometryElementUV*  UV = nullptr;
+		FbxGeometryElement::EMappingMode  mapping;
+		FbxGeometryElement::EReferenceMode  reference;
+		FbxLayerElementArrayTemplate<int>*  texcoordIndex;
+		int  uvIndexCount;
+		int  k;
 
 		// UVセット数を取得
 		int UVLayerCount = fbxMesh->GetElementUVCount();
 		for ( int i = 0; UVLayerCount > i; i++ ) 
 		{
 				// UVバッファを取得
-				FbxGeometryElementUV* UV = fbxMesh->GetElementUV( i );
+				UV = fbxMesh->GetElementUV( i );
 
 				// マッピングモードの取得
-				FbxGeometryElement::EMappingMode mapping = UV->GetMappingMode();
+				mapping = UV->GetMappingMode();
 				// リファレンスモードの取得
-				FbxGeometryElement::EReferenceMode reference = UV->GetReferenceMode();
+				reference = UV->GetReferenceMode();
 
 				// UV数を取得
 				int uvCount = UV->GetDirectArray().GetCount();
@@ -227,16 +242,16 @@ FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
 
 								case  FbxGeometryElement::eIndexToDirect:
 										{
-												FbxLayerElementArrayTemplate<int>*  texcoordIndex = &UV->GetIndexArray();
-												int  uvIndexCount = texcoordIndex->GetCount();
+												texcoordIndex = &UV->GetIndexArray();
+												uvIndexCount = texcoordIndex->GetCount();
 
 												// UVを保持
-												Vector2 temp;
-												for ( int i = 0; uvIndexCount > i; i++ ) {
+												temp;
+												for ( k = 0; uvIndexCount > k; k++ ) {
 
-														temp.x = ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[0];
+														temp.x = ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( k ) )[0];
 
-														temp.y = 1.0f - ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( i ) )[1];
+														temp.y = 1.0f - ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( k ) )[1];
 
 														fbxTextureInfo.texcoordList.push_back( temp );
 												}
