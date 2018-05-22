@@ -164,13 +164,13 @@ void  GameUtility::GameLoop()
 				isRotate = true;
 		if ( isRotate )
 		{// 水車ぐるぐる
-				waterWheelRotat.y += ToRadian( 0.1 );
+				waterWheelRotat.y += ToRadian( 0.01 );
 				Vector3&  gateRotL = s_waterGateLTrans->GetRotation();
 				Vector3&  gateRotR = s_waterGateRTrans->GetRotation();
 				Vector3&  gateTransL = s_waterGateLTrans->GetTranslation();
 				Vector3&  gateTransR = s_waterGateRTrans->GetTranslation();
 				if ( gateRotL.y <= ToRadian( 130 ) )
-				{
+				{// 扉パッカーン
 						gateRotL.y += ToRadian( 0.1 );
 						gateRotR.y -= ToRadian( 0.1 );
 						gateTransL.z -= 0.0002f;
