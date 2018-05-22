@@ -35,7 +35,6 @@ static Transform*  s_waterWheelTrans = nullptr;
 static Transform*  s_waterGateLTrans = nullptr;
 static Transform*  s_waterGateRTrans = nullptr;
 
-
 void  GameUtility::GameInit()
 {
 		componentManager.reset( new  ComponentManager() );
@@ -69,6 +68,9 @@ void  GameUtility::GameInit()
 		backGroundEntity->AddComponent<Transform>();
 
 		Renderable*  backRender = backGroundEntity->GetComponent<Renderable>();
+		Transform*  backTrans = backGroundEntity->GetComponent<Transform>();
+		backTrans->SetPosition( Vector3( 0, 0, 6.0f ) );
+		backTrans->SetScale( Vector3( 10, 10, 10 ) );
 		backRender->SetColor( Vector4( 1, 1, 0, 0 ) );
 		backRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 
@@ -158,7 +160,6 @@ void  GameUtility::GameLoop()
 		UpdateController();
 		pSystemManager->Update( 0 );
 		pd3dRenderer->Rendering();
-
 		
 		if ( rot.z <= ToRadian( -50 ) )
 				isRotate = true;

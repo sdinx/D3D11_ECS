@@ -49,6 +49,7 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 		UINT  numIndex = ARRAYSIZE( indices );
 		m_pVertexBuffer->CreateIndexBuffer( indices, numIndex );
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
+		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
 
 		delete[ ]  vertices;
 }

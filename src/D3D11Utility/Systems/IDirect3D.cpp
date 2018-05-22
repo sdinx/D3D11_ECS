@@ -153,8 +153,6 @@ HRESULT  IDirect3D::CreateDevice()
 		if ( FAILED( hr ) )
 				return  hr;
 
-		// デバイスコンテキストにレンダーターゲットを設定
-		m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
 
 		// ピューポートの設定
 		D3D11_VIEWPORT  vp;
@@ -271,6 +269,9 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 		hr = m_pd3dDevice->CreateShaderResourceView( m_pDSTexture, &srvd, &m_pDSShaderResourceView );
 		if ( FAILED( hr ) )
 				return  E_FAIL;
+
+		// デバイスコンテキストにレンダーターゲットを設定
+		m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
 
 		return  S_OK;
 }// end CreateDefaultDepthStencil()

@@ -41,7 +41,6 @@ namespace  D3D11Utility
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManager;
 
-
 				public:
 						//----------------------------------------------------------------------------------
 						// public  variables
