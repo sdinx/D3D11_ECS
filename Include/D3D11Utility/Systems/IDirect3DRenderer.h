@@ -14,6 +14,9 @@
 #include  <D3D11Utility\Systems\IDirect3D.h>
 #include  <IGraphicsRenderer.h>
 #include  <IRenderable.h>
+#include  <D3D11Utility\Graphics\VertexShader.h>
+#include  <D3D11Utility\Graphics\GeometryShader.h>
+#include  <D3D11Utility\Graphics\PixelShader.h>
 
 
 namespace  D3D11Utility
@@ -40,6 +43,9 @@ namespace  D3D11Utility
 
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManager;
+						std::vector<Graphics::VertexShader>  m_vertexShaderList;
+						std::vector<Graphics::GeometryShader>  m_geometryShaderList;
+						std::vector<Graphics::PixelShader>  m_pixelShaderList;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -58,6 +64,7 @@ namespace  D3D11Utility
 						// public  methods
 						//----------------------------------------------------------------------------------
 
+						Graphics::ShaderId  CreateShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel );
 						void  Release();
 						void  Rendering()const;
 

@@ -34,7 +34,7 @@ namespace  D3D11Utility
 
 		namespace  Graphics
 		{
-
+				using  ShaderId = int;
 		}// namespace Graphics
 
 
