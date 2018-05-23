@@ -54,5 +54,5 @@ void  IDirect3DRenderer::Rendering()const
 
 Graphics::ShaderId  IDirect3DRenderer::CreateShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel )
 {
-
+		return  0;
 }

@@ -13,6 +13,7 @@
 #include  <D3D11Utility\Systems\EntityManager.h>
 #include  <D3D11Utility\Systems\SystemManager.h>
 #include  <D3D11Utility\Systems\TextureManager.h>
+#include  <D3D11Utility\Systems\FbxLoader.h>
 using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
@@ -42,9 +43,10 @@ void  GameUtility::GameInit()
 		pSystemManager.reset( new  SystemManager( componentManager.get() ) );
 		pEntityManager.reset( new  EntityManager( componentManager.get() ) );
 		pTextureManager.reset( new  TextureManager );
-		
+
 		Graphics::TextureId  texId = pTextureManager->CreateTexture( TEXT( "res/0.png" ) );
-		Graphics::TextureId  texId2 = pTextureManager->CreateTexture( TEXT( "WaterMill_BaseColor.png" ) );
+		Graphics::TextureId  texId2 = pTextureManager->CreateTexture( TEXT( "res/WaterMill_BaseColor.png" ) );
+		Graphics::TextureId  texDoor = pTextureManager->CreateTexture( TEXT( "res/WaterGate_No3_lambert1_AlbedoTransparency.png" ) );
 
 		static  const  EntityId  playerId = pEntityManager->CreateEntity( "Player" );
 		static  const  EntityId  backGroundId = pEntityManager->CreateEntity( "BackGround" );
@@ -80,6 +82,9 @@ void  GameUtility::GameInit()
 		waterGateLEntity->AddComponent<Renderable>( "WaterGate_No3.fbx" );
 		waterGateLEntity->AddComponent<Transform>();
 
+		Renderable*  s_waterGateLRender = waterGateLEntity->GetComponent<Renderable>();
+		s_waterGateLRender->SetTextureId( texDoor, pTextureManager.get() );
+		s_waterGateLRender->SetColor( Vector4( 1, 1, 1, 1 ) );
 		s_waterGateLTrans = waterGateLEntity->GetComponent<Transform>();
 		s_waterGateLTrans->SetPosition( Vector3( 7, 0, 1 ) );
 		s_waterGateLTrans->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
@@ -88,6 +93,9 @@ void  GameUtility::GameInit()
 		waterGateREntity->AddComponent<Renderable>( "WaterGate_No3.fbx" );
 		waterGateREntity->AddComponent<Transform>();
 
+		Renderable*  s_waterGateRRender = waterGateREntity->GetComponent<Renderable>();
+		s_waterGateRRender->SetTextureId( texDoor, pTextureManager.get() );
+		s_waterGateRRender->SetColor( Vector4( 1, 1, 1, 1 ) );
 		s_waterGateRTrans = waterGateREntity->GetComponent<Transform>();
 		s_waterGateRTrans->SetPosition( Vector3( 7.1f, 0, 1 ) );
 		s_waterGateRTrans->SetRotation( Vector3( 0, ToRadian( 180 ), 0 ) );
@@ -99,6 +107,8 @@ void  GameUtility::GameInit()
 		waterWheelEntity->AddComponent<Transform>();
 
 		Renderable*  waterWheelRender = waterWheelEntity->GetComponent<Renderable>();
+		waterWheelRender->SetTextureId( texId2, pTextureManager.get() );
+		waterWheelRender->SetColor( Vector4( 1, 1, 1, 1 ) );
 
 		s_waterWheelTrans = waterWheelEntity->GetComponent<Transform>();
 		s_waterWheelTrans->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
@@ -106,7 +116,6 @@ void  GameUtility::GameInit()
 		Vector3&  waterWheelRotat = s_waterWheelTrans->GetRotation();
 		waterWheelRotat.x = ToRadian( 90 );
 		waterWheelRotat.y = ToRadian( -60 );
-		waterWheelRender->SetTextureId( texId2, pTextureManager.get() );
 
 
 		/* Init Player */

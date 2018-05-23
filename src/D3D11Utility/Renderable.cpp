@@ -2,12 +2,10 @@
 // Includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Renderable.h>
-#include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Transform.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\TextureManager.h>
 #include  <DirectXMath.h>
-#include  <fbxsdk.h>
 
 
 //----------------------------------------------------------------------------------
@@ -85,18 +83,23 @@ Renderable::Renderable( LPCSTR  fbxString )
 
 		INT  numVertices = mesh->GetControlPointsCount();
 		VERTEX*  vertices = new  VERTEX[numVertices];
-		for ( i = 0; i < ( int ) numVertices; i++ )
+		INT*  index = mesh->GetPolygonVertices();
+		FbxVector4  vec;
+		for ( i = 0; i < numVertices; i++ )
 		{
-				vertices[i].position.x = ( float ) mesh->GetControlPointAt( i )[0];
-				vertices[i].position.y = ( float ) mesh->GetControlPointAt( i )[1];
-				vertices[i].position.z = ( float ) mesh->GetControlPointAt( i )[2];
+				vec = mesh->GetControlPointAt( i );
+				vertices[i].position.x = ( float )vec[0];
+				vertices[i].position.y = ( float )vec[1];
+				vertices[i].position.z = ( float )vec[2];
 		}// end for
 
 		FbxTextureInfo  texInfo = FbxLoadTexcoord( mesh );
-
+		
+		i = 0;
 		for ( auto texcoord : texInfo.texcoordList )
 		{
-
+				vertices[index[i]].texcoord = texcoord;
+				i++;
 		}
 
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) numVertices );
@@ -147,6 +150,10 @@ void  Renderable::Rendering()const
 
 		if ( m_textureId != TEXTURE_ID_INVALID )
 				m_textureManager->SetTexture( m_textureId );
+		else
+		{
+				// テクスチャのNULL化
+		}// end else
 
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
@@ -202,13 +209,22 @@ void  Renderable::SetTextureId( Graphics::TextureId  textureId, Systems::Texture
 FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
 {
 		FbxTextureInfo  fbxTextureInfo;
-		Vector2  temp;
+		FbxVector2  uv;
 		FbxGeometryElementUV*  UV = nullptr;
 		FbxGeometryElement::EMappingMode  mapping;
 		FbxGeometryElement::EReferenceMode  reference;
-		FbxLayerElementArrayTemplate<int>*  texcoordIndex;
-		int  uvIndexCount;
-		int  k;
+		FbxLayerElementArrayTemplate<int>*  indexArray;
+		const FbxLayerElementArrayTemplate<FbxVector2>*  directArray;
+		int  size = fbxMesh->GetPolygonCount();
+		INT*  indexList = fbxMesh->GetPolygonVertices();
+		int  uvCount = 0;
+		int  k = 0;
+		int  j = 0;
+		int  index = 0;
+		int  uvIndex = 0;
+		int  polygonSize = 0;
+		int  indexByPolygonVertex = 0;						// 面の構成情報インデックス配列のインデックス
+		int  polygonCount = 0;
 
 		// UVセット数を取得
 		int UVLayerCount = fbxMesh->GetElementUVCount();
@@ -216,6 +232,8 @@ FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
 		{
 				// UVバッファを取得
 				UV = fbxMesh->GetElementUV( i );
+				indexArray = &UV->GetIndexArray();
+				directArray = &UV->GetDirectArray();
 
 				// マッピングモードの取得
 				mapping = UV->GetMappingMode();
@@ -223,65 +241,62 @@ FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
 				reference = UV->GetReferenceMode();
 
 				// UV数を取得
-				int uvCount = UV->GetDirectArray().GetCount();
+				uvCount = UV->GetDirectArray().GetCount();
 
-				// マッピングモードの判別
-				switch ( mapping ) 
+				// 頂点に対応して格納されている場合
+				if ( mapping == FbxGeometryElement::eByControlPoint )
 				{
-				case FbxGeometryElement::eByControlPoint:
-								/* NOTHING */
-								break;
-
-				case FbxGeometryElement::eByPolygonVertex:
+						// 頂点座標でマッピング
+						for ( j = 0; j < size; j++ )
 						{
-								// リファレンスモードの判別
-								switch ( reference )
+								index = indexList[j];			// 面の構成情報配列から頂点インデックス番号を取得
+
+																							// リファレンスモードを判定
+								uvIndex;
+								if ( reference == FbxGeometryElement::eDirect ) {		// eDirectの場合
+										uvIndex = index;		//　eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
+								}
+								else {													// eIndexToDirectの場合
+										uvIndex = indexArray->GetAt( index );				// 頂点座標インデックスに対応したＵＶ情報インデックスを取得
+								}
+
+								FbxVector2 uv = directArray->GetAt( uvIndex );		// uv値をdouble型で取得
+								fbxTextureInfo.texcoordList.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );		// float値として格納
+						}
+				}
+				// 面の構成情報に対応して格納されている場合
+				else if ( mapping == FbxGeometryElement::eByPolygonVertex )
+				{
+						// ポリゴンバーテックス（面の構成情報のインデックス）でマッピング
+						indexByPolygonVertex = 0;
+						polygonCount = fbxMesh->GetPolygonCount();			// メッシュのポリゴン数を取得
+						for ( j = 0; j < polygonCount; ++j )				// ポリゴン数分ループ
+						{
+								polygonSize = fbxMesh->GetPolygonSize( j );		// ｉ番目のポリゴン頂点数を取得
+
+																																// ポリゴンの頂点数分ループ
+								for ( k = 0; k < polygonSize; ++k )
 								{
-								case  FbxGeometryElement::eDirect:
-										/* NOTHING */
-										break;
+										// リファレンスモードの判定？
+										if ( reference == FbxGeometryElement::eDirect ) {		// eDirectの場合
+												uvIndex = indexByPolygonVertex;		//　eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
+										}
+										else {													// eIndexToDirectの場合
+												uvIndex = indexArray->GetAt( indexByPolygonVertex );	// 面の構成情報インデックスに対応したＵＶ情報インデックスを取得
+										}
+										uv = directArray->GetAt( uvIndex );
 
-								case  FbxGeometryElement::eIndexToDirect:
-										{
-												texcoordIndex = &UV->GetIndexArray();
-												uvIndexCount = texcoordIndex->GetCount();
+										fbxTextureInfo.texcoordList.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );	// ｆｌｏａｔ値として格納
 
-												// UVを保持
-												temp;
-												for ( k = 0; uvIndexCount > k; k++ ) {
-
-														temp.x = ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( k ) )[0];
-
-														temp.y = 1.0f - ( float ) UV->GetDirectArray().GetAt( texcoordIndex->GetAt( k ) )[1];
-
-														fbxTextureInfo.texcoordList.push_back( temp );
-												}
-
-												// UVSet名を取得
-												fbxTextureInfo.name = UV->GetName();
-										}// case FbxGeometryElement::eIndexToDirect
-										break;
-								default:
-										/* NOTHING */
-										break;
-								}// end switch
-
-						}// case FbxGeometryElement::eByPolygonVertex
-						break;
-
-				case FbxGeometryElement::eByEdge:
-						/* NOTHING */
-						break;
-
-				case FbxGeometryElement::eByPolygon:
-						/* NOTHING */
-						break;
-
-				default:
-						/* NOTHING */
-								break;
-
-				}// end switch
+										++indexByPolygonVertex;						// 頂点インデックスをインクリメント
+								}
+						}
+				}
+				else
+				{
+						// それ以外のマッピングモードには対応しない
+						assert( false );
+				}
 
 		}// end for
 

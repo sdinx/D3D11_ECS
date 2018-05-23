@@ -111,6 +111,9 @@
     <ClCompile Include="src\D3D11Utility\Physical\ColliderBox2D.cpp">
       <Filter>Source\D3D11Utility\Physical</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\FbxLoader.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -212,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox2D.h">
       <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\FbxLoader.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

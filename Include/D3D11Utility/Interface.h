@@ -40,11 +40,4 @@ namespace  D3D11Utility
 
 }// namespace D3D11Utility
 
-
-namespace  fbxsdk 
-{
-		class  FbxScene;
-		class  FbxMesh;
-}// namespace fbxsdk
-
 #endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_

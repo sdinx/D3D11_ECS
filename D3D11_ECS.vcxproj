@@ -33,6 +33,7 @@
     <ClCompile Include="src\D3D11Utility\Scene.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\ComponentManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\EntityManager.cpp" />
+    <ClCompile Include="src\D3D11Utility\Systems\FbxLoader.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\PhysicalSystem.cpp" />
@@ -65,6 +66,7 @@
     <ClInclude Include="Include\D3D11Utility\Scene.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\ComponentManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\EntityManager.h" />
+    <ClInclude Include="Include\D3D11Utility\Systems\FbxLoader.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\IDirect3D.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\IDirect3DRenderer.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\ISystem.h" />
