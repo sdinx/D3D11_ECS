@@ -18,20 +18,11 @@
 #include  <D3D11Utility\Graphics\GeometryShader.h>
 #include  <GameUtility.h>
 #include  <IRenderable.h>
-#include  <fbxsdk.h>
 #include  <memory>
 
 
 namespace  D3D11Utility
 {
-
-		struct  FbxTextureInfo
-		{
-				std::string  name;
-				std::list<std::string>  textureNameList;
-				std::list<Vector2>  texcoordList;
-		};
-
 
 		class  Renderable : virtual  public  Component, virtual  public  IRenderable
 		{
@@ -73,7 +64,6 @@ namespace  D3D11Utility
 				Graphics::PixelShader*  m_pPixelShader = nullptr;
 				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
 				Systems::TextureManager*  m_textureManager = nullptr;
-				FbxScene*  m_fbxScene = nullptr;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -85,8 +75,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private methods
 				//----------------------------------------------------------------------------------
-
-				FbxTextureInfo  FbxLoadTexcoord( FbxMesh*  fbxMesh );
+				/* NOTHING */
 
 		public:
 				//----------------------------------------------------------------------------------

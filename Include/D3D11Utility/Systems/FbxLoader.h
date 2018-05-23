@@ -25,14 +25,13 @@ namespace  D3D11Utility
 						Release();
 				}
 
-				FbxMesh*  pMesh;
+				FbxMesh*  pMesh = nullptr;
 				std::vector<Vector3>  vertices;
 				std::vector<Vector3>  normals;
 				std::vector<Vector2>  texcoords;
 				std::vector<INT>  indices;
 				void  Release()
 				{
-						SafeDestroy( pMesh );
 						vertices.clear();
 						normals.clear();
 						texcoords.clear();
@@ -93,6 +92,7 @@ namespace  D3D11Utility
 						{
 								if ( m_modelContainer.size() > i )
 										return  m_modelContainer[i];
+								return  ModelContainer();
 						}
 						std::vector<Vector3>  LoadVertices( FbxMesh*  pMesh, INT  size );
 						std::vector<Vector3>  LoadNormals( FbxMesh*  pMesh, INT  size );

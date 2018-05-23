@@ -6,6 +6,7 @@
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\TextureManager.h>
 #include  <DirectXMath.h>
+#include  <D3D11Utility\Systems\FbxLoader.h>
 
 
 //----------------------------------------------------------------------------------
@@ -61,56 +62,43 @@ Renderable::Renderable( LPCSTR  fbxString )
 		m_pPixelShader = new  PixelShader();
 		m_pGeometryShader = new  GeometryShader();
 
+		Systems::FbxLoader  loader( fbxString );
 
-		FbxManager*  fbxManager = FbxManager::Create();
-		m_fbxScene = FbxScene::Create( fbxManager, "fbxscene" );
-		FbxString  fileName( fbxString );
-		FbxImporter*  fbxImporter = FbxImporter::Create( fbxManager, "imp" );
-		fbxImporter->Initialize( fileName.Buffer(), -1, fbxManager->GetIOSettings() );
-		fbxImporter->Import( m_fbxScene );
-
-		FbxMesh*  mesh;
+		ModelContainer  container = loader.GetModelContainer( 0 );
 
 		INT  i = 0;
-		INT  maxChildCounts = m_fbxScene->GetRootNode()->GetChildCount();
 
-		for ( i = 0; i < maxChildCounts; i++ )
-				if ( m_fbxScene->GetRootNode()->GetChild( i )->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eMesh )
-				{
-						mesh = m_fbxScene->GetRootNode()->GetChild( i )->GetMesh();
-						break;
-				}// end if
-
-		INT  numVertices = mesh->GetControlPointsCount();
-		VERTEX*  vertices = new  VERTEX[numVertices];
-		INT*  index = mesh->GetPolygonVertices();
-		FbxVector4  vec;
-		for ( i = 0; i < numVertices; i++ )
+		INT  vertexCount = container.vertices.size();
+		VERTEX*  vertices = new  VERTEX[vertexCount];
+		for ( auto vertex : container.vertices )
 		{
-				vec = mesh->GetControlPointAt( i );
-				vertices[i].position.x = ( float )vec[0];
-				vertices[i].position.y = ( float )vec[1];
-				vertices[i].position.z = ( float )vec[2];
-		}// end for
-
-		FbxTextureInfo  texInfo = FbxLoadTexcoord( mesh );
-		
-		i = 0;
-		for ( auto texcoord : texInfo.texcoordList )
-		{
-				vertices[index[i]].texcoord = texcoord;
+				vertices[i].position = vertex;
 				i++;
 		}
 
-		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) numVertices );
-		m_pVertexBuffer->CreateIndexBuffer( mesh->GetPolygonVertices(), mesh->GetPolygonVertexCount() );
+		i = 0;
+		for ( auto texcoord : container.texcoords )
+		{
+				vertices[i].texcoord = texcoord;
+				i++;
+		}
+
+		INT  indexCount = container.indices.size();
+		INT*  indices = new  INT[indexCount];
+		i = 0;
+		for ( auto index : container.indices )
+		{
+				indices[i] = index;
+				i++;
+		}
+
+		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
+		//m_pVertexBuffer->CreateIndexBuffer( indices, indexCount );
 
 
 		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
 
-		SafeDestroy( fbxImporter );
-		SafeDestroy( m_fbxScene );
-		SafeDestroy( fbxManager );
+
 		delete[ ]  vertices;
 }
 
@@ -203,102 +191,4 @@ void  Renderable::SetTextureId( Graphics::TextureId  textureId, Systems::Texture
 
 
 		m_textureId = textureId;
-}
-
-
-FbxTextureInfo  Renderable::FbxLoadTexcoord( FbxMesh*  fbxMesh )
-{
-		FbxTextureInfo  fbxTextureInfo;
-		FbxVector2  uv;
-		FbxGeometryElementUV*  UV = nullptr;
-		FbxGeometryElement::EMappingMode  mapping;
-		FbxGeometryElement::EReferenceMode  reference;
-		FbxLayerElementArrayTemplate<int>*  indexArray;
-		const FbxLayerElementArrayTemplate<FbxVector2>*  directArray;
-		int  size = fbxMesh->GetPolygonCount();
-		INT*  indexList = fbxMesh->GetPolygonVertices();
-		int  uvCount = 0;
-		int  k = 0;
-		int  j = 0;
-		int  index = 0;
-		int  uvIndex = 0;
-		int  polygonSize = 0;
-		int  indexByPolygonVertex = 0;						// 面の構成情報インデックス配列のインデックス
-		int  polygonCount = 0;
-
-		// UVセット数を取得
-		int UVLayerCount = fbxMesh->GetElementUVCount();
-		for ( int i = 0; UVLayerCount > i; i++ ) 
-		{
-				// UVバッファを取得
-				UV = fbxMesh->GetElementUV( i );
-				indexArray = &UV->GetIndexArray();
-				directArray = &UV->GetDirectArray();
-
-				// マッピングモードの取得
-				mapping = UV->GetMappingMode();
-				// リファレンスモードの取得
-				reference = UV->GetReferenceMode();
-
-				// UV数を取得
-				uvCount = UV->GetDirectArray().GetCount();
-
-				// 頂点に対応して格納されている場合
-				if ( mapping == FbxGeometryElement::eByControlPoint )
-				{
-						// 頂点座標でマッピング
-						for ( j = 0; j < size; j++ )
-						{
-								index = indexList[j];			// 面の構成情報配列から頂点インデックス番号を取得
-
-																							// リファレンスモードを判定
-								uvIndex;
-								if ( reference == FbxGeometryElement::eDirect ) {		// eDirectの場合
-										uvIndex = index;		//　eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
-								}
-								else {													// eIndexToDirectの場合
-										uvIndex = indexArray->GetAt( index );				// 頂点座標インデックスに対応したＵＶ情報インデックスを取得
-								}
-
-								FbxVector2 uv = directArray->GetAt( uvIndex );		// uv値をdouble型で取得
-								fbxTextureInfo.texcoordList.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );		// float値として格納
-						}
-				}
-				// 面の構成情報に対応して格納されている場合
-				else if ( mapping == FbxGeometryElement::eByPolygonVertex )
-				{
-						// ポリゴンバーテックス（面の構成情報のインデックス）でマッピング
-						indexByPolygonVertex = 0;
-						polygonCount = fbxMesh->GetPolygonCount();			// メッシュのポリゴン数を取得
-						for ( j = 0; j < polygonCount; ++j )				// ポリゴン数分ループ
-						{
-								polygonSize = fbxMesh->GetPolygonSize( j );		// ｉ番目のポリゴン頂点数を取得
-
-																																// ポリゴンの頂点数分ループ
-								for ( k = 0; k < polygonSize; ++k )
-								{
-										// リファレンスモードの判定？
-										if ( reference == FbxGeometryElement::eDirect ) {		// eDirectの場合
-												uvIndex = indexByPolygonVertex;		//　eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
-										}
-										else {													// eIndexToDirectの場合
-												uvIndex = indexArray->GetAt( indexByPolygonVertex );	// 面の構成情報インデックスに対応したＵＶ情報インデックスを取得
-										}
-										uv = directArray->GetAt( uvIndex );
-
-										fbxTextureInfo.texcoordList.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );	// ｆｌｏａｔ値として格納
-
-										++indexByPolygonVertex;						// 頂点インデックスをインクリメント
-								}
-						}
-				}
-				else
-				{
-						// それ以外のマッピングモードには対応しない
-						assert( false );
-				}
-
-		}// end for
-
-		return  fbxTextureInfo;
 }
