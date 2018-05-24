@@ -32,12 +32,6 @@ namespace  D3D11Utility
 		}// namespace Systems
 
 
-		namespace  Graphics
-		{
-				using  ShaderId = int;
-		}// namespace Graphics
-
-
 }// namespace D3D11Utility
 
 #endif // ! _INCLUDED_D3D11_UTILITY_INTERFACE_

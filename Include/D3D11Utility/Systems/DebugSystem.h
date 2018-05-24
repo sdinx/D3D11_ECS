@@ -1,67 +1,91 @@
 //----------------------------------------------------------------------------------
-// file : PixelShader.h
-// desc : 
+// file : DebugSystem.h
+// desc : デバッグ時のみ有効になるシステム
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_GRAPHICS_PIXEL_SHADER_
-#define  _INCLUDED_D3D11_UTILITY_GRAPHICS_PIXEL_SHADER_
+//----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+// TODO: ゲームスピード、フレームスピード制御の実装.
+// TODO: リソースの読み込み・解放状況の実装.
+// TODO: デバッグカメラの実装.
+// TODO: デバッグウィンドウの実装.
+// TODO: どこでもセーブ・ロードの実装.
+// TODO: スクリーン・ムービーキャプチャーの実装.
+// TODO: CPU・GPU負荷状況の実装.
+// TODO: BGM・SEの確認の実装.
+// TODO: 当たり判定の可視化の実装.
+// TODO: ゲームエディットの実装.
+
+#ifndef  _INCLUDED_D3D11_UTILITY_SYSTEMS_DEBUG_SYSTEM_
+#define  _INCLUDED_D3D11_UTILITY_SYSTEMS_DEBUG_SYSTEM_
 
 //----------------------------------------------------------------------------------
-// Includes
+// includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Graphics\IShader.h>
+#include  <D3D11Utility/Systems/ISystem.h>
 
 
 namespace  D3D11Utility
 {
-
-		namespace  Graphics
+		namespace  Systems
 		{
-				class  PixelShader :public  IShader
+
+				class  DebugSystem :public  ISystem
 				{
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
-						PixelShader();
-						PixelShader( ID3D11PixelShader*  pPS );
-						~PixelShader();
+
+						DebugSystem();
+						~DebugSystem();
 
 				private:
 						//----------------------------------------------------------------------------------
 						// private variables
 						//----------------------------------------------------------------------------------
-						ID3D11PixelShader*  m_pPixelShader = nullptr;
 
+						static  SystemId  STATIC_SYSTEM_ID;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// public variables
 						//----------------------------------------------------------------------------------
-
+						/* NOTHING */
 
 				private:
 						//----------------------------------------------------------------------------------
 						// private methods
 						//----------------------------------------------------------------------------------
-
+						
+						void  SetupConsole();
 
 				public:
 						//----------------------------------------------------------------------------------
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						// シェーダのコンパイルと頂点シェーダの作成
-						HRESULT  CreatePixelShader( LPCWSTR  szFileName = nullptr );
-						// 描画を行う前に呼び出す
-						void  UpdateShader();
+						static  SystemId  GetStaticSystemId()
+						{
+								return  STATIC_SYSTEM_ID;
+						}
+						static  void  SetStaticSystemId( SystemId  systemId )
+						{
+								if ( STATIC_SYSTEM_ID == STATIC_ID_INVALID )
+										STATIC_SYSTEM_ID = systemId;
+						}
+
+						SystemId  GetSystemId()const
+						{
+								return  STATIC_SYSTEM_ID;
+						}
+						void  Update( FLOAT  ms );
 						void  Release();
 
-				}; // class PixelBuffer
+				};// class DebugSystem
 
-		}// namespace Graphics
-
+		}// namespace Systems
 }// namespace D3D11Utility
 
-
-#endif // ! _INCLUDED_D3D11_UTILITY_GRAPHICS_PIXEL_SHADER_
+#endif // ! _INCLUDED_D3D11_UTILITY_SYSTEMS_DEBUG_SYSTEM_

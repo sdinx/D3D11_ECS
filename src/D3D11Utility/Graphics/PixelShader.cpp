@@ -25,6 +25,13 @@ PixelShader::PixelShader()
 }
 
 
+PixelShader::PixelShader( ID3D11PixelShader*  pPS ) :
+		m_pPixelShader( pPS )
+{
+
+}
+
+
 PixelShader::~PixelShader()
 {
 		Release();

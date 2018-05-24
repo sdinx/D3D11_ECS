@@ -3,20 +3,13 @@
 // desc : 
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_GEOMETRY_BUFFER_
-#define  _INCLUDED_D3D11_UTILITY_GEOMETRY_BUFFER_
-
-//----------------------------------------------------------------------------------
-// pragma
-//----------------------------------------------------------------------------------
-#pragma comment(lib, "d3d11.lib")
+#ifndef  _INCLUDED_D3D11_UTILITY_GRAPHICS_GEOMETRY_SHADER_
+#define  _INCLUDED_D3D11_UTILITY_GRAPHICS_GEOMETRY_SHADER_
 
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
-#include  <d3d11.h>
-#include  <DirectXMath.h>
+#include  <D3D11Utility\Graphics\IShader.h>
 
 
 namespace  D3D11Utility
@@ -24,13 +17,14 @@ namespace  D3D11Utility
 
 		namespace  Graphics
 		{
-				class  GeometryShader
+				class  GeometryShader :public  IShader
 				{
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 						GeometryShader();
+						GeometryShader( ID3D11GeometryShader*  pGS );
 						~GeometryShader();
 
 				private:
@@ -70,4 +64,4 @@ namespace  D3D11Utility
 }// namespace D3D11Utility
 
 
-#endif // ! _INCLUDED_D3D11_UTILITY_GEOMETRY_BUFFER_
+#endif // ! _INCLUDED_D3D11_UTILITY_GRAPHICS_GEOMETRY_SHADER_

@@ -25,6 +25,14 @@ VertexShader::VertexShader()
 }
 
 
+VertexShader::VertexShader( ID3D11VertexShader*  pVS, ID3D11InputLayout*  pIL ) :
+		m_pVertexShader( pVS ),
+		m_pInputLayout( pIL )
+{
+
+}
+
+
 VertexShader::~VertexShader()
 {
 		Release();

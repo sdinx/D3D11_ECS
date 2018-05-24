@@ -16,6 +16,7 @@
 #include  <D3D11Utility\Graphics\VertexShader.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
 #include  <D3D11Utility\Graphics\GeometryShader.h>
+#include  <D3D11Utility\Graphics\IShader.h>
 #include  <GameUtility.h>
 #include  <IRenderable.h>
 #include  <memory>
@@ -26,6 +27,8 @@ namespace  D3D11Utility
 
 		class  Renderable : virtual  public  Component, virtual  public  IRenderable
 		{
+				friend  class  Systems::IDirect3DRenderer;
+
 				struct  ConstantBufferForPerFrame
 				{
 						Matrix4x4  world;
@@ -102,6 +105,18 @@ namespace  D3D11Utility
 				void  Rendering()const;
 				void  Update();
 				void  UpdateConstantBuffer( Matrix4x4  world );
+				void  SetVertexShader( Graphics::VertexShader*  pVertexShader )
+				{
+						m_pVertexShader = pVertexShader;
+				}
+				void  SetGeometryShader( Graphics::GeometryShader*  pGeometryShader )
+				{
+						m_pGeometryShader = pGeometryShader;
+				}
+				void  SetPixelShader( Graphics::PixelShader*  pPixelShader )
+				{
+						m_pPixelShader = pPixelShader;
+				}
 				void  SetColor( Vector4  v4Color );
 				void  SetTextureId( Graphics::TextureId  textureId,  Systems::TextureManager*  textureManagerInstance = nullptr );
 		};

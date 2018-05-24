@@ -26,19 +26,21 @@ const  UINT  Renderable::s_nConstantBufferSlot;
 ID3D11Buffer*  Renderable::s_pConstantBuffer = nullptr;
 
 
-Renderable::Renderable()
+Renderable::Renderable() :
+		m_pVertexShader( nullptr ),
+		m_pGeometryShader( nullptr ),
+		m_pPixelShader( nullptr )
 {
 
 }
 
 
-Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
+Renderable::Renderable( PRIMITIVE_TYPE  primitiveType ) :
+		m_pVertexShader( nullptr ),
+		m_pGeometryShader( nullptr ),
+		m_pPixelShader( nullptr )
 {
 		m_isRendering = true;
-
-		m_pVertexShader = new  VertexShader();
-		m_pPixelShader = new  PixelShader();
-		m_pGeometryShader = new  GeometryShader();
 
 		VERTEX*  vertices;
 		UINT  numVertices = CreatePrimitive( PRMTV_2D_SQUARE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices );
@@ -54,13 +56,12 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType )
 }
 
 
-Renderable::Renderable( LPCSTR  fbxString )
+Renderable::Renderable( LPCSTR  fbxString ) :
+		m_pVertexShader( nullptr ),
+		m_pGeometryShader( nullptr ),
+		m_pPixelShader( nullptr )
 {
 		m_isRendering = true;
-
-		m_pVertexShader = new  VertexShader();
-		m_pPixelShader = new  PixelShader();
-		m_pGeometryShader = new  GeometryShader();
 
 		Systems::FbxLoader  loader( fbxString );
 
@@ -96,7 +97,7 @@ Renderable::Renderable( LPCSTR  fbxString )
 		//m_pVertexBuffer->CreateIndexBuffer( indices, indexCount );
 
 
-		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
+		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
 
 
 		delete[ ]  vertices;

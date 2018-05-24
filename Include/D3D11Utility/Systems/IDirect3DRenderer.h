@@ -17,6 +17,7 @@
 #include  <D3D11Utility\Graphics\VertexShader.h>
 #include  <D3D11Utility\Graphics\GeometryShader.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
+#include  <vector>
 
 
 namespace  D3D11Utility
@@ -43,9 +44,9 @@ namespace  D3D11Utility
 
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManager;
-						std::vector<Graphics::VertexShader>  m_vertexShaderList;
-						std::vector<Graphics::GeometryShader>  m_geometryShaderList;
-						std::vector<Graphics::PixelShader>  m_pixelShaderList;
+						std::vector<Graphics::VertexShader*>  m_vertexShaderList;
+						std::vector<Graphics::GeometryShader*>  m_geometryShaderList;
+						std::vector<Graphics::PixelShader*>  m_pixelShaderList;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -64,7 +65,9 @@ namespace  D3D11Utility
 						// public  methods
 						//----------------------------------------------------------------------------------
 
-						Graphics::ShaderId  CreateShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel );
+						Graphics::VertexShader*  CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel = "vs_5_0" );
+						Graphics::GeometryShader*  CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel = "gs_5_0" );
+						Graphics::PixelShader*  CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel = "ps_5_0" );
 						void  Release();
 						void  Rendering()const;
 

@@ -75,10 +75,10 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						//----------------------------------------------------------------------------------
-						// func: AddComponent( const  EntityId,  P&&... ) : void, template<T, P>
-						// brief: 始めてテーブルに登録されるコンポーネントの場合, リストの末尾にIDを追加.
-						// param: (param) 追加するコンポーネントのコンストラクタ引数を指定.
-						// note: 予め全コンポーネントに固有IDを割り振ると高速化できるかも.
+						//! @func:     AddComponent( const  EntityId,  P&&... ) : void, template<T, P>
+						//! @brief:     始めてテーブルに登録されるコンポーネントの場合, リストの末尾にIDを追加.
+						//! @param:     (param) 追加するコンポーネントのコンストラクタ引数を指定.
+						//! @note:     予め全コンポーネントに固有IDを割り振ると高速化できるかも.
 						//----------------------------------------------------------------------------------
 						template<class  T, typename  ...P>
 						void  AddComponent( const  EntityId  entity, P&&... param )
@@ -93,6 +93,8 @@ namespace  D3D11Utility
 										componentId = m_componentTable.size();
 										T::SetStaticComponentId( componentId );
 										m_componentTable.resize( componentId + 1 );
+
+										std::cout << "<ComponentManager> Add new component : componentId = " << componentId << ", Type = " << typeid( T ).name() << std::endl;
 								}
 
 								// コンポーネントの格納される位置
@@ -121,8 +123,7 @@ namespace  D3D11Utility
 						}// end AddComponent(const EntityId, T*) : void
 
 						//----------------------------------------------------------------------------------
-						// func: GetComponent( const EntityId& ) : T*
-						// note: 型チェックのために動的キャストにしているが静的キャストにするかもしれない.
+						//! @func:     GetComponent( const EntityId& ) : T*
 						//----------------------------------------------------------------------------------
 						template<class  T>
 						T*  GetComponent( const  EntityId  entity )
@@ -135,19 +136,37 @@ namespace  D3D11Utility
 								{
 										const  INT  numComponents = m_entityComponetIdTable[entityId][componentId];
 										if ( numComponents == COMPONENT_ID_INVALID )
+										{
+												std::cout << "<ComponentManager> numComponents invalid : entityId = " << entityId << ", componentId = " << componentId << std::endl;
 												return  nullptr;
+										}
 										return  dynamic_cast< T* >( m_componentTable[componentId][numComponents] );
 								}
 
-								// TODO: need to output debug string.
+								std::cout << "<ComponentManager> numComponents invalid : entityId = " << entityId << ", componentId = " << componentId << std::endl;
+								return  nullptr;
+						}// end GetComponent(const EntityId) : T*
+
+						//----------------------------------------------------------------------------------
+						//! @func:     GetComponent( const UINT ) : T*
+						//! @brief:     型と位置の指定でコンポーネントを取得する
+						//----------------------------------------------------------------------------------
+						template<class  T>
+						T*  GetComponent( const  UINT  numComponents )
+						{
+								const  ComponentId  componentId = T::GetStaticComponentId();
+
+								if ( componentId != COMPONENT_ID_INVALID&& componentId < ( int ) m_componentTable.size() && numComponents < m_componentTable[componentId].size() )
+										return  dynamic_cast< T* >( m_componentTable[componentId][numComponents] );
+
 								return  nullptr;
 						}// end GetComponent(const EntityId) : T*
 
 						 //----------------------------------------------------------------------------------
-						 // func: RemoveComponent() : void
-						 // brief: コンポーネントの解放処理だけでなく,
-						 // brief: 一時的に更新コンポーネントや描画コンポーネントを,
-						 // brief: 外して処理速度の改善を図ったりする.
+						 //! @func:     RemoveComponent() : void
+						 //! @brief:     コンポーネントの解放処理だけでなく,
+						 //! @brief:     一時的に更新コンポーネントや描画コンポーネントを,
+						 //! @brief:     外して処理速度の改善を図ったりする.
 						 //----------------------------------------------------------------------------------
 						template<typename  T>
 						void  RemoveComponent( const  EntityId  entity )
@@ -166,16 +185,19 @@ namespace  D3D11Utility
 						}// end RemoveComponent(const  EntityId) : void
 
 						//----------------------------------------------------------------------------------
-						// func: GetComponents() : std::vector<Component*>, template<T>
-						// brief: 指定したコンポーネント型の配列を返す
-						// TODO: 配列を直接返さずに行えるように変更する必要がある
+						//! @func:     GetComponents() : std::vector<Component*>, template<T>
+						//! @brief:     指定したコンポーネント型の配列を返す
+						//! @TODO:     配列を直接返さずに行えるように変更する必要がある
 						//----------------------------------------------------------------------------------
 						template  <class  T>
 						std::vector<Component*>  GetComponents()
 						{
 								ComponentId  componentId = T::GetStaticComponentId();
 
-								//if ( componentId == STATIC_ID_INVALID );// need to output debug string
+								if ( componentId == STATIC_ID_INVALID )
+								{
+										std::cout << "<ComponentManager> GetComponents failed." << std::endl;
+								}
 
 								return  m_componentTable[componentId];
 						}

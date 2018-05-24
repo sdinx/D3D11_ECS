@@ -114,6 +114,9 @@
     <ClCompile Include="src\D3D11Utility\Systems\FbxLoader.cpp">
       <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\DebugSystem.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -218,6 +221,12 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\FbxLoader.h">
       <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\DebugSystem.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Graphics\IShader.h">
+      <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

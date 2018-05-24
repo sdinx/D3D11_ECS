@@ -25,6 +25,13 @@ GeometryShader::GeometryShader()
 }
 
 
+GeometryShader::GeometryShader( ID3D11GeometryShader*  pGS ) :
+		m_pGeometryShader( pGS )
+{
+
+}
+
+
 GeometryShader::~GeometryShader()
 {
 		Release();
