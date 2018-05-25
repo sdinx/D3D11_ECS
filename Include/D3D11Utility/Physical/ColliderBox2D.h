@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // file : ColliderBox2D.h
-// desc : 衝突判定ボックス
+// desc : 2Dでの衝突判定ボックス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -15,7 +15,6 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
-#include  <D3D11Utility\Physical\IPhysics.h>
 
 
 namespace  D3D11Utility
@@ -43,7 +42,7 @@ namespace  D3D11Utility
 
 						static  ComponentId  STATIC_COMPONENT_ID;
 
-						Vector2  m_position;
+						Vector2  m_center;
 						Vector2  m_size;
 
 				public:

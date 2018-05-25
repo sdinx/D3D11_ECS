@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
-// file : Physics2D.h
-// desc : 2次元空間における物理クラス
+// file : ColliderBox.h
+// desc : 3Dでの衝突判定ボックス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -8,14 +8,13 @@
 //----------------------------------------------------------------------------------
 /* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
-#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
+#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_BOX_
+#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_BOX_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
-#include  <D3D11Utility\Physical\IPhysics.h>
 
 
 namespace  D3D11Utility
@@ -23,25 +22,28 @@ namespace  D3D11Utility
 		namespace  Physical
 		{
 
-				class  Physics2D :public  Component, public  IPhysics
+				class  ColliderBox :public  Component
 				{
-						friend  class  Systems::PhysicalSystem;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						Physics2D()
+						ColliderBox()
 						{}
-						virtual  ~Physics2D()
+						virtual  ~ColliderBox()
 						{}
 
 				private:
 						//----------------------------------------------------------------------------------
-						// private variables
+						// protected variables
 						//----------------------------------------------------------------------------------
 
+						static  ComponentId  STATIC_COMPONENT_ID;
+
+						Vector3  m_center;
+						Vector3  m_size;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -62,24 +64,25 @@ namespace  D3D11Utility
 
 						static  ComponentId  GetStaticComponentId()
 						{
-								return  IPhysics::STATIC_COMPONENT_ID;
+								return  STATIC_COMPONENT_ID;
 						}
 						static  void  SetStaticComponentId( ComponentId  id )
 						{
-								if ( IPhysics::STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+								if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
 								{
-										IPhysics::STATIC_COMPONENT_ID = id;
+										STATIC_COMPONENT_ID = id;
 										// TODO: need  to output debug string.
 								}
 						}
+						virtual  void  HandleMessage( const  GameUtility::Message&  msg )
+						{}
+						virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
+						{}
+						virtual  void  Update();
 
-						virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
-						virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
-						virtual  void  Update() = 0;
-
-				};// class Physics2D
+				};// class ColliderBox
 
 		}// namespace Physical
 }// namespace D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
+#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_BOX_

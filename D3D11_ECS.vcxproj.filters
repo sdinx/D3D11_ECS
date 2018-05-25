@@ -228,6 +228,12 @@
     <ClInclude Include="Include\D3D11Utility\Graphics\IShader.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\Physics.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Readme.txt" />

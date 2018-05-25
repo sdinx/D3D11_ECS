@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
-// file : Physics2D.h
-// desc : 2次元空間における物理クラス
+// file : Physical.h
+// desc : 3次元空間における物理クラス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -8,8 +8,8 @@
 //----------------------------------------------------------------------------------
 /* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
-#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
+#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_
+#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_
 
 //----------------------------------------------------------------------------------
 // includes
@@ -23,7 +23,7 @@ namespace  D3D11Utility
 		namespace  Physical
 		{
 
-				class  Physics2D :public  Component, public  IPhysics
+				class  Physics :public  Component, public  IPhysics
 				{
 						friend  class  Systems::PhysicalSystem;
 
@@ -32,9 +32,9 @@ namespace  D3D11Utility
 						// other
 						//----------------------------------------------------------------------------------
 
-						Physics2D()
+						Physics()
 						{}
-						virtual  ~Physics2D()
+						virtual  ~Physics()
 						{}
 
 				private:
@@ -77,9 +77,9 @@ namespace  D3D11Utility
 						virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
 						virtual  void  Update() = 0;
 
-				};// class Physics2D
+				};// class Physics
 
 		}// namespace Physical
 }// namespace D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_2D_
+#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_PHYSICS_

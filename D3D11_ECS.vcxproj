@@ -62,7 +62,9 @@
     <ClInclude Include="Include\D3D11Utility\Interface.h" />
     <ClInclude Include="Include\D3D11Utility\Object.h" />
     <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox2D.h" />
+    <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox.h" />
     <ClInclude Include="Include\D3D11Utility\Physical\IPhysics.h" />
+    <ClInclude Include="Include\D3D11Utility\Physical\Physics.h" />
     <ClInclude Include="Include\D3D11Utility\Physical\Physics2D.h" />
     <ClInclude Include="Include\D3D11Utility\Renderable.h" />
     <ClInclude Include="Include\D3D11Utility\Scene.h" />
