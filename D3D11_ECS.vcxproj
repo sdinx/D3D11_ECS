@@ -40,6 +40,7 @@
     <ClCompile Include="src\D3D11Utility\Systems\PhysicalSystem.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp" />
+    <ClCompile Include="src\D3D11Utility\Systems\Timer.cpp" />
     <ClCompile Include="src\D3D11Utility\Transform.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
