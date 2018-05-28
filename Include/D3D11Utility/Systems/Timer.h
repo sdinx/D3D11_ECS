@@ -20,12 +20,6 @@ namespace  D3D11Utility
 				class  Timer
 				{
 
-						//----------------------------------------------------------------------------------
-						// type defined
-						//----------------------------------------------------------------------------------
-						using  ElapsedMilli = std::chrono::duration<float, std::milli >;
-						using  TimePoint = std::chrono::system_clock::time_point;
-
 				public:
 						//----------------------------------------------------------------------------------
 						// other
@@ -33,12 +27,21 @@ namespace  D3D11Utility
 						Timer();
 						virtual  ~Timer();
 
+						//----------------------------------------------------------------------------------
+						// type defined
+						//----------------------------------------------------------------------------------
+						using  ElapsedMilli = std::chrono::duration<float, std::milli >;
+						using  TimePoint = std::chrono::system_clock::time_point;
+						using  Nanoseconds = std::chrono::nanoseconds;
+						using  Milliseconds = std::chrono::milliseconds;
+						using  Seconds = std::chrono::seconds;
+						using  Hours = std::chrono::hours;
+
 				private:
 						//----------------------------------------------------------------------------------
 						// private  variables
 						//----------------------------------------------------------------------------------
-
-						const  TimePoint  tpStart;
+						const  TimePoint  m_tpStart;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -58,7 +61,12 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						TimePoint  Now();
-						ElapsedMilli  GetElapsed();
+
+						template<typename  T>
+						float  GetElapsed()
+						{
+								return  static_cast< float >( std::chrono::duration_cast< T >( std::chrono::system_clock::now() - m_tpStart ).count() );
+						}
 
 				};// class Timer
 

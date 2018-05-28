@@ -15,6 +15,7 @@
 #include  <D3D11Utility\Systems\TextureManager.h>
 #include  <D3D11Utility\Systems\FbxLoader.h>
 #include  <D3D11Utility\Systems\DebugSystem.h>
+#include  <D3D11Utility\Systems\Timer.h>
 using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
