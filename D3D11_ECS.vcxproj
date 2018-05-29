@@ -27,6 +27,7 @@
     <ClCompile Include="src\D3D11Utility\Graphics\Texture.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
+    <ClCompile Include="src\D3D11Utility\Physical\ColliderBox.cpp" />
     <ClCompile Include="src\D3D11Utility\Physical\ColliderBox2D.cpp" />
     <ClCompile Include="src\D3D11Utility\Physical\IPhysical.cpp" />
     <ClCompile Include="src\D3D11Utility\Renderable.cpp" />

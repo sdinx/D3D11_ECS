@@ -120,6 +120,9 @@
     <ClCompile Include="src\D3D11Utility\Systems\Timer.cpp">
       <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\ColliderBox.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">

@@ -74,11 +74,11 @@ namespace  D3D11Utility
 										// TODO: need  to output debug string.
 								}
 						}
-						virtual  void  HandleMessage( const  GameUtility::Message&  msg )
+						void  HandleMessage( const  GameUtility::Message&  msg )
 						{}
-						virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
+						void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 						{}
-						virtual  void  Update();
+						void  Update();
 
 				};// class ColliderBox2D
 

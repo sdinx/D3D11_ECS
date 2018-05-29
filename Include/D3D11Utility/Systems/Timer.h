@@ -62,7 +62,7 @@ namespace  D3D11Utility
 
 						TimePoint  Now();
 
-						template<typename  T>
+						template<typename  T = Milliseconds>
 						float  GetElapsed()
 						{
 								return  static_cast< float >( std::chrono::duration_cast< T >( std::chrono::system_clock::now() - m_tpStart ).count() );

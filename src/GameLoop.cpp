@@ -71,7 +71,6 @@ void  GameUtility::GameInit()
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
 
-
 		/* Init Background */
 		backGroundEntity->AddComponent<Renderable>( PRMTV_PLANE );
 		backGroundEntity->AddComponent<Transform>();
@@ -165,7 +164,6 @@ void  GameUtility::GameInit()
 		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 
-		
 		s_camera = cam;
 
 		s_camTrans = trans2;
