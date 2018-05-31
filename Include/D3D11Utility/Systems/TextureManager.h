@@ -75,22 +75,14 @@ namespace  D3D11Utility
 						// private methods
 						//----------------------------------------------------------------------------------
 
-#if  defined( _UNICODE ) || ( UNICODE )
 						Image*  LoadImageFile( const  std::wstring  &filename );
-#else// Multibyte
-						Image*  LoadImageFile( const  std::string  &filename );
-#endif// UNICODE
 
 				public:
 						//----------------------------------------------------------------------------------
 						// public methods
 						//----------------------------------------------------------------------------------
 
-#if  defined( _UNICODE ) || ( UNICODE )
 						Graphics::TextureId  CreateTexture( const  std::wstring  &filename );
-#else// Multibyte
-						Graphics::TextureId  CreateTexture( const  std::string  &filename );
-#endif// UNICODE
 
 						void  SetTexture( Graphics::TextureId  textureId );
 						void  Release();

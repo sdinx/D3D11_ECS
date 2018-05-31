@@ -28,13 +28,8 @@ TextureManager::~TextureManager()
 }
 
 
-#if  defined( _UNICODE ) || ( UNICODE )
 Image*  TextureManager::LoadImageFile( const  std::wstring  &filename )
 {
-#else// Multibyte
-Image*  TextureManager::LoadImageFile( const  std::string  &filename )
-{
-#endif// UNICODE
 		IWICImagingFactory  *iwicImageFactory;
 		HRESULT hr = CoCreateInstance(
 				CLSID_WICImagingFactory,
@@ -105,13 +100,8 @@ Image*  TextureManager::LoadImageFile( const  std::string  &filename )
 }
 
 
-#if  defined( _UNICODE ) || ( UNICODE )
 Graphics::TextureId  TextureManager::CreateTexture( const  std::wstring  &filename )
 {
-#else// Multibyte
-Graphics::TextureId  TextureManager::CreateTexture( const  std::string  &filename )
-{
-#endif// UNICODE
 		ID3D11Texture2D*  texture = nullptr;
 		ID3D11ShaderResourceView*  shaderResourceView = nullptr;
 		ID3D11SamplerState*  sampler = nullptr;

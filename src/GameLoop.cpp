@@ -47,9 +47,9 @@ void  GameUtility::GameInit()
 		pTextureManager.reset( new  TextureManager );
 		pSystemManager->AddSystem<DebugSystem>();
 
-		Graphics::TextureId  texId = pTextureManager->CreateTexture( TEXT( "res/0.png" ) );
-		Graphics::TextureId  texId2 = pTextureManager->CreateTexture( TEXT( "res/WaterMill_BaseColor.png" ) );
-		Graphics::TextureId  texDoor = pTextureManager->CreateTexture( TEXT( "res/WaterGate_No3_lambert1_AlbedoTransparency.png" ) );
+		Graphics::TextureId  texId = pTextureManager->CreateTexture( L"res/0.png" );
+		Graphics::TextureId  texId2 = pTextureManager->CreateTexture( L"res/WaterMill_BaseColor.png" );
+		Graphics::TextureId  texDoor = pTextureManager->CreateTexture( L"res/WaterGate_No3_lambert1_AlbedoTransparency.png" );
 
 		Graphics::VertexShader*  vs = pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
 		//Graphics::ShaderId  gsId = pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
@@ -112,7 +112,6 @@ void  GameUtility::GameInit()
 		s_waterGateRTrans->SetRotation( Vector3( 0, ToRadian( 180 ), 0 ) );
 		s_waterGateRTrans->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
 
-
 		/* Init WaterWheel*/
 		waterWheelEntity->AddComponent<Renderable>( "WaterMill_No1.fbx" );
 		waterWheelEntity->AddComponent<Transform>();
@@ -133,7 +132,7 @@ void  GameUtility::GameInit()
 
 		/* Init Player */
 		playerEntity->SetTag( "Player" );
-		playerEntity->AddComponent<Renderable>( "Cup_No1.fbx" );
+		playerEntity->AddComponent<Renderable>( "sphere.fbx" );
 		playerEntity->AddComponent<Transform>();
 
 		Renderable*  playerRender = playerEntity->GetComponent<Renderable>();
@@ -143,7 +142,6 @@ void  GameUtility::GameInit()
 
 		playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 		playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-
 
 		Transform*  trans2 = playerEntity->GetComponent<Transform>();
 		Vector3&  scale2 = trans2->GetScale();
