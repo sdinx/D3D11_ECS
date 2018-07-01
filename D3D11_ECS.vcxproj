@@ -81,7 +81,6 @@
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
-    <ClInclude Include="Include\D3D11Utility\Texture.h" />
     <ClInclude Include="Include\D3D11Utility\Transform.h" />
     <ClInclude Include="Include\GameUtility.h" />
     <ClInclude Include="Include\IGraphicsRenderer.h" />
@@ -90,8 +89,17 @@
     <ClInclude Include="Include\XInputController.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ChangeLog.txt" />
-    <Text Include="Readme.txt" />
+    <Text Include="ChangeLog.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Text>
+    <Text Include="Reference.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\Default.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -37,6 +37,9 @@
     <Filter Include="Source\D3D11Utility\Physical">
       <UniqueIdentifier>{51a2476e-c04b-4ee9-9696-a96766c73d46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{08596376-7a35-4b9c-b0ee-671122379fc8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp">
@@ -212,7 +215,6 @@
     <ClInclude Include="Include\D3D11Utility\Graphics\Texture.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Texture.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\PhysicalSystem.h">
       <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
@@ -242,7 +244,12 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Readme.txt" />
     <Text Include="ChangeLog.txt" />
+    <Text Include="Reference.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\Default.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
