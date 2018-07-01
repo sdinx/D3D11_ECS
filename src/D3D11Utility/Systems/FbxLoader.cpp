@@ -42,8 +42,8 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 		}
 
 		// ŽOŠp‰»
-		//FbxGeometryConverter  geometryConverter( s_pFbxManager );
-		//geometryConverter.Triangulate( m_pScene, true );
+		FbxGeometryConverter  geometryConverter( s_pFbxManager );
+		geometryConverter.Triangulate( m_pScene, true );
 
 		INT  nMeshCount = m_pScene->GetMemberCount<FbxMesh>();
 		INT  nNodeCount = m_pScene->GetNodeCount();

@@ -1,3 +1,7 @@
+.vs/
+[Dd]ebug/
+[Rr]elease/
+
 # Prerequisites
 *.d
 
@@ -30,3 +34,4 @@
 *.exe
 *.out
 *.app
+/D3D11_ECS.VC.db

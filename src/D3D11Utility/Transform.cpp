@@ -31,7 +31,7 @@ void  Transform::Update()
 		XMStoreFloat4x4( &m_localWorld, mtxRotate );
 		XMStoreFloat4x4( &m_localWorld, mtxScale );
 		XMStoreFloat4x4( &m_localWorld, mtxPos );
-		mtxAngle = XMMatrixMultiply( mtxAngle, XMMatrixTranslation( 0, 0, 0 ) );
+
 		mtxPos = XMMatrixMultiply( mtxTrans, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );

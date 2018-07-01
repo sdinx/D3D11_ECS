@@ -132,7 +132,7 @@ void  GameUtility::GameInit()
 
 		/* Init Player */
 		playerEntity->SetTag( "Player" );
-		playerEntity->AddComponent<Renderable>( "sphere.fbx" );
+		playerEntity->AddComponent<Renderable>( "WaterMill_No1.fbx" );
 		playerEntity->AddComponent<Transform>();
 
 		Renderable*  playerRender = playerEntity->GetComponent<Renderable>();
@@ -150,7 +150,7 @@ void  GameUtility::GameInit()
 		pos2.y -= 3.0f;
 		pos2.z += 5.0f;
 
-		scale2 = Vector3( .5f, .5f, .5f );
+		scale2 = Vector3( .05f, .05f, .05f );
 
 
 		/* Init Camera */
