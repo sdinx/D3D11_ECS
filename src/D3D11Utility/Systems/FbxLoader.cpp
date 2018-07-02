@@ -207,8 +207,10 @@ std::vector<Vector2>  FbxLoader::LoadTexcoords( FbxMesh*  pMesh, INT  size )
 		INT  uvIndex = 0;
 		FbxVector2  uv;
 		INT*  indexList = pMesh->GetPolygonVertices();
-		INT  elementCount = pMesh->GetElementUVCount();		// 何個のＵＶ情報がセットされているか
-		if ( uvNo + 1 > elementCount )						// 今回は 1個にのみ対応
+		INT  elementCount = pMesh->GetElementUVCount();// UV情報の数.
+
+		// 一個のみに対応.
+		if ( uvNo + 1 > elementCount )
 		{
 				return  texcoords;
 		}
@@ -217,73 +219,65 @@ std::vector<Vector2>  FbxLoader::LoadTexcoords( FbxMesh*  pMesh, INT  size )
 		INT  indexByPolygonVertex = 0;
 		INT  j = 0;
 
-		FbxGeometryElementUV* element = pMesh->GetElementUV( uvNo );					// UVセットを取得
-		FbxLayerElement::EMappingMode mappingMode = element->GetMappingMode();		// マッピングモードを取得
-		FbxLayerElement::EReferenceMode referenceMode = element->GetReferenceMode();	// リファレンスモードを取得	
-		const FbxLayerElementArrayTemplate<int>& indexArray = element->GetIndexArray();	// ＵＶ情報を格納したＶＥＣＴＯＲ配列のインデックス配列を取得
-		const FbxLayerElementArrayTemplate<FbxVector2>& directArray = element->GetDirectArray();	// ＵＶ値配列を取得
+		FbxGeometryElementUV* element = pMesh->GetElementUV( uvNo );// UVセットを取得.
+		FbxLayerElement::EMappingMode mappingMode = element->GetMappingMode();// マッピングモードを取得.
+		FbxLayerElement::EReferenceMode referenceMode = element->GetReferenceMode();	// リファレンスモードを取得	.
+		const FbxLayerElementArrayTemplate<int>& indexArray = element->GetIndexArray();// UV情報を格納した頂点配列のインデックス配列を取得.
+		const FbxLayerElementArrayTemplate<FbxVector2>& directArray = element->GetDirectArray();	// UV値配列を取得.
 
-																																															// eDirctかeIndexDirectのみ対応
+		// eDirectかeIndexDirectのみ対応.
 		assert( ( referenceMode == FbxGeometryElement::eDirect ) || ( referenceMode == FbxGeometryElement::eIndexToDirect ) );
-
-		// 頂点インデックス数分ｖｅｃｔｏｒ容量を確保
+		
+		// 頂点インデックス数を領域確保.
 		texcoords.reserve( size );
 
-		// 頂点に対応して格納されている場合
+		// 頂点に対応して格納されている場合.
 		if ( mappingMode == FbxGeometryElement::eByControlPoint )
 		{
-				// 頂点座標でマッピング
+				// 頂点座標でマッピング.
 				for ( INT  i = 0; i < size; i++ )
 				{
-						index = indexList[i];			// 面の構成情報配列から頂点インデックス番号を取得
+						index = indexList[i];// 面の構成情報配列から頂点インデックス番号を取得.
 
-																					// リファレンスモードを判定
 						uvIndex = 0;
-						if ( referenceMode == FbxGeometryElement::eDirect ) {		// eDirectの場合
-								uvIndex = index;		//　eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
-						}
-						else {													// eIndexToDirectの場合
-								uvIndex = indexArray.GetAt( index );				// 頂点座標インデックスに対応したＵＶ情報インデックスを取得
-						}
+						// リファレンスモードを判定.
+						if ( referenceMode == FbxGeometryElement::eDirect )// eDirectの場合.
+								uvIndex = index;// eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
+						else // eIndexToDirectの場合
+								uvIndex = indexArray.GetAt( index );// 頂点座標インデックスに対応したＵＶ情報インデックスを取得.
 
-						uv = directArray.GetAt( uvIndex );		// uv値をdouble型で取得
-						texcoords.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );		// float値として格納
-				}
-		}
-		// 面の構成情報に対応して格納されている場合
-		else if ( mappingMode == FbxGeometryElement::eByPolygonVertex )
+						uv = directArray.GetAt( uvIndex );// uv値をdouble型で取得.
+						texcoords.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );		// float値として格納.
+				}// end for
+		}// end if
+		else if ( mappingMode == FbxGeometryElement::eByPolygonVertex )// 面の構成情報に対応して格納されている場合.
 		{
-				// ポリゴンバーテックス（面の構成情報のインデックス）でマッピング
-				indexByPolygonVertex = 0;						// 面の構成情報インデックス配列のインデックス
-				polygonCount = pMesh->GetPolygonCount();			// メッシュのポリゴン数を取得
-				for ( INT  i = 0; i < polygonCount; ++i )				// ポリゴン数分ループ
+				// 面の構成情報のインデックス でマッピング.
+				indexByPolygonVertex = 0;// 面の構成情報インデックス配列のインデックス.
+				polygonCount = pMesh->GetPolygonCount();// メッシュのポリゴン数を取得.
+				for ( INT  i = 0; i < polygonCount; ++i )// ポリゴン数分ループ.
 				{
-						polygonSize = pMesh->GetPolygonSize( i );		// ｉ番目のポリゴン頂点数を取得
+						polygonSize = pMesh->GetPolygonSize( i );// i 番目のポリゴン頂点数を取得.
 
-																														// ポリゴンの頂点数分ループ
+						// ポリゴンの頂点数分ループ
 						for ( j = 0; j < polygonSize; ++j )
 						{
-								// リファレンスモードの判定？
+								// リファレンスモードの判定?
 								uvIndex = 0;
-								if ( referenceMode == FbxGeometryElement::eDirect ) {		// eDirectの場合
-										uvIndex = indexByPolygonVertex;		//　eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
-								}
-								else {													// eIndexToDirectの場合
-										uvIndex = indexArray.GetAt( indexByPolygonVertex );	// 面の構成情報インデックスに対応したＵＶ情報インデックスを取得
-								}
+								if ( referenceMode == FbxGeometryElement::eDirect )// eDirectの場合.
+										uvIndex = indexByPolygonVertex;// eDirectの場合
+								else // eIndexToDirectの場合.
+										uvIndex = indexArray.GetAt( indexByPolygonVertex );// 面の構成情報インデックスに対応したUV情報インデックスを取得.
 								uv = directArray.GetAt( uvIndex );
 
-								texcoords.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );	// ｆｌｏａｔ値として格納
+								texcoords.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );// doubleからfloatへキャスト.
 
-								++indexByPolygonVertex;						// 頂点インデックスをインクリメント
+								++indexByPolygonVertex;// 頂点インデックスをインクリメント.
 						}
 				}
-		}
-		else
-		{
-				// それ以外のマッピングモードには対応しない
+		}// end else if
+		else// それ以外のマッピングモードには対応しない.
 				assert( false );
-		}
 
 		return  texcoords;
 }
@@ -293,14 +287,14 @@ std::vector<INT>  FbxLoader::LoadIndices( FbxMesh*  pMesh )
 {
 		std::vector<INT>  indices;
 
-		int polygonCount = pMesh->GetPolygonCount();			// 三角形の数を取得
-		indices.reserve( polygonCount * 3 );				// 3角形の数×３
+		int polygonCount = pMesh->GetPolygonCount();// 三角面の数を取得.
+		indices.reserve( polygonCount * 3 );// 頂点インデックス数の領域確保.
 
-																									// 面の構成情報を取得する
+		// 面の構成情報を取得する
 		for ( int i = 0; i < polygonCount; i++ ) {
-				indices.push_back( pMesh->GetPolygonVertex( i, 0 ) );		// i番目の三角形の０番目の頂点インデックスを取得
-				indices.push_back( pMesh->GetPolygonVertex( i, 1 ) );		// i番目の三角形の１番目の頂点インデックスを取得
-				indices.push_back( pMesh->GetPolygonVertex( i, 2 ) );		// i番目の三角形の２番目の頂点インデックスを取得
+				indices.push_back( pMesh->GetPolygonVertex( i, 0 ) );// i番目の三角面の 0番目の頂点インデックス.
+				indices.push_back( pMesh->GetPolygonVertex( i, 1 ) );// i番目の三角面の 1番目の頂点インデックス.
+				indices.push_back( pMesh->GetPolygonVertex( i, 2 ) );// i番目の三角面の 2番目の頂点インデックス.
 		}
 
 		return  indices;
