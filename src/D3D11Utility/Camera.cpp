@@ -122,6 +122,12 @@ void  Camera::SetTarget( Vector3  focusPosition )
 }
 
 
+void  SetTargetRotation( float  x, float  y, float  z )
+{
+
+}
+
+
 void  Camera::SetUp( Vector3  upDirection )
 {
 		m_upDirection = upDirection;

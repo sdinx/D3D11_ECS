@@ -4,11 +4,16 @@
 // などの情報を持っているコンポーネント
 //----------------------------------------------------------------------------------
 
+//----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+// TODO: 親と子の再帰的なクラス図になるように変更.
+
 #ifndef  _INCLUDED_D3D11_UTILITY_TRANSFORM_
 #define  _INCLUDED_D3D11_UTILITY_TRANSFORM_
 
 //----------------------------------------------------------------------------------
-// Include
+// includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
 #include  <D3D11Utility\D3D11Utility.h>
@@ -85,7 +90,7 @@ namespace  D3D11Utility
 						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
 						{
 								STATIC_COMPONENT_ID = id;
-								// TODO: need  to output debug string.
+								// TODO: need output debug string.
 						}
 				}
 
@@ -136,6 +141,10 @@ namespace  D3D11Utility
 				void  SetRotation( Vector3  rotation )
 				{
 						m_rotation = rotation;
+				}
+				void  SetRotation( float x, float y, float z )// オイラー角
+				{
+						m_rotation = Vector3( ToRadian( x ), ToRadian( y ), ToRadian( z ) );
 				}
 				void  SetScale( Vector3  scale )
 				{

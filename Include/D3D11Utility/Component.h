@@ -6,6 +6,7 @@
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
+// TODO: HandleMessage(const Message&, void*): テンプレートでの可変引数に変更する必要がある ( ただし処理速度が落ちる? )
 
 #ifndef  _INCLUDED_D3D11_UTILITY_COMPONENT_
 #define  _INCLUDED_D3D11_UTILITY_COMPONENT_
@@ -58,7 +59,7 @@ namespace  D3D11Utility
 				// public  methods
 				//----------------------------------------------------------------------------------
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
-				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;
+				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;// !! need change.
 				virtual  void  Update() = 0;
 				virtual  void  Rendering()const {};
 

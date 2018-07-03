@@ -126,6 +126,9 @@
     <ClCompile Include="src\D3D11Utility\Physical\ColliderBox.cpp">
       <Filter>Source\D3D11Utility\Physical</Filter>
     </ClCompile>
+    <ClCompile Include="src\DIKeyBoard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -241,6 +244,9 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Physical\Physics.h">
       <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\DIKeyboard.h">
+      <Filter>Header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

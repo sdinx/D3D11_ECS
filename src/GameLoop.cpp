@@ -6,7 +6,7 @@
 #include  <D3D11Utility\Camera.h>
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Transform.h>
-#include  <XInputController.h>
+#include  <DIKeyboard.h>
 
 #include  <D3D11Utility\Entity.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
@@ -16,6 +16,8 @@
 #include  <D3D11Utility\Systems\FbxLoader.h>
 #include  <D3D11Utility\Systems\DebugSystem.h>
 #include  <D3D11Utility\Systems\Timer.h>
+
+
 using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
@@ -30,13 +32,9 @@ static  std::unique_ptr<TextureManager>  pTextureManager;
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
-// note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある
+// note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある?
 
 static Camera*  s_camera = nullptr;
-static Transform*  s_camTrans = nullptr;
-static Transform*  s_waterWheelTrans = nullptr;
-static Transform*  s_waterGateLTrans = nullptr;
-static Transform*  s_waterGateRTrans = nullptr;
 
 void  GameUtility::GameInit()
 {
@@ -48,8 +46,6 @@ void  GameUtility::GameInit()
 		pSystemManager->AddSystem<DebugSystem>();
 
 		Graphics::TextureId  texId = pTextureManager->CreateTexture( L"res/0.png" );
-		Graphics::TextureId  texId2 = pTextureManager->CreateTexture( L"res/WaterMill_BaseColor.png" );
-		Graphics::TextureId  texDoor = pTextureManager->CreateTexture( L"res/WaterGate_No3_lambert1_AlbedoTransparency.png" );
 
 		Graphics::VertexShader*  vs = pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
 		//Graphics::ShaderId  gsId = pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
@@ -58,15 +54,9 @@ void  GameUtility::GameInit()
 		static  const  EntityId  playerId = pEntityManager->CreateEntity( "Player" );
 		static  const  EntityId  backGroundId = pEntityManager->CreateEntity( "BackGround" );
 		static  const  EntityId  cameraId = pEntityManager->CreateEntity( "Camera" );
-		static  const  EntityId  waterGateLId = pEntityManager->CreateEntity( "waterGateLeft" );
-		static  const  EntityId  waterGateRId = pEntityManager->CreateEntity( "waterGateRight" );
-		static  const  EntityId  waterWheelId = pEntityManager->CreateEntity( "WaterWheel" );
 		Entity*  playerEntity = pEntityManager->GetEntity( playerId );
 		Entity*  backGroundEntity = pEntityManager->GetEntity( backGroundId );
 		Entity*  cameraEntity = pEntityManager->GetEntity( cameraId );
-		Entity*  waterGateLEntity = pEntityManager->GetEntity( waterGateLId );
-		Entity*  waterGateREntity = pEntityManager->GetEntity( waterGateRId );
-		Entity*  waterWheelEntity = pEntityManager->GetEntity( waterWheelId );
 
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
@@ -78,56 +68,13 @@ void  GameUtility::GameInit()
 		Renderable*  backRender = backGroundEntity->GetComponent<Renderable>();
 		Transform*  backTrans = backGroundEntity->GetComponent<Transform>();
 		backTrans->SetPosition( Vector3( 0, 0, 6.0f ) );
-		backTrans->SetScale( Vector3( 10, 10, 10 ) );
+		backTrans->SetScale( Vector3( 2, 2, 2 ) );
+		backTrans->SetRotation( 45, 45, 0 );
 		backRender->SetColor( Vector4( 1, 1, 0, 0 ) );
 		backRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 		backRender->SetVertexShader( vs );
 		backRender->SetPixelShader( ps );
 		backRender->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
-
-		/* Init WaterGate+*/
-		waterGateLEntity->AddComponent<Renderable>( "WaterGate_No3.fbx" );
-		waterGateLEntity->AddComponent<Transform>();
-
-		Renderable*  s_waterGateLRender = waterGateLEntity->GetComponent<Renderable>();
-		s_waterGateLRender->SetTextureId( texDoor, pTextureManager.get() );
-		s_waterGateLRender->SetColor( Vector4( 1, 1, 1, 1 ) );
-		s_waterGateLRender->SetVertexShader( vs );
-		s_waterGateLRender->SetPixelShader( ps );
-		s_waterGateLTrans = waterGateLEntity->GetComponent<Transform>();
-		s_waterGateLTrans->SetPosition( Vector3( 7, 0, 1 ) );
-		s_waterGateLTrans->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
-
-		/* Init WaterGateR*/
-		waterGateREntity->AddComponent<Renderable>( "WaterGate_No3.fbx" );
-		waterGateREntity->AddComponent<Transform>();
-
-		Renderable*  s_waterGateRRender = waterGateREntity->GetComponent<Renderable>();
-		s_waterGateRRender->SetTextureId( texDoor, pTextureManager.get() );
-		s_waterGateRRender->SetColor( Vector4( 1, 1, 1, 1 ) );
-		s_waterGateRRender->SetVertexShader( vs );
-		s_waterGateRRender->SetPixelShader( ps );
-		s_waterGateRTrans = waterGateREntity->GetComponent<Transform>();
-		s_waterGateRTrans->SetPosition( Vector3( 7.1f, 0, 1 ) );
-		s_waterGateRTrans->SetRotation( Vector3( 0, ToRadian( 180 ), 0 ) );
-		s_waterGateRTrans->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
-
-		/* Init WaterWheel*/
-		waterWheelEntity->AddComponent<Renderable>( "WaterMill_No1.fbx" );
-		waterWheelEntity->AddComponent<Transform>();
-
-		Renderable*  waterWheelRender = waterWheelEntity->GetComponent<Renderable>();
-		waterWheelRender->SetTextureId( texId2, pTextureManager.get() );
-		waterWheelRender->SetColor( Vector4( 1, 1, 1, 1 ) );
-		waterWheelRender->SetVertexShader( vs );
-		waterWheelRender->SetPixelShader( ps );
-
-		s_waterWheelTrans = waterWheelEntity->GetComponent<Transform>();
-		s_waterWheelTrans->SetScale( Vector3( 0.05f, 0.05f, 0.05f ) );
-		s_waterWheelTrans->SetPosition( Vector3( 10, 0, 3 ) );
-		Vector3&  waterWheelRotat = s_waterWheelTrans->GetRotation();
-		waterWheelRotat.x = ToRadian( 90 );
-		waterWheelRotat.y = ToRadian( -60 );
 
 
 		/* Init Player */
@@ -163,76 +110,55 @@ void  GameUtility::GameInit()
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 
 		s_camera = cam;
-
-		s_camTrans = trans2;
 }
 
 
 void  GameUtility::GameLoop()
 {
-		Vector3&  pos = s_camera->GetPosition();
-		Vector3&  tar = s_camera->GetTarget();
-		Vector3&  move = s_camTrans->GetPosition();
-		Vector3&  rot = s_camTrans->GetRotation();
-		Vector3&  waterWheelRotat = s_waterWheelTrans->GetAngle();
-		FLOAT  rotate = 0;
-		static  BOOL  isRotate = false;
 
-		UpdateController();
+		//UpdateController();
+		Input::UpdateKeyboard();
+		Input::UpdateMouse();
+
 		pSystemManager->Update( 0 );
 		pd3dRenderer->Rendering();
-		
-		if ( rot.z <= ToRadian( -50 ) )
-				isRotate = true;
-		if ( isRotate )
-		{// 水車ぐるぐる
-				waterWheelRotat.y += ToRadian( 0.01 );
-				Vector3&  gateRotL = s_waterGateLTrans->GetRotation();
-				Vector3&  gateRotR = s_waterGateRTrans->GetRotation();
-				Vector3&  gateTransL = s_waterGateLTrans->GetTranslation();
-				Vector3&  gateTransR = s_waterGateRTrans->GetTranslation();
-				if ( gateRotL.y <= ToRadian( 130 ) )
-				{// 扉パッカーン
-						gateRotL.y += ToRadian( 0.1 );
-						gateRotR.y -= ToRadian( 0.1 );
-						gateTransL.z -= 0.0002f;
-						gateTransR.z -= 0.0002f;
-						gateTransL.x -= 0.0007f;
-						gateTransR.x += 0.0007f;
-				}// end if
-		}// end if
-		if ( GetControllerButtonPress( XIP_RB ) )
-		{
-				rotate -= ToRadian( 1 );
-		}
-		if ( GetControllerButtonPress( XIP_LB ) )
-		{
-				rotate += ToRadian( 1 );
-		}
-		if ( GetControllerButtonPress( XIP_D_UP ) )
-		{
+		auto& pos = s_camera->GetComponent<Camera>()->GetTarget();
+		auto& move = s_camera->GetComponent<Camera>()->GetPosition();
+		static Vector3  s_vecCamera = Vector3( 0, 0, 0 );
 
-		}
-		else if ( GetControllerButtonPress( XIP_D_DOWN ) )
+		auto mx = Input::MouseAxisX();
+		auto my = Input::MouseAxisY();
+		if ( mx != 0 )
 		{
+				pos.x += ( float ) mx / 100.0f;
+		}
+		if ( my != 0 )
+		{
+				pos.y -= ( float ) my / 100.0f;
+		}
 
-		}
-		if ( GetControllerButtonPress( XIP_D_RIGHT ) )
+		if ( Input::KeyPress( DIK_W ) )
 		{
-				pos.x += 0.001f;
-				tar.x += 0.001f;
-				move.x += 0.001f;
+				move.z += .01f;
+				pos.z += .01f;
 		}
-		else if ( GetControllerButtonPress( XIP_D_LEFT ) )
+		else if ( Input::KeyPress( DIK_S ) )
 		{
-				pos.x -= 0.001f;
-				tar.x -= 0.001f;
-				move.x -= 0.001f;
+				move.z -= .01f;
+				pos.z -= .01f;
 		}
-		if ( GetControllerButtonPress( XIP_ANY ) )
+
+		if ( Input::KeyPress( DIK_A ) )
 		{
-				rot.z += ToRadian( rotate );
-				s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
+				//move.x += .01f;
+				//pos.x += .01f;
 		}
+		else if ( Input::KeyPress( DIK_D ) )
+		{
+				//move.x -= .01f;
+				//pos.x -= .01f;
+		}
+
+		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 
 }

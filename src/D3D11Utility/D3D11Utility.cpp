@@ -166,6 +166,155 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 }
 
 
+UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices )
+{
+		FLOAT  sx = size.x / 2.0f;
+		FLOAT  sy = size.y / 2.0f;
+		FLOAT  sz = size.z / 2.0f;
+		UINT  numVertices = 0;
+
+		switch ( primitiveType )
+		{
+		case  PRMTV_CUBE:
+				{
+						numVertices = 8;
+						ppVertices = new  VERTEX[numVertices];
+						pIndices = new INT[numVertices * 6];
+
+						// 頂点設定
+						{
+								// front face
+								ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z - sz );
+								ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z - sz );
+								ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z - sz );
+								ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z - sz );
+
+								// back face
+								ppVertices[4].position = Vector3( position.x + sx, position.y + sy, position.z + sz );
+								ppVertices[5].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
+								ppVertices[6].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
+								ppVertices[7].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
+						}
+
+						// 頂点インデックス設定
+						{
+								// front face
+								pIndices[0] = 0;
+								pIndices[1] = 1;
+								pIndices[2] = 2;
+
+								pIndices[3] = 0;
+								pIndices[4] = 2;
+								pIndices[5] = 3;
+
+								// back face
+								pIndices[6] = 4;
+								pIndices[7] = 5;
+								pIndices[8] = 6;
+
+								pIndices[9] = 4;
+								pIndices[10] = 6;
+								pIndices[11] = 7;
+
+								// left face
+								pIndices[12] = 1;
+								pIndices[13] = 4;
+								pIndices[14] = 7;
+
+								pIndices[15] = 1;
+								pIndices[16] = 7;
+								pIndices[17] = 2;
+
+								// right face
+								pIndices[18] = 5;
+								pIndices[19] = 0;
+								pIndices[20] = 3;
+
+								pIndices[21] = 5;
+								pIndices[22] = 3;
+								pIndices[23] = 6;
+
+								// top face
+								pIndices[24] = 5;
+								pIndices[25] = 4;
+								pIndices[26] = 1;
+
+								pIndices[27] = 5;
+								pIndices[28] = 1;
+								pIndices[29] = 0;
+
+								// bottom face
+								pIndices[30] = 3;
+								pIndices[31] = 2;
+								pIndices[32] = 6;
+
+								pIndices[33] = 3;
+								pIndices[34] = 6;
+								pIndices[35] = 5;
+						}
+
+						// テクスチャ座標設定
+						{
+								ppVertices[0].texcoord = Vector2( 0, 0 );
+								ppVertices[1].texcoord = Vector2( 1, 0 );
+								ppVertices[2].texcoord = Vector2( 1, 1 );
+								ppVertices[3].texcoord = Vector2( 0, 1 );
+
+								ppVertices[4].texcoord = Vector2( 0, 0 );
+								ppVertices[5].texcoord = Vector2( 1, 0 );
+								ppVertices[6].texcoord = Vector2( 1, 1 );
+								ppVertices[7].texcoord = Vector2( 0, 1 );
+						}
+
+				}// end case PRMTV_CUBE
+				break;
+		case PRMTV_PLANE:
+				{
+
+				}// end case PRMTV_PLANE
+				break;
+		case  PRMTV_SPHERE:
+				{
+
+				}// end case PRMTV_SPHERE
+		case PRMTV_2D_TRIANGLE:
+				{
+						numVertices = 3;
+						ppVertices = new  VERTEX[numVertices];
+						ppVertices[0].position = Vector3( position.x, position.y + sy, position.z );
+						ppVertices[1].position = Vector3( position.x + sx, position.y - sy, position.z );
+						ppVertices[2].position = Vector3( position.x - sx, position.y - sy, position.z );
+
+				}// end case PRMTV_PLANE
+				break;
+		case  PRMTV_2D_SQUARE:
+				{
+						numVertices = 4;
+						ppVertices = new  VERTEX[numVertices];
+						ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z );
+						ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z );
+						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
+						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
+
+
+						ppVertices[0].texcoord = Vector2( 0, 0 );
+						ppVertices[1].texcoord = Vector2( 1, 0 );
+						ppVertices[2].texcoord = Vector2( 1, 1 );
+						ppVertices[3].texcoord = Vector2( 0, 1 );
+
+				}// end case PRMTV_SPHERE
+				break;
+		case  PRMTV_2D_CIRCLE:
+				{
+
+				}// end case PRMTV_CUBE
+				break;
+		}// end switch
+
+		return  numVertices;
+}
+
+
 FLOAT  D3D11Utility::GetAspectRatio()
 {
 		auto  d3d11 = _Singleton<Systems::IDirect3D>::GetInstance();

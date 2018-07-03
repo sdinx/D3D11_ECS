@@ -43,11 +43,11 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType ) :
 		m_isRendering = true;
 
 		VERTEX*  vertices;
-		UINT  numVertices = CreatePrimitive( PRMTV_2D_SQUARE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices );
+		INT* indices;
+		UINT  numVertices = CreatePrimitive( PRMTV_CUBE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices, indices );
 		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
-		INT  indices[ ] = { 0,1,2,0,2,3 };
-		UINT  numIndex = ARRAYSIZE( indices );
+		UINT  numIndex = numVertices * 6;
 		m_pVertexBuffer->CreateIndexBuffer( indices, numIndex );
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
 		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
@@ -94,6 +94,8 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 		}
 
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
+
+		// note: インデックスが正しく設定されていない?
 		//m_pVertexBuffer->CreateIndexBuffer( indices, indexCount );
 
 

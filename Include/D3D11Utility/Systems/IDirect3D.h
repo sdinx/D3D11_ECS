@@ -131,6 +131,7 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// Getter
 						//----------------------------------------------------------------------------------
+						HWND  GetWindowHandle() { return  m_hWnd; }
 						ID3D11Device* GetDevice() { return  m_pd3dDevice; }
 						ID3D11DeviceContext* GetDeviceContext() { return  m_pd3dDeviceContext; }
 						IDXGISwapChain* GetSwapChain() { return  m_pSwapChain; }

@@ -90,7 +90,7 @@ namespace  D3D11Utility
 				{
 						m_isActive = isActive;
 				}
-				volatile  BOOL&  GetActive()
+				volatile  BOOL  GetActive()
 				{
 						return  m_isActive;
 				}

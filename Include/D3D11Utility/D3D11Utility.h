@@ -77,7 +77,7 @@ namespace  D3D11Utility
 		using  Vector4 = DirectX::XMFLOAT4;
 		using  Matrix3x3 = DirectX::XMFLOAT3X3;
 		using  Matrix4x4 = DirectX::XMFLOAT4X4;
-		using  Value = void*;
+		using  Value = void*;// Žg—p‹ÖŽ~
 
 		//----------------------------------------------------------------------------------
 		// struct
@@ -120,6 +120,7 @@ namespace  D3D11Utility
 		HRESULT  CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel, ID3DBlob**  ppBlobOut );
 		HRESULT  CreateConstantBuffer(ID3D11Buffer*&  ppCB, size_t  byteWidth);
 		UINT  CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices );
+		UINT  CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices );
 		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
 		// ID3D11Device*  GetD3DDevice();
