@@ -122,9 +122,29 @@ void  Camera::SetTarget( Vector3  focusPosition )
 }
 
 
-void  SetTargetRotation( float  x, float  y, float  z )
+void  Camera::SetRotation( float  x, float  y, float  z )
 {
+		Vector3  distance( m_focusTarget.x - m_eyePosition.x, m_focusTarget.y - m_eyePosition.y, m_focusTarget.z - m_eyePosition.z );
+		//Vector3  r( ToRadian( x ), ToRadian( y ), ToRadian( z ) );
+		x = ToRadian( x );
+		y = ToRadian( y );
+		z = ToRadian( z );
 
+		float  L2 = cosf( y )*distance.y;
+		//m_focusTarget.y = sinf( y )*distance.y;
+
+		m_focusTarget.x = cosf( x )*L2;
+ 
+		m_focusTarget.z = sinf( x )*L2;
+
+		//m_focusTarget.y += distance.y*cosf( x ) + distance.z*sinf( x );
+		//m_focusTarget.z += distance.y*-sinf( x ) + distance.z*cosf( x );
+
+		//m_focusTarget.x += distance.x * cosf( y ) + distance.z * -sinf( y );
+		//m_focusTarget.z += distance.x * sinf( y ) + distance.z * cosf( y );
+
+		//m_focusTarget.x += distance.x * cosf( z ) + distance.y * sinf( z );
+		//m_focusTarget.y += distance.x * -sinf( z ) + distance.y * cosf( z );
 }
 
 

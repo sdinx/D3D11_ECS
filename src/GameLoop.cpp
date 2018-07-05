@@ -108,6 +108,7 @@ void  GameUtility::GameInit()
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
 		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
+		SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 
 		s_camera = cam;
 }
@@ -122,20 +123,22 @@ void  GameUtility::GameLoop()
 
 		pSystemManager->Update( 0 );
 		pd3dRenderer->Rendering();
-		auto& pos = s_camera->GetComponent<Camera>()->GetTarget();
-		auto& move = s_camera->GetComponent<Camera>()->GetPosition();
-		static Vector3  s_vecCamera = Vector3( 0, 0, 0 );
+		auto&  pos = s_camera->GetComponent<Camera>()->GetTarget();
+		auto&  move = s_camera->GetComponent<Camera>()->GetPosition();
+		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
+		float  deg = 0.0f;
+		float  dy = 0.0f;
 
-		auto mx = Input::MouseAxisX();
-		auto my = Input::MouseAxisY();
-		if ( mx != 0 )
+		auto  mx = Input::MouseAxisX();
+		auto  my = Input::MouseAxisY();
+
+		deg += ( float ) mx / 100.0f;
+		dy += ( float ) my / 100.0f;
+		if ( my != 0.0f )
 		{
-				pos.x += ( float ) mx / 100.0f;
+				s_camera->SetRotation( dy, deg, 0.0f );
 		}
-		if ( my != 0 )
-		{
-				pos.y -= ( float ) my / 100.0f;
-		}
+
 
 		if ( Input::KeyPress( DIK_W ) )
 		{

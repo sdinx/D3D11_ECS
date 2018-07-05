@@ -122,7 +122,7 @@ namespace  D3D11Utility
 				}
 				void  SetPosition( Vector3  eyePosition );
 				void  SetTarget( Vector3  focusPosition );
-				void  SetTargetRotation( float  x, float  y, float  z );
+				void  SetRotation( float  x, float  y, float  z );
 				void  SetUp( Vector3  upDirection );
 				void  Update();
 				void  UpdateView();
