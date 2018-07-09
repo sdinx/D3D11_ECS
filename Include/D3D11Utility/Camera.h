@@ -57,6 +57,8 @@ namespace  D3D11Utility
 				Vector3  m_eyePosition;
 				Vector3  m_focusTarget;
 				Vector3  m_upDirection;
+				Vector3  m_rotation;
+				Vector3  m_translation;
 
 
 		public:
@@ -123,6 +125,8 @@ namespace  D3D11Utility
 				void  SetPosition( Vector3  eyePosition );
 				void  SetTarget( Vector3  focusPosition );
 				void  SetRotation( float  x, float  y, float  z );
+				void  SetLookRotation( float  x, float  y, float  z );
+				void  SetTranslation( Vector3  trans );
 				void  SetUp( Vector3  upDirection );
 				void  Update();
 				void  UpdateView();

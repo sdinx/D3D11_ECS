@@ -108,7 +108,6 @@ void  GameUtility::GameInit()
 		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
 		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
-		SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 
 		s_camera = cam;
 }
@@ -116,6 +115,7 @@ void  GameUtility::GameInit()
 
 void  GameUtility::GameLoop()
 {
+		SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 
 		//UpdateController();
 		Input::UpdateKeyboard();
@@ -126,40 +126,36 @@ void  GameUtility::GameLoop()
 		auto&  pos = s_camera->GetComponent<Camera>()->GetTarget();
 		auto&  move = s_camera->GetComponent<Camera>()->GetPosition();
 		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
-		float  deg = 0.0f;
+		float  dx = 0.0f;
 		float  dy = 0.0f;
 
 		auto  mx = Input::MouseAxisX();
 		auto  my = Input::MouseAxisY();
 
-		deg += ( float ) mx / 100.0f;
-		dy += ( float ) my / 100.0f;
-		if ( my != 0.0f )
+		dx = ( float ) mx / 10.0f;
+		dy = ( float ) my / 10.0f;
+		if ( mx != 0.0f || my != 0.0f )
 		{
-				s_camera->SetRotation( dy, deg, 0.0f );
+				s_camera->SetLookRotation( dx, dy, 0.0f );
 		}
 
 
 		if ( Input::KeyPress( DIK_W ) )
 		{
-				move.z += .01f;
-				pos.z += .01f;
+				s_camera->SetTranslation( Vector3( 0, 0, 0.1f ) );
 		}
 		else if ( Input::KeyPress( DIK_S ) )
 		{
-				move.z -= .01f;
-				pos.z -= .01f;
+				s_camera->SetTranslation( Vector3( 0, 0, -0.1f ) );
 		}
 
 		if ( Input::KeyPress( DIK_A ) )
 		{
-				//move.x += .01f;
-				//pos.x += .01f;
+
 		}
 		else if ( Input::KeyPress( DIK_D ) )
 		{
-				//move.x -= .01f;
-				//pos.x -= .01f;
+
 		}
 
 		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );

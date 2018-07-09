@@ -124,27 +124,36 @@ void  Camera::SetTarget( Vector3  focusPosition )
 
 void  Camera::SetRotation( float  x, float  y, float  z )
 {
+		Vector3  r( ToRadian( x ), ToRadian( y ), ToRadian( z ) );
+		m_rotation = r;
+}
+
+
+void  Camera::SetLookRotation( float  x, float  y, float  z )
+{
 		Vector3  distance( m_focusTarget.x - m_eyePosition.x, m_focusTarget.y - m_eyePosition.y, m_focusTarget.z - m_eyePosition.z );
-		//Vector3  r( ToRadian( x ), ToRadian( y ), ToRadian( z ) );
-		x = ToRadian( x );
-		y = ToRadian( y );
-		z = ToRadian( z );
+		//Vector3  distance( 0.0f, 0.0f, 0.75f );
+		Vector3  r( ToRadian( -x ), ToRadian( -y ), ToRadian( z ) );
 
-		float  L2 = cosf( y )*distance.y;
-		//m_focusTarget.y = sinf( y )*distance.y;
+		distance.x = distance.x*cosf( r.x ) + distance.z*-sinf( r.x );
+		distance.z = distance.x*sinf( r.x ) + distance.z*cosf( r.x );
 
-		m_focusTarget.x = cosf( x )*L2;
- 
-		m_focusTarget.z = sinf( x )*L2;
+		m_focusTarget.x = distance.x + m_eyePosition.x;
+		m_focusTarget.z = distance.z + m_eyePosition.z;
 
-		//m_focusTarget.y += distance.y*cosf( x ) + distance.z*sinf( x );
-		//m_focusTarget.z += distance.y*-sinf( x ) + distance.z*cosf( x );
 
-		//m_focusTarget.x += distance.x * cosf( y ) + distance.z * -sinf( y );
-		//m_focusTarget.z += distance.x * sinf( y ) + distance.z * cosf( y );
+		distance.y = distance.y*cosf( r.y ) + distance.z*sinf( r.y );
+		distance.z = distance.y*-sinf( r.y ) + distance.z*cosf( r.y );
 
-		//m_focusTarget.x += distance.x * cosf( z ) + distance.y * sinf( z );
-		//m_focusTarget.y += distance.x * -sinf( z ) + distance.y * cosf( z );
+		m_focusTarget.y = distance.y + m_eyePosition.y;
+		m_focusTarget.z = distance.z + m_eyePosition.z;
+
+}
+
+
+void  Camera::SetTranslation( Vector3  trans )
+{
+		m_translation = trans;
 }
 
 
@@ -162,6 +171,12 @@ void  Camera::Update()
 
 void  Camera::UpdateView()
 {
+		float  r = atan2f( m_focusTarget.z - m_eyePosition.z, m_focusTarget.x - m_eyePosition.x );
+		m_eyePosition.x += m_translation.x*cosf( r ) + m_translation.z*-sinf( r );
+		m_eyePosition.z += m_translation.x*sinf( r ) + m_translation.z*cosf( r );
+
+		m_translation = Vector3( 0, 0, 0 );
+
 		DirectX::XMStoreFloat4x4(
 				&m_view,
 				DirectX::XMMatrixLookAtLH( 
