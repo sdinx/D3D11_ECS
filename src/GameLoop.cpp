@@ -1,4 +1,9 @@
 //----------------------------------------------------------------------------------
+// comments
+//----------------------------------------------------------------------------------
+/* NOTHING */
+
+//----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
 #include  <GameUtility.h>
@@ -7,6 +12,7 @@
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Transform.h>
 #include  <DIKeyboard.h>
+#include  <XInputController.h>
 
 #include  <D3D11Utility\Entity.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
@@ -17,24 +23,23 @@
 #include  <D3D11Utility\Systems\DebugSystem.h>
 #include  <D3D11Utility\Systems\Timer.h>
 
-
+//----------------------------------------------------------------------------------
+// pragma
+//----------------------------------------------------------------------------------
 using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
 
-
+//----------------------------------------------------------------------------------
+// global variables
+//----------------------------------------------------------------------------------
 static  std::unique_ptr<ComponentManager>  componentManager;
 static  std::unique_ptr<IDirect3DRenderer>  pd3dRenderer;
 static  std::unique_ptr<EntityManager>  pEntityManager;
 static  std::unique_ptr<SystemManager>  pSystemManager;
 static  std::unique_ptr<TextureManager>  pTextureManager;
-
-//----------------------------------------------------------------------------------
-// comments
-//----------------------------------------------------------------------------------
-// note: std::unique_ptr 明示的なリリースじゃないとメモリリークする可能性がある?
-
 static Camera*  s_camera = nullptr;
+
 
 void  GameUtility::GameInit()
 {
@@ -60,6 +65,7 @@ void  GameUtility::GameInit()
 
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
+
 
 		/* Init Background */
 		backGroundEntity->AddComponent<Renderable>( PRMTV_PLANE );
@@ -105,8 +111,8 @@ void  GameUtility::GameInit()
 		cameraEntity->AddComponent<Transform>();
 
 		Camera*  cam = cameraEntity->GetComponent<Camera>();
-		cam->SetPosition( Vector3( 0.0f, 0.0f, -0.75f ) );
-		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.0f ) );
+		cam->SetPosition( Vector3( 0.0f, 0.0f, 0.0f ) );
+		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.75f ) );
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 
 		s_camera = cam;
@@ -115,9 +121,8 @@ void  GameUtility::GameInit()
 
 void  GameUtility::GameLoop()
 {
-		SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 
-		//UpdateController();
+		UpdateController();
 		Input::UpdateKeyboard();
 		Input::UpdateMouse();
 
@@ -126,6 +131,7 @@ void  GameUtility::GameLoop()
 		auto&  pos = s_camera->GetComponent<Camera>()->GetTarget();
 		auto&  move = s_camera->GetComponent<Camera>()->GetPosition();
 		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
+		static  bool  isMouse = false;
 		float  dx = 0.0f;
 		float  dy = 0.0f;
 
@@ -134,30 +140,39 @@ void  GameUtility::GameLoop()
 
 		dx = ( float ) mx / 10.0f;
 		dy = ( float ) my / 10.0f;
-		if ( mx != 0.0f || my != 0.0f )
+
+		if ( isMouse )
+				if ( mx != 0.0f || my != 0.0f )
+				{
+						s_camera->SetLookRotation( dy, dx, 0.0f );
+				}
+
+		if ( Input::KeyTrigger( DIK_RETURN ) )
 		{
-				s_camera->SetLookRotation( dx, dy, 0.0f );
+				isMouse = !isMouse;
+				ShowCursor( isMouse );
 		}
 
-
-		if ( Input::KeyPress( DIK_W ) )
+		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				s_camera->SetTranslation( Vector3( 0, 0, 0.1f ) );
+				s_camera->SetTranslation( Vector3( 0, 0, 0.02f ) );
 		}
-		else if ( Input::KeyPress( DIK_S ) )
+		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				s_camera->SetTranslation( Vector3( 0, 0, -0.1f ) );
+				s_camera->SetTranslation( Vector3( 0, 0, -0.02f ) );
 		}
 
-		if ( Input::KeyPress( DIK_A ) )
+		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-
+				s_camera->SetTranslation( Vector3( -0.02f, 0, 0 ) );
 		}
-		else if ( Input::KeyPress( DIK_D ) )
+		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-
+				s_camera->SetTranslation( Vector3( 0.02f, 0, 0 ) );
 		}
 
 		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 
+		if ( isMouse )
+				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 }

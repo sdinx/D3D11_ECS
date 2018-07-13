@@ -33,6 +33,8 @@ Camera::Camera()
 		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
 		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
 		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
+		m_translation = Vector3( 0.0f, 0.0f, 0.0f );
+		m_lookRotation = Vector3( 0.0f, 0.0f, 0.0f );
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
@@ -124,30 +126,15 @@ void  Camera::SetTarget( Vector3  focusPosition )
 
 void  Camera::SetRotation( float  x, float  y, float  z )
 {
-		Vector3  r( ToRadian( x ), ToRadian( y ), ToRadian( z ) );
-		m_rotation = r;
+
 }
 
 
 void  Camera::SetLookRotation( float  x, float  y, float  z )
 {
-		Vector3  distance( m_focusTarget.x - m_eyePosition.x, m_focusTarget.y - m_eyePosition.y, m_focusTarget.z - m_eyePosition.z );
-		//Vector3  distance( 0.0f, 0.0f, 0.75f );
-		Vector3  r( ToRadian( -x ), ToRadian( -y ), ToRadian( z ) );
-
-		distance.x = distance.x*cosf( r.x ) + distance.z*-sinf( r.x );
-		distance.z = distance.x*sinf( r.x ) + distance.z*cosf( r.x );
-
-		m_focusTarget.x = distance.x + m_eyePosition.x;
-		m_focusTarget.z = distance.z + m_eyePosition.z;
-
-
-		distance.y = distance.y*cosf( r.y ) + distance.z*sinf( r.y );
-		distance.z = distance.y*-sinf( r.y ) + distance.z*cosf( r.y );
-
-		m_focusTarget.y = distance.y + m_eyePosition.y;
-		m_focusTarget.z = distance.z + m_eyePosition.z;
-
+		m_lookRotation.x += x;
+		m_lookRotation.y += y;
+		m_lookRotation.z += z;
 }
 
 
@@ -171,19 +158,61 @@ void  Camera::Update()
 
 void  Camera::UpdateView()
 {
-		float  r = atan2f( m_focusTarget.z - m_eyePosition.z, m_focusTarget.x - m_eyePosition.x );
-		m_eyePosition.x += m_translation.x*cosf( r ) + m_translation.z*-sinf( r );
-		m_eyePosition.z += m_translation.x*sinf( r ) + m_translation.z*cosf( r );
+		Matrix4x4  dist;
+		Vector3  focusPos( m_focusTarget );
+		Vector3  r( ToRadian( m_lookRotation.x ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
+		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
 
-		m_translation = Vector3( 0, 0, 0 );
+		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( &m_eyePosition ) );
+		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( &m_translation ) );
+		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r2 ) );
+		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) );
 
+		/*
+		// Y軸回転 ( 左右視点移動 )
+		distance.x = distance.x*cosf( r.x ) + distance.z*-sinf( r.x );
+		distance.z = distance.x*sinf( r.x ) + distance.z*cosf( r.x );
+		m_focusTarget.x = distance.x + m_eyePosition.x;
+		m_focusTarget.z = distance.z + m_eyePosition.z;
+
+		// X軸回転 ( 上下視点移動 )
+		distance.y = distance.y*cosf( r.y ) + distance.z*sinf( r.y );
+		distance.z = distance.y*-sinf( r.y ) + distance.z*cosf( r.y );
+		m_focusTarget.y = distance.y + m_eyePosition.y;
+		m_focusTarget.z = distance.z + m_eyePosition.z;
+		*/
+
+		// 行列計算
+		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
+		// ワールド行列の更新
+		XMStoreFloat4x4( &m_localWorld, XMMatrixMultiply( mtxTrans, mtxPos ) );
+
+		// カメラ位置を更新
+		m_eyePosition.x = m_localWorld._41;
+		m_eyePosition.y = m_localWorld._42;
+		m_eyePosition.z = m_localWorld._43;
+
+		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( &focusPos ) );
+		mtxDist = XMMatrixMultiply( mtxDist, mtxPos );
+		mtxDist = XMMatrixMultiply( mtxTrans, mtxDist );
+
+		// ワールド行列の更新
+		XMStoreFloat4x4( &dist, mtxDist );
+
+		focusPos.x = dist._41;
+		focusPos.y = dist._42;
+		focusPos.z = dist._43;
+
+		// ビュー行列変換
 		DirectX::XMStoreFloat4x4(
 				&m_view,
 				DirectX::XMMatrixLookAtLH( 
 						DirectX::XMLoadFloat3( &m_eyePosition ),
-						DirectX::XMLoadFloat3( &m_focusTarget ),
+						DirectX::XMLoadFloat3( &focusPos ),
 						DirectX::XMLoadFloat3( &m_upDirection ) ) );
 
+		// 移動量の初期化
+		m_translation = Vector3( 0, 0, 0 );
 }
 
 

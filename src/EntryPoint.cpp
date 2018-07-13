@@ -24,13 +24,13 @@ INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCm
 
 		Input::DI_Init( d3d11->GetWindowHandle(), hInstance );
 		Input::InitMouse( d3d11->GetWindowHandle() );
-		// InitController( ControllerMax::CMAX_1 );
+		InitController( ControllerMax::CMAX_1 );
 
 		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 		d3d11->MainLoop();
 		_CrtDumpMemoryLeaks();
 
-		// UninitController();
+		UninitController();
 
 		return  0;
 

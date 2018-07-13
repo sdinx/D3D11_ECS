@@ -42,14 +42,19 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType ) :
 {
 		m_isRendering = true;
 
+		/* 頂点の設定 */
 		VERTEX*  vertices;
 		INT* indices;
+		// 定数指定でプリミティブの頂点を生成
 		UINT  numVertices = CreatePrimitive( PRMTV_CUBE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices, indices );
 		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
+		/* インデックス頂点の設定 */
 		UINT  numIndex = numVertices * 6;
 		m_pVertexBuffer->CreateIndexBuffer( indices, numIndex );
+
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
+		// カリング設定
 		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
 
 		delete[ ]  vertices;
@@ -63,8 +68,9 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 {
 		m_isRendering = true;
 
+		// 指定ディレクトリのFBXモデルをロード
 		Systems::FbxLoader  loader( fbxString );
-
+		// モデルの情報を取得 ( 0番目のメッシュ情報 )
 		ModelContainer  container = loader.GetModelContainer( 0 );
 
 		INT  i = 0;
@@ -83,6 +89,7 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 				vertices[i].texcoord = texcoord;
 				i++;
 		}
+		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
 
 		INT  indexCount = container.indices.size();
 		INT*  indices = new  INT[indexCount];
@@ -93,14 +100,10 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 				i++;
 		}
 
-		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
-
 		// note: インデックスが正しく設定されていない?
 		//m_pVertexBuffer->CreateIndexBuffer( indices, indexCount );
 
-
 		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
-
 
 		delete[ ]  vertices;
 }

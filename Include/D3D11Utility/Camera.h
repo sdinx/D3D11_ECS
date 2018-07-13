@@ -52,13 +52,14 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 				BOOL  m_isEnable = false;
 
+				Matrix4x4  m_localWorld;// カメラ位置の行列.
 				Matrix4x4  m_view;
 				Matrix4x4  m_projection;
-				Vector3  m_eyePosition;
-				Vector3  m_focusTarget;
+				Vector3  m_eyePosition;// カメラ位置.
+				Vector3  m_focusTarget;// 注視点 ( カメラ位置からの差分座標として使う )
 				Vector3  m_upDirection;
-				Vector3  m_rotation;
-				Vector3  m_translation;
+				Vector3  m_lookRotation;// カメラ位置と注視点の差分角度.
+				Vector3  m_translation;// 1フレームでの移動量.
 
 
 		public:
@@ -122,10 +123,26 @@ namespace  D3D11Utility
 				{
 						return  m_upDirection;
 				}
+				Vector3&  GetLookRotation()
+				{
+						return  m_lookRotation;
+				}
 				void  SetPosition( Vector3  eyePosition );
 				void  SetTarget( Vector3  focusPosition );
 				void  SetRotation( float  x, float  y, float  z );
 				void  SetLookRotation( float  x, float  y, float  z );
+				void  SetLookRotationX( float  x )
+				{
+						m_lookRotation.x = x;
+				}
+				void  SetLookRotationY( float  y )
+				{
+						m_lookRotation.y = y;
+				}
+				void  SetLookRotationZ( float  z )
+				{
+						m_lookRotation.z = z;
+				}
 				void  SetTranslation( Vector3  trans );
 				void  SetUp( Vector3  upDirection );
 				void  Update();

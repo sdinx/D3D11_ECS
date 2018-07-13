@@ -21,21 +21,18 @@ void  Transform::Update()
 {
 		XMMATRIX  mtxPos, mtxAngle, mtxTrans, mtxRotate, mtxScale;
 
+		// 行列変換
 		mtxPos = XMMatrixTranslationFromVector( XMLoadFloat3( &m_position ) );
-		mtxAngle = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &m_angle ) );
-		mtxTrans = XMMatrixTranslationFromVector( XMLoadFloat3( &m_translation ) );
 		mtxRotate = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &m_rotation ) );
+		mtxTrans = XMMatrixTranslationFromVector( XMLoadFloat3( &m_translation ) );
+		mtxAngle = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &m_angle ) );
 		mtxScale = XMMatrixScalingFromVector( XMLoadFloat3( &m_scale ) );
 
-		XMStoreFloat4x4( &m_localWorld, mtxTrans );
-		XMStoreFloat4x4( &m_localWorld, mtxRotate );
-		XMStoreFloat4x4( &m_localWorld, mtxScale );
-		XMStoreFloat4x4( &m_localWorld, mtxPos );
-
-		mtxPos = XMMatrixMultiply( mtxTrans, mtxPos );
+		// 行列計算
 		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
-		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
+		mtxPos = XMMatrixMultiply( mtxTrans, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
+		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
 
 		// ワールド行列の更新
 		XMStoreFloat4x4( &m_localWorld, mtxPos );
