@@ -76,6 +76,12 @@
     <ClInclude Include="Include\D3D11Utility\IEntity.h" />
     <ClInclude Include="Include\D3D11Utility\Interface.h" />
     <ClInclude Include="Include\D3D11Utility\Object.h" />
+    <ClInclude Include="Include\D3D11Utility\Physical\Collider.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\Collider2D.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox2D.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
@@ -91,6 +97,7 @@
     <ClInclude Include="Include\D3D11Utility\Physical\Physics2D.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Platform.h" />
     <ClInclude Include="Include\D3D11Utility\Renderable.h" />
     <ClInclude Include="Include\D3D11Utility\Scene.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\ComponentManager.h" />
@@ -146,6 +153,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -153,6 +161,7 @@
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

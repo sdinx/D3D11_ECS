@@ -135,6 +135,9 @@ void  Camera::SetLookRotation( float  x, float  y, float  z )
 		m_lookRotation.x += x;
 		m_lookRotation.y += y;
 		m_lookRotation.z += z;
+
+		if ( m_lookRotation.x > 89.99f || m_lookRotation.x < -90.0f )
+				m_lookRotation.x -= x;
 }
 
 

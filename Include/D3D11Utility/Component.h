@@ -60,7 +60,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
 				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;// !! need change.
+				//virtual  void  FrameUpdate() = 0;// フレーム毎更新
 				virtual  void  Update() = 0;
+				//virtual  void  LateUpdate() = 0;
 				virtual  void  Rendering()const {};
 
 		public:

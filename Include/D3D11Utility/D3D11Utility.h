@@ -27,7 +27,7 @@
 #include  <string>
 #include  <d3d11.h>
 #include  <d3dcompiler.h>
-#include  <DirectXMath.h>
+#include  <D3D11utility\Platform.h>
 
 
 namespace  D3D11Utility
@@ -68,17 +68,6 @@ namespace  D3D11Utility
 						p = nullptr;
 				}
 		};
-
-		//----------------------------------------------------------------------------------
-		// type defined
-		//----------------------------------------------------------------------------------
-		using  Vector2 = DirectX::XMFLOAT2;
-		using  Vector3 = DirectX::XMFLOAT3;
-		using  Vector4 = DirectX::XMFLOAT4;
-		using  Quaternion = DirectX::XMFLOAT4;
-		using  Matrix3x3 = DirectX::XMFLOAT3X3;
-		using  Matrix4x4 = DirectX::XMFLOAT4X4;
-		using  Value = void*;// Žg—p‹ÖŽ~
 
 		//----------------------------------------------------------------------------------
 		// struct

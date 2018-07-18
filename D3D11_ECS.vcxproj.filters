@@ -248,6 +248,15 @@
     <ClInclude Include="Include\DIKeyboard.h">
       <Filter>Header</Filter>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\Collider.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\Collider2D.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Platform.h">
+      <Filter>Header\D3D11Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ChangeLog.txt" />

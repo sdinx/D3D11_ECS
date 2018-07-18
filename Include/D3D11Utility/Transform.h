@@ -7,7 +7,8 @@
 //----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
-// TODO: 親と子の再帰的なクラス図になるように変更.
+// TODO: 親と子の関係のなるよう変更.
+// TODO: ローカル行列とワールド行列の計算頻度をオブジェクトごとに段階分けする.
 
 #ifndef  _INCLUDED_D3D11_UTILITY_TRANSFORM_
 #define  _INCLUDED_D3D11_UTILITY_TRANSFORM_
@@ -39,15 +40,15 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 
-				Transform() :
-						m_position( 0, 0, 0 ),
-						m_angle( 0, 0, 0 ),
-						m_translation( 0, 0, 0 ),
-						m_rotation( 0, 0, 0 ),
-						m_scale( 1, 1, 1 )
-				{
+				Transform();
+				Transform( Transform*  parent );
 
-				}
+				enum  MSG_TRANSFORM
+				{
+						MSG_NONE = 0,
+						MSG_UPDATE_LOCAL,
+						MSG_UPDATE_ALL,
+				};// enum MSG_CAMERA
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -55,12 +56,20 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				Vector3  m_position;
-				Vector3  m_angle;
-				Vector3  m_translation;
-				Vector3  m_rotation;
-				Vector3  m_scale;
+				Transform*  m_pParent;// 親のワールド空間
+
+				// 子に影響しないローカル空間
 				Matrix4x4  m_localWorld;
+				Vector3  m_localPosition;
+				Vector3  m_localEuler;
+				Vector3  m_localScale;
+
+				// 子に影響するワールド空間
+				Matrix4x4  m_world;
+				Vector3  m_position;
+				Vector3  m_euler;
+				Vector3  m_scale;
+				Vector3  m_translation;// 移動行列
 
 
 		public:
@@ -95,64 +104,97 @@ namespace  D3D11Utility
 				}
 
 				/* derived virtual */
-				void  HandleMessage( const  GameUtility::Message&  msg )
-				{}
+				void  HandleMessage( const  GameUtility::Message&  msg );
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
 				void  Update();
 
-				/* Setter and Getter */
+				/* Getter local world */
+				Matrix4x4&  GetLocalWorld()
+				{
+						return  m_localWorld;
+				}
+				Vector3&  GetLocalPosition()
+				{
+						return  m_localPosition;
+				}
+				Vector3&  GetLocalEuler()
+				{
+						return  m_localEuler;
+				}
+				Vector3&  GetLocalScale()
+				{
+						return  m_localScale;
+				}
+				/* Getter world */
+				Matrix4x4&  GetWorld()
+				{
+						return  m_world;
+				}
 				Vector3&  GetPosition()
 				{
 						return  m_position;
 				}
-				Vector3&  GetAngle()
+				Vector3&  GetEuler()
 				{
-						return  m_angle;
-				}
-				Vector3&  GetTranslation()
-				{
-						return  m_translation;
-				}
-				Vector3&  GetRotation()
-				{
-						return  m_rotation;
+						return  m_euler;
 				}
 				Vector3&  GetScale()
 				{
 						return  m_scale;
 				}
-				Matrix4x4&  GetLocalWorld()
+				Vector3&  GetTranslation()
 				{
-						return  m_localWorld;
+						return  m_translation;
+				}
+
+				const  Matrix4x4  GetWorldMatrix();
+
+				/* Setter local world */
+				void  SetLocalWorld( Matrix4x4  world )
+				{
+						m_localWorld = world;
+				}
+				void  SetLocalPosition( Vector3  position )
+				{
+						m_localPosition = position;
+				}
+				void  SetLocalEuler( Vector3  euler )
+				{
+						m_localEuler = euler;
+				}
+				void  SetLocalEuler( float x, float y, float z )// オイラー角
+				{
+						m_localEuler = Vector3( x, y, z );
+				}
+				void  SetLocalScale( Vector3  scale )
+				{
+						m_localScale = scale;
+				}
+				/* Setter world */
+				void  SetWorld( Matrix4x4  world )
+				{
+						m_world = world;
 				}
 				void  SetPosition( Vector3  position )
 				{
 						m_position = position;
 				}
-				void  SetAngle( Vector3  angle )
+				void  SetEuler( Vector3  euler )
 				{
-						m_angle = angle;
+						m_euler = euler;
 				}
-				void  SetTranslation( Vector3  translation )
+				void  SetEuler( float x, float y, float z )// オイラー角
 				{
-						m_translation = translation;
-				}
-				void  SetRotation( Vector3  rotation )
-				{
-						m_rotation = rotation;
-				}
-				void  SetRotation( float x, float y, float z )// オイラー角
-				{
-						m_rotation = Vector3( ToRadian( x ), ToRadian( y ), ToRadian( z ) );
+						m_euler = Vector3( x, y, z );
 				}
 				void  SetScale( Vector3  scale )
 				{
 						m_scale = scale;
 				}
-				void  SetLocalWorld( Matrix4x4  localWorld )
+				void  SetTranslation( Vector3  translation )
 				{
-						m_localWorld = localWorld;
+						m_translation = translation;
 				}
 
 		public:

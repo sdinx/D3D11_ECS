@@ -74,8 +74,10 @@ void  GameUtility::GameInit()
 		Renderable*  backRender = backGroundEntity->GetComponent<Renderable>();
 		Transform*  backTrans = backGroundEntity->GetComponent<Transform>();
 		backTrans->SetPosition( Vector3( 0, 0, 6.0f ) );
-		backTrans->SetScale( Vector3( 2, 2, 2 ) );
-		backTrans->SetRotation( 45, 45, 0 );
+		backTrans->SetScale( Vector3( 2, 2, 2 ) ); 
+		backTrans->SetLocalPosition( Vector3( 3, 0, 0 ) );
+		backTrans->SetLocalEuler( 45, 45, 0 );
+		backTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 		backRender->SetColor( Vector4( 1, 1, 0, 0 ) );
 		backRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 		backRender->SetVertexShader( vs );
