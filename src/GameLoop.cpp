@@ -127,12 +127,15 @@ void  GameUtility::GameInit()
 void  GameUtility::GameLoop()
 {
 
+		/* Update inputs */
 		UpdateController();
 		Input::UpdateKeyboard();
 		Input::UpdateMouse();
 
+		/* Update systems */
 		pSystemManager->Update( 0 );
 		pd3dRenderer->Rendering();
+
 		auto&  pos = s_camera->GetComponent<Camera>()->GetTarget();
 		auto&  move = s_camera->GetComponent<Camera>()->GetPosition();
 		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
@@ -227,7 +230,6 @@ void  GameUtility::GameLoop()
 		}
 
 		s_trans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
-
 		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 
 		if ( isMouse )

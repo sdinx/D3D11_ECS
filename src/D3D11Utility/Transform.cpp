@@ -91,8 +91,7 @@ void  Transform::Update()
 
 const  Matrix4x4  Transform::GetWorldMatrix()
 {
-		DirectX::XMMATRIX  mtxWorld = DirectX::XMLoadFloat4x4( &m_world );
-		mtxWorld = DirectX::XMMatrixMultiply( MultiplyRootTransform( this ), mtxWorld );
+		DirectX::XMMATRIX  mtxWorld = MultiplyRootTransform( this );
 		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
 		Matrix4x4  matrix4x4;
 		DirectX::XMStoreFloat4x4( &matrix4x4, mtxWorld );

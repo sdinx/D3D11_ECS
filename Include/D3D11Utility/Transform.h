@@ -155,6 +155,9 @@ namespace  D3D11Utility
 				/* Setter */
 				void  SetParent( Transform*  pParent )
 				{
+						if ( m_parentsEntityId == pParent->m_parentsEntityId )
+								return;
+
 						m_pParent = pParent;
 				}
 
