@@ -111,9 +111,6 @@
     <ClCompile Include="src\D3D11Utility\Physical\IPhysical.cpp">
       <Filter>Source\D3D11Utility\Physical</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Physical\ColliderBox2D.cpp">
-      <Filter>Source\D3D11Utility\Physical</Filter>
-    </ClCompile>
     <ClCompile Include="src\D3D11Utility\Systems\FbxLoader.cpp">
       <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
@@ -123,11 +120,20 @@
     <ClCompile Include="src\D3D11Utility\Systems\Timer.cpp">
       <Filter>Source\D3D11Utility\Systems</Filter>
     </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Physical\ColliderBox.cpp">
-      <Filter>Source\D3D11Utility\Physical</Filter>
-    </ClCompile>
     <ClCompile Include="src\DIKeyBoard.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\BoxCollider.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\BoxCollider2D.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\Collider.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\SphereCollider.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +233,6 @@
     <ClInclude Include="Include\D3D11Utility\Physical\IPhysics.h">
       <Filter>Header\D3D11Utility\Physical</Filter>
     </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox2D.h">
-      <Filter>Header\D3D11Utility\Physical</Filter>
-    </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\FbxLoader.h">
       <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
@@ -238,9 +241,6 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Graphics\IShader.h">
       <Filter>Header\D3D11Utility\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\ColliderBox.h">
-      <Filter>Header\D3D11Utility\Physical</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Physical\Physics.h">
       <Filter>Header\D3D11Utility\Physical</Filter>
@@ -256,6 +256,18 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Platform.h">
       <Filter>Header\D3D11Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\BoxCollider.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\BoxCollider2D.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\SphereCollider.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\SphereCollider2D.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

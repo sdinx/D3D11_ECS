@@ -22,7 +22,8 @@ Transform::Transform() :
 		m_position( 0, 0, 0 ),
 		m_translation( 0, 0, 0 ),
 		m_euler( 0, 0, 0 ),
-		m_scale( 1, 1, 1 )
+		m_scale( 1, 1, 1 ),
+		m_pParent( nullptr )
 {
 		HandleMessage( GameUtility::Message( MSG_UPDATE_LOCAL ) );
 }
@@ -90,9 +91,25 @@ void  Transform::Update()
 
 const  Matrix4x4  Transform::GetWorldMatrix()
 {
-		DirectX::XMMATRIX  mtx = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), DirectX::XMLoadFloat4x4( &m_world ) );
+		DirectX::XMMATRIX  mtxWorld = DirectX::XMLoadFloat4x4( &m_world );
+		mtxWorld = DirectX::XMMatrixMultiply( MultiplyRootTransform( this ), mtxWorld );
+		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
 		Matrix4x4  matrix4x4;
-		DirectX::XMStoreFloat4x4( &matrix4x4, mtx );
+		DirectX::XMStoreFloat4x4( &matrix4x4, mtxWorld );
 
 		return  matrix4x4;
+}
+
+
+DirectX::XMMATRIX  Transform::MultiplyRootTransform( Transform*  parent )
+{
+		DirectX::XMMATRIX  mtxWorld = DirectX::XMLoadFloat4x4( &parent->GetWorld() );
+		DirectX::XMMATRIX  mtxParent;
+
+		if ( parent->m_pParent != nullptr )
+				mtxParent = MultiplyRootTransform( parent->m_pParent );
+		else
+				return  mtxWorld;
+
+		return  DirectX::XMMatrixMultiply( mtxParent, mtxWorld );
 }

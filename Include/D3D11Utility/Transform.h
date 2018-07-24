@@ -56,6 +56,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
+				bool  isChange;// true のときに行列を更新する
 				Transform*  m_pParent;// 親のワールド空間
 
 				// 子に影響しないローカル空間
@@ -102,6 +103,7 @@ namespace  D3D11Utility
 								// TODO: need output debug string.
 						}
 				}
+				static  DirectX::XMMATRIX  MultiplyRootTransform( Transform*  parent );
 
 				/* derived virtual */
 				void  HandleMessage( const  GameUtility::Message&  msg );
@@ -149,6 +151,12 @@ namespace  D3D11Utility
 				}
 
 				const  Matrix4x4  GetWorldMatrix();
+
+				/* Setter */
+				void  SetParent( Transform*  pParent )
+				{
+						m_pParent = pParent;
+				}
 
 				/* Setter local world */
 				void  SetLocalWorld( Matrix4x4  world )

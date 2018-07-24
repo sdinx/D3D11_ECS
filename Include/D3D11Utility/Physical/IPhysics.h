@@ -45,8 +45,11 @@ namespace  D3D11Utility
 
 						static  ComponentId  STATIC_COMPONENT_ID;
 
-						FLOAT  m_velocity;
-						FLOAT  m_gravity;
+						bool  m_isGravity;
+						float  m_velocity;
+						float  m_gravity;
+						float  m_time;
+						float  m_mass;
 
 				public:
 						//----------------------------------------------------------------------------------

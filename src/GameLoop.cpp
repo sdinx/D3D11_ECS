@@ -38,7 +38,8 @@ static  std::unique_ptr<IDirect3DRenderer>  pd3dRenderer;
 static  std::unique_ptr<EntityManager>  pEntityManager;
 static  std::unique_ptr<SystemManager>  pSystemManager;
 static  std::unique_ptr<TextureManager>  pTextureManager;
-static Camera*  s_camera = nullptr;
+static  Camera*  s_camera = nullptr;
+static  Transform*  s_trans = nullptr;
 
 
 void  GameUtility::GameInit()
@@ -73,8 +74,8 @@ void  GameUtility::GameInit()
 
 		Renderable*  backRender = backGroundEntity->GetComponent<Renderable>();
 		Transform*  backTrans = backGroundEntity->GetComponent<Transform>();
-		backTrans->SetPosition( Vector3( 0, 0, 6.0f ) );
-		backTrans->SetScale( Vector3( 2, 2, 2 ) ); 
+		backTrans->SetPosition( Vector3( 0, 1.0f, 6.0f ) );
+		backTrans->SetLocalScale( Vector3( 50, 50, 50 ) ); 
 		backTrans->SetLocalPosition( Vector3( 3, 0, 0 ) );
 		backTrans->SetLocalEuler( 45, 45, 0 );
 		backTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
@@ -118,6 +119,8 @@ void  GameUtility::GameInit()
 		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 
 		s_camera = cam;
+		s_trans = trans2;
+		backTrans->SetParent( s_trans );
 }
 
 
@@ -172,6 +175,58 @@ void  GameUtility::GameLoop()
 		{
 				s_camera->SetTranslation( Vector3( 0.02f, 0, 0 ) );
 		}
+
+		if ( Input::KeyPress( DIK_L ) )
+		{
+				Vector3&  objPos = s_trans->GetLocalPosition();
+				if ( Input::KeyPress( DIK_LEFT ) )
+						objPos.x += -0.05f;
+				else if ( Input::KeyPress( DIK_RIGHT ) )
+						objPos.x += 0.05f;
+				if ( Input::KeyPress( DIK_UP ) )
+						objPos.z += 0.05f;
+				else if ( Input::KeyPress( DIK_DOWN ) )
+						objPos.z += -0.05f;
+		}
+		else
+		{
+				Vector3&  objPos = s_trans->GetTranslation();
+				if ( Input::KeyPress( DIK_LEFT ) )
+						objPos.x += -0.005f;
+				else if ( Input::KeyPress( DIK_RIGHT ) )
+						objPos.x += 0.005f;
+				if ( Input::KeyPress( DIK_UP ) )
+						objPos.z += 0.005f;
+				else if ( Input::KeyPress( DIK_DOWN ) )
+						objPos.z += -0.005f;
+		}
+
+		if ( Input::KeyPress( DIK_L ) )
+		{
+				Vector3&  rotate = s_trans->GetLocalEuler();
+				if ( Input::KeyPress( DIK_Q ) )
+				{
+						rotate.y += 1.0f;
+				}
+				else if ( Input::KeyPress( DIK_E ) )
+				{
+						rotate.y += -1.0f;
+				}
+		}
+		else
+		{
+				Vector3&  rotate = s_trans->GetEuler();
+				if ( Input::KeyPress( DIK_Q ) )
+				{
+						rotate.y += 0.1f;
+				}
+				else if ( Input::KeyPress( DIK_E ) )
+				{
+						rotate.y += -0.1f;
+				}
+		}
+
+		s_trans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 
 		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 

@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
-// file : ColliderBox2D.h
-// desc : 2Dでの衝突判定ボックス
+// file : SphereCollider.h
+// desc : 3Dバウンディングスフィア
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -8,13 +8,14 @@
 //----------------------------------------------------------------------------------
 /* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_BOX_2D_
-#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_BOX_2D_
+#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_SPHERE_COLLIDER_
+#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_SPHERE_COLLIDER_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\Physical\Collider.h>
 
 
 namespace  D3D11Utility
@@ -22,18 +23,18 @@ namespace  D3D11Utility
 		namespace  Physical
 		{
 
-				class  ColliderBox2D :public  Component
+				class  SphereCollider :public  Component, virtual  public  Collider
 				{
+						friend  class  Collider;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						ColliderBox2D()
-						{}
-						virtual  ~ColliderBox2D()
-						{}
+						SphereCollider();
+						SphereCollider( Vector3  center, Vector3  radius );
+						virtual  ~SphereCollider();
 
 				private:
 						//----------------------------------------------------------------------------------
@@ -41,9 +42,6 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						static  ComponentId  STATIC_COMPONENT_ID;
-
-						Vector2  m_center;
-						Vector2  m_size;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -80,9 +78,9 @@ namespace  D3D11Utility
 						{}
 						void  Update();
 
-				};// class ColliderBox2D
+				};// class SphereCollider
 
 		}// namespace Physical
 }// namespace D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_BOX_2D_
+#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_SPHERE_COLLIDER_

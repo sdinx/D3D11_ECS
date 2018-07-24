@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
-// file : Collider2D.h
-// desc : 衝突判定フラグや2D用の中心点を持った基底クラス
+// file: Collider2D.h
+// desc: 衝突判定フラグや2D用の中心点を持った基底クラス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\D3D11Utility.h>
 
 
 namespace  D3D11Utility
@@ -22,7 +22,7 @@ namespace  D3D11Utility
 		namespace  Physical
 		{
 
-				class  Collider2D :public  Component
+				class  Collider2D
 				{
 
 				public:
@@ -32,19 +32,21 @@ namespace  D3D11Utility
 
 						Collider2D()
 						{}
+						Collider2D( Vector2  center, Vector2  radius ) :
+								m_center( center ),
+								m_radius( radius )
+						{}
 						virtual  ~Collider2D()
 						{}
 
-				private:
+				protected:
 						//----------------------------------------------------------------------------------
 						// protected variables
 						//----------------------------------------------------------------------------------
 
-						static  ComponentId  STATIC_COMPONENT_ID;
-
 						bool  isHit;// フレーム毎に初期化
-						Vector2  m_center;
-						Vector2  m_size;
+						Vector2  m_center;// Transformのpositionを原点とした相対位置
+						Vector2  m_radius;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -63,23 +65,6 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						static  ComponentId  GetStaticComponentId()
-						{
-								return  STATIC_COMPONENT_ID;
-						}
-						static  void  SetStaticComponentId( ComponentId  id )
-						{
-								if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
-								{
-										STATIC_COMPONENT_ID = id;
-										// TODO: need  to output debug string.
-								}
-						}
-						void  HandleMessage( const  GameUtility::Message&  msg )
-						{}
-						void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
-						{}
-						void  Update();
 
 				};// class Collider2D
 

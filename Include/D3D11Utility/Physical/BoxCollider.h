@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
-// file: Collider.h
-// desc: 衝突判定フラグや中心点を持った基底クラス
+// file : BoxCollider.h
+// desc : 3Dバウンディングボックス
 //----------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------
@@ -8,47 +8,43 @@
 //----------------------------------------------------------------------------------
 /* NOTHING */
 
-#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_
-#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_
+#ifndef  _INCLUDED_D3D11_UTILITY_PHYSICAL_BOX_COLLIDER_
+#define  _INCLUDED_D3D11_UTILITY_PHYSICAL_BOX_COLLIDER_
 
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
+#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\Physical\Collider.h>
 
 
 namespace  D3D11Utility
 {
 		namespace  Physical
 		{
-				class  BoxCollider;
-				class  SphereCollider;
 
-				class  Collider
+				class  BoxCollider :public  Component, virtual  public  Collider
 				{
+						friend  class  Collider;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						Collider()
-						{}
-						Collider( Vector3  center, Vector3  radius ) :
-								m_center( center ),
-								m_radius( radius )
-						{}
-						virtual  ~Collider()
-						{}
+						BoxCollider();
+						BoxCollider( Vector3  center, Vector3  radius );
+						virtual  ~BoxCollider();
 
-				protected:
+				private:
 						//----------------------------------------------------------------------------------
 						// protected variables
 						//----------------------------------------------------------------------------------
 
-						bool  isHit;// フレーム毎に初期化
-						Vector3  m_center;// Transformのpositionを原点とした相対位置
-						Vector3  m_radius;
+						static  ComponentId  STATIC_COMPONENT_ID;
+
+						Vector3  m_min;
+						Vector3  m_max;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -67,14 +63,27 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						static  bool  IsIntersect( const  BoxCollider  a, const  BoxCollider  b );
-						static  bool  IsIntersect( const  SphereCollider  a, const  SphereCollider  b );
-						static  bool  IsIntersect( const  BoxCollider  a, const  SphereCollider  b );
-						static  bool  IsIntersect( const  SphereCollider  a, const  BoxCollider  b );
-						
-				};// class Collider
+						static  ComponentId  GetStaticComponentId()
+						{
+								return  STATIC_COMPONENT_ID;
+						}
+						static  void  SetStaticComponentId( ComponentId  id )
+						{
+								if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
+								{
+										STATIC_COMPONENT_ID = id;
+										// TODO: need  to output debug string.
+								}
+						}
+						void  HandleMessage( const  GameUtility::Message&  msg )
+						{}
+						void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
+						{}
+						void  Update();
+
+				};// class BoxCollider
 
 		}// namespace Physical
 }// namespace D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_COLLIDER_
+#endif // ! _INCLUDED_D3D11_UTILITY_PHYSICAL_BOX_COLLIDER_

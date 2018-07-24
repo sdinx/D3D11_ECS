@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Physical\ColliderBox.h>
+#include  <D3D11Utility\Physical\SphereCollider.h>
 
 
 //----------------------------------------------------------------------------------
@@ -15,30 +15,29 @@ using  namespace  DirectX;
 //----------------------------------------------------------------------------------
 // static variables
 //----------------------------------------------------------------------------------
-ComponentId  ColliderBox::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
+ComponentId  SphereCollider::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 
 
-ColliderBox::ColliderBox()
+SphereCollider::SphereCollider()
 {
 
 }
 
 
-ColliderBox::ColliderBox( Vector3  center, Vector3  size ) :
-		m_center( center ),
-		m_size( size )
+SphereCollider::SphereCollider( Vector3  center, Vector3  radius ) :
+		Collider( center, radius )
 {
 
 }
 
 
-ColliderBox::~ColliderBox()
+SphereCollider::~SphereCollider()
 {
 
 }
 
 
-void  ColliderBox::Update()
+void  SphereCollider::Update()
 {
 
 }
