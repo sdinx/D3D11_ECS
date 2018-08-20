@@ -4,6 +4,7 @@
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
 #include  <D3D11Utility\Systems\IDirect3D.h>
+#include  <iostream>
 
 //----------------------------------------------------------------------------------
 // Defines
@@ -19,16 +20,20 @@ using namespace D3D11Utility;
 using namespace Graphics;
 
 
-PixelShader::PixelShader()
+PixelShader::PixelShader() :
+		m_pPixelShader( nullptr ),
+		m_pSamplerState( nullptr )
 {
 		CreatePixelShader( DEFAULT_SHADER );
+		CreateSamplerState();
 }
 
 
 PixelShader::PixelShader( ID3D11PixelShader*  pPS ) :
-		m_pPixelShader( pPS )
+		m_pPixelShader( pPS ),
+		m_pSamplerState( nullptr )
 {
-
+		CreateSamplerState();
 }
 
 
@@ -67,9 +72,36 @@ HRESULT  PixelShader::CreatePixelShader( LPCWSTR  szFileName )
 }
 
 
+HRESULT  PixelShader::CreateSamplerState()
+{
+		HRESULT  hr = S_OK;
+
+		// SamplerStateì¬
+		D3D11_SAMPLER_DESC samplerDesc;
+		ZeroMemory( &samplerDesc, sizeof( samplerDesc ) );
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		samplerDesc.MinLOD = 0;
+		samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		hr = pd3dDevice->CreateSamplerState( &samplerDesc, &m_pSamplerState );
+		if ( FAILED( hr ) )
+		{
+				std::cout << "<PixelShader> CreateSamplerState() : Failed to create a sampler state.\n";
+				return  hr;
+		}
+
+		return  hr;
+}
+
+
 void  PixelShader::UpdateShader()
 {
 		pd3dDeviceContext->PSSetShader( m_pPixelShader, nullptr, 0 );
+		pd3dDeviceContext->PSSetSamplers( 0, 1, &m_pSamplerState );
 }
 
 

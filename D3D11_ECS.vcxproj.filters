@@ -40,6 +40,18 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{08596376-7a35-4b9c-b0ee-671122379fc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{244bfab3-1575-4cde-be26-a583c23257f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game">
+      <UniqueIdentifier>{6b04dae2-1ede-46b5-96ac-c3341d9d8683}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Scene">
+      <UniqueIdentifier>{df42ea04-eaf6-4d79-ad79-996cd51d479f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\Scene">
+      <UniqueIdentifier>{44841112-3327-4e5e-aa40-11e68c7ca5a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp">
@@ -134,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Physical\SphereCollider.cpp">
       <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Scene\Tutorial.cpp">
+      <Filter>Source\Game\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +284,15 @@
     <ClInclude Include="Include\D3D11Utility\Physical\SphereCollider2D.h">
       <Filter>Header\D3D11Utility\Physical</Filter>
     </ClInclude>
+    <ClInclude Include="Include\StateTransition.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Game\Scene\Tutorial.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Game\Scene\BaseScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ChangeLog.txt" />
@@ -278,5 +302,10 @@
     <FxCompile Include="Shader\Default.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Header\Structs.hlsli">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

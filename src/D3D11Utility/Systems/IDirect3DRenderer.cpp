@@ -1,3 +1,5 @@
+//#define  _RENDERING_TIME_COUNT_
+
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
@@ -6,6 +8,7 @@
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\IDirect3DRenderer.h>
 #include  <GameUtility.h>
+#include  <D3D11Utility\Systems\Timer.h>
 
 
 //----------------------------------------------------------------------------------
@@ -41,12 +44,29 @@ void  IDirect3DRenderer::Rendering()const
 {
 		m_pID3D->BeginRender();
 		{/* Begin rendering */
-
+				static  UINT  nCount = 1;
+				static  float  fLastTime = 0.0f;
+				static  float  fAll = 0;
+				Timer  timer;
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 				{
 						renderable->Update();
 						renderable->Rendering();
 				}
+
+#ifdef  _RENDERING_TIME_COUNT_
+				// 描画時間計測
+				{
+						float  fThisTime = timer.GetElapsed<Timer::Milliseconds>();
+						printf( "Loop time: %f ms ( %f )\n", fThisTime, fThisTime - fLastTime );
+						fAll += fThisTime;
+						printf( "Average time: %f ms\n", fAll / ( float ) nCount );
+						Sleep( 1000 );
+						nCount++;
+						system( "CLS" );
+						fLastTime = fThisTime;
+				}
+#endif // _RENDERING_TIME_COUNT_
 
 		}/* Done rendering */
 		m_pID3D->EndRender();
@@ -75,7 +95,7 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 		hr = D3D11Utility::CompileShaderFromFile( szFileName, szEntryPoint, szVSModel, &pVSBlob );
 		if ( FAILED( hr ) )
 		{
-				std::cout << "<IDirect3DRenderer>  Compile vertex shader failed by: " << szEntryPoint << std::endl;
+				std::cout << "<IDirect3DRenderer>  Failed to compile a vertex shader by: " << szEntryPoint << std::endl;
 				SafeRelease( pVSBlob );
 				return  nullptr;
 		}
@@ -93,7 +113,8 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 		// 入力レイアウトの定義
 		const  D3D11_INPUT_ELEMENT_DESC  layout[ ] = {
 				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 		const  UINT  numElements = ARRAYSIZE( layout );
 
@@ -118,7 +139,7 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel )
 {
 		const  size_t  shaderHash = std::hash<LPCSTR>()( szEntryPoint );
-		const  Graphics::ShaderId  shaderId = m_vertexShaderList.size();
+		const  Graphics::ShaderId  shaderId = m_geometryShaderList.size();
 		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
 		// 重複で生成を防止
@@ -135,7 +156,7 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 		hr = D3D11Utility::CompileShaderFromFile( szFileName, szEntryPoint, szGSModel, &pGSBlob );
 		if ( FAILED( hr ) )
 		{
-				std::cout << "<IDirect3DRenderer>  Compile geometry shader failed by: " << szEntryPoint << std::endl;
+				std::cout << "<IDirect3DRenderer>  Failed to compile a geometry shader by: " << szEntryPoint << std::endl;
 				SafeRelease( pGSBlob );
 				return  nullptr;
 		}
@@ -145,7 +166,7 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 		SafeRelease( pGSBlob );
 		if ( FAILED( hr ) )
 		{
-				std::cout << "<IDirect3DRenderer>  Create geometry shader failed." << std::endl;
+				std::cout << "<IDirect3DRenderer>  Failed to create a geometry shader." << std::endl;
 				return  nullptr;
 		}
 
@@ -162,7 +183,7 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel )
 {
 		const  size_t  shaderHash = std::hash<LPCSTR>()( szPSModel );
-		const  Graphics::ShaderId  shaderId = m_vertexShaderList.size();
+		const  Graphics::ShaderId  shaderId = m_pixelShaderList.size();
 		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
 		// 重複で生成を防止
@@ -179,17 +200,17 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 		hr = D3D11Utility::CompileShaderFromFile( szFileName, szEntryPoint, szPSModel, &pPSBlob );
 		if ( FAILED( hr ) )
 		{
-				std::cout << "<IDirect3DRenderer>  Compile Pixel shader failed by: " << szEntryPoint << std::endl;
+				std::cout << "<IDirect3DRenderer>  Failed to compile a pixel shader by: " << szEntryPoint << std::endl;
 				SafeRelease( pPSBlob );
 				return  nullptr;
 		}
 
-		// 頂点シェーダーの生成
+		// ピクセルシェーダーの生成
 		hr = pd3dDevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), NULL, &pPixelShader );
 		SafeRelease( pPSBlob );
 		if ( FAILED( hr ) )
 		{
-				std::cout << "<IDirect3DRenderer>  Create pixel shader failed." << std::endl;
+				std::cout << "<IDirect3DRenderer>  Failed to create a pixel shader.\n";
 				return  nullptr;
 		}
 
@@ -200,4 +221,34 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 		m_pixelShaderList.back()->m_shaderId = shaderId;
 
 		return  m_pixelShaderList.back();
+}
+
+
+Graphics::VertexShader*  IDirect3DRenderer::GetVertexShader( size_t  index )
+{
+		if ( index < m_vertexShaderList.size() )
+				return  m_vertexShaderList[index];
+
+		printf( "<IDirect3DRenderer> GetVertexShader( %d ) invalid value.\n", index );
+		return  nullptr;
+}
+
+
+Graphics::GeometryShader*  IDirect3DRenderer::GetGeometryShader( size_t  index )
+{
+		if ( index < m_geometryShaderList.size() )
+				return  m_geometryShaderList[index];
+
+		printf( "<IDirect3DRenderer> GetGeometryShader( %d ) invalid value.\n", index );
+		return  nullptr;
+}
+
+
+Graphics::PixelShader*  IDirect3DRenderer::GetPixelShader( size_t  index )
+{
+		if ( index < m_pixelShaderList.size() )
+				return  m_pixelShaderList[index];
+
+		printf( "<IDirect3DRenderer> GetPixelShader( %d ) invalid value.\n", index );
+		return  nullptr;
 }

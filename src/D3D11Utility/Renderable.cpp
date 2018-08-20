@@ -55,7 +55,7 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType ) :
 
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
 		// カリング設定
-		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
+		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
 
 		delete[ ]  vertices;
 }
@@ -91,19 +91,10 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 		}
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
 
-		INT  indexCount = container.indices.size();
-		INT*  indices = new  INT[indexCount];
-		i = 0;
-		for ( auto index : container.indices )
-		{
-				indices[i] = index;
-				i++;
-		}
-
 		// note: インデックスが正しく設定されていない?
-		//m_pVertexBuffer->CreateIndexBuffer( indices, indexCount );
+		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
 
-		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, D3D11_FILL_SOLID );
+		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_FRONT, D3D11_FILL_SOLID );
 
 		delete[ ]  vertices;
 }

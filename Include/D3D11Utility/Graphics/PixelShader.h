@@ -31,8 +31,8 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// private variables
 						//----------------------------------------------------------------------------------
-						ID3D11PixelShader*  m_pPixelShader = nullptr;
-
+						ID3D11PixelShader*  m_pPixelShader;
+						ID3D11SamplerState*  m_pSamplerState;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -53,6 +53,7 @@ namespace  D3D11Utility
 
 						// シェーダのコンパイルと頂点シェーダの作成
 						HRESULT  CreatePixelShader( LPCWSTR  szFileName = nullptr );
+						HRESULT  CreateSamplerState();
 						// 描画を行う前に呼び出す
 						void  UpdateShader();
 						void  Release();

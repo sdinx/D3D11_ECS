@@ -47,7 +47,7 @@
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\PhysicalSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp" />
@@ -59,6 +59,7 @@
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\GameUtility.cpp" />
+    <ClCompile Include="src\Game\Scene\Tutorial.cpp" />
     <ClCompile Include="src\XInputController.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
@@ -116,7 +117,7 @@
     <ClInclude Include="Include\D3D11Utility\Systems\IDirect3DRenderer.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\ISystem.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\PhysicalSystem.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
@@ -126,9 +127,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Include\GameUtility.h" />
+    <ClInclude Include="Include\Game\Scene\BaseScene.h" />
+    <ClInclude Include="Include\Game\Scene\Tutorial.h" />
     <ClInclude Include="Include\IGraphicsRenderer.h" />
     <ClInclude Include="Include\IRenderable.h" />
     <ClInclude Include="Include\Singleton.h" />
+    <ClInclude Include="Include\StateTransition.h" />
     <ClInclude Include="Include\XInputController.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
@@ -146,6 +150,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shader\Header\Structs.hlsli" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

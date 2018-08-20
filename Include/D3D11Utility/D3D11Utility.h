@@ -75,6 +75,7 @@ namespace  D3D11Utility
 		struct  VERTEX
 		{
 				Vector3  position;
+				Vector3  normal;
 				Vector2  texcoord;
 		};// struct VERTEX
 

@@ -7,6 +7,7 @@
 #include  <D3D11Utility\Systems\IDirect3D.h>
 #include  <XInputController.h>
 #include  <DIKeyboard.h>
+#include  <StateTransition.h>
 
 
 INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCmdLine, INT  nCmdShow )
@@ -21,6 +22,8 @@ INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCm
 
 		if ( FAILED( d3d11->CreateDefaultDepthStencil() ) )
 				return  E_FAIL;
+
+
 
 		Input::DI_Init( d3d11->GetWindowHandle(), hInstance );
 		Input::InitMouse( d3d11->GetWindowHandle() );

@@ -79,7 +79,7 @@ namespace  D3D11Utility
 
 						// 頂点バッファの生成と設定
 						HRESULT  CreateVertexBuffer();
-						HRESULT  CreateIndexBuffer( INT*  nPrimitiveVertices, UINT  nIndexCounts );
+						HRESULT  CreateIndexBuffer( const  INT*  nPrimitiveVertices, const  UINT  nIndexCounts );
 						void  CreateRasterizer( D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode );
 						// 描画を行うときに呼び出す
 						void  BindBuffer();

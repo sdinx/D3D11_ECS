@@ -39,7 +39,8 @@ static  std::unique_ptr<EntityManager>  pEntityManager;
 static  std::unique_ptr<SystemManager>  pSystemManager;
 static  std::unique_ptr<TextureManager>  pTextureManager;
 static  Camera*  s_camera = nullptr;
-static  Transform*  s_trans = nullptr;
+static  Transform*  s_trans[3] = { nullptr };
+static  UINT  numTrans = 0;
 
 
 void  GameUtility::GameInit()
@@ -57,70 +58,94 @@ void  GameUtility::GameInit()
 		//Graphics::ShaderId  gsId = pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
 		Graphics::PixelShader*  ps = pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
 
-		static  const  EntityId  playerId = pEntityManager->CreateEntity( "Player" );
-		static  const  EntityId  backGroundId = pEntityManager->CreateEntity( "BackGround" );
-		static  const  EntityId  cameraId = pEntityManager->CreateEntity( "Camera" );
-		Entity*  playerEntity = pEntityManager->GetEntity( playerId );
-		Entity*  backGroundEntity = pEntityManager->GetEntity( backGroundId );
-		Entity*  cameraEntity = pEntityManager->GetEntity( cameraId );
-
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
 
 
-		/* Init Background */
-		backGroundEntity->AddComponent<Renderable>( PRMTV_PLANE );
-		backGroundEntity->AddComponent<Transform>();
+		/* Init Cube */
+		static  const  EntityId  cubeId = pEntityManager->CreateEntity( "Cube" );
+		Entity*  cubeEntity = pEntityManager->GetEntity( cubeId );
+		cubeEntity->AddComponent<Renderable>( "res/cube.fbx" );
+		cubeEntity->AddComponent<Transform>();
+		Renderable*  cubeRender = cubeEntity->GetComponent<Renderable>();
+		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
+		cubeRender->SetVertexShader( vs );
+		cubeRender->SetPixelShader( ps );
+		{/* Parameter */
+				cubeTrans->SetPosition( Vector3( 0, 1.0f, 6.0f ) );
+				cubeTrans->SetLocalScale( Vector3( 50, 50, 50 ) );
+				cubeTrans->SetLocalPosition( Vector3( 3, 0, 0 ) );
+				cubeTrans->SetLocalEuler( 45, 45, 0 );
+				cubeTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
+				cubeRender->SetColor( Vector4( 1, 1, 0, 0 ) );
+				cubeRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
+				cubeRender->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
+		}
 
-		Renderable*  backRender = backGroundEntity->GetComponent<Renderable>();
-		Transform*  backTrans = backGroundEntity->GetComponent<Transform>();
-		backTrans->SetPosition( Vector3( 0, 1.0f, 6.0f ) );
-		backTrans->SetLocalScale( Vector3( 50, 50, 50 ) ); 
-		backTrans->SetLocalPosition( Vector3( 3, 0, 0 ) );
-		backTrans->SetLocalEuler( 45, 45, 0 );
-		backTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
-		backRender->SetColor( Vector4( 1, 1, 0, 0 ) );
-		backRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-		backRender->SetVertexShader( vs );
-		backRender->SetPixelShader( ps );
-		backRender->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
+
+		/* Init Sphere */
+		static  const  EntityId  sphereId = pEntityManager->CreateEntity( "Sphere" );
+		Entity*  sphereEntity = pEntityManager->GetEntity( sphereId );
+		sphereEntity->AddComponent<Renderable>( "res/sphere.fbx" );
+		sphereEntity->AddComponent<Transform>();
+		Renderable*  sphereRender = sphereEntity->GetComponent<Renderable>();
+		Transform*  sphereTrans = sphereEntity->GetComponent<Transform>();
+		sphereRender->SetVertexShader( vs );
+		sphereRender->SetPixelShader( ps );
+		{/* Parameter */
+				sphereTrans->SetPosition( Vector3( 0, 1.0f, 6.0f ) );
+				sphereTrans->SetLocalScale( Vector3( 50, 50, 50 ) );
+				sphereTrans->SetPosition( Vector3( -3, 0, -3 ) );
+				sphereTrans->SetLocalEuler( 0, 0, 0 );
+				sphereTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
+				sphereRender->SetColor( Vector4( 1, 1, 0, 0 ) );
+				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
+				sphereRender->SetColor( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
+		}
 
 
 		/* Init Player */
+		static  const  EntityId  playerId = pEntityManager->CreateEntity( "Player" );
+		Entity*  playerEntity = pEntityManager->GetEntity( playerId );
 		playerEntity->SetTag( "Player" );
 		playerEntity->AddComponent<Renderable>( "WaterMill_No1.fbx" );
 		playerEntity->AddComponent<Transform>();
-
 		Renderable*  playerRender = playerEntity->GetComponent<Renderable>();
-		playerRender->SetTextureId( texId, pTextureManager.get() );
+		Transform*  trans2 = playerEntity->GetComponent<Transform>();
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( ps );
-
-		playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
-		playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-
-		Transform*  trans2 = playerEntity->GetComponent<Transform>();
-		Vector3&  scale2 = trans2->GetScale();
-		Vector3&  pos2 = trans2->GetPosition();
-
-		pos2.y -= 3.0f;
-		pos2.z += 5.0f;
-
-		scale2 = Vector3( .05f, .05f, .05f );
+		{/* Parameter */
+				playerRender->SetTextureId( texId, pTextureManager.get() );
+				playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
+				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
+				Vector3&  scale2 = trans2->GetScale();
+				Vector3&  pos2 = trans2->GetPosition();
+				pos2.y -= 3.0f;
+				pos2.z += 5.0f;
+				scale2 = Vector3( .05f, .05f, .05f );
+		}
 
 
 		/* Init Camera */
+		static  const  EntityId  cameraId = pEntityManager->CreateEntity( "Camera" );
+		Entity*  cameraEntity = pEntityManager->GetEntity( cameraId );
 		cameraEntity->AddComponent<Camera>();
 		cameraEntity->AddComponent<Transform>();
-
 		Camera*  cam = cameraEntity->GetComponent<Camera>();
-		cam->SetPosition( Vector3( 0.0f, 0.0f, 0.0f ) );
-		cam->SetTarget( Vector3( 0.0f, 0.0f, 0.75f ) );
-		cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
+		{/* Parameter */
+				cam->SetPosition( Vector3( 0.0f, 0.0f, 0.0f ) );
+				cam->SetTarget( Vector3( 0.0f, 0.0f, 0.75f ) );
+				cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
+		}
 
 		s_camera = cam;
-		s_trans = trans2;
-		backTrans->SetParent( s_trans );
+		s_trans[0] = trans2;
+		s_trans[1] = cubeTrans;
+		s_trans[2] = sphereTrans;
+
+		// eŽqŠÖŒW‚ÌÝ’è
+		cubeTrans->SetParent( s_trans[0] );
+		sphereTrans->SetParent( cubeTrans );
 }
 
 
@@ -181,7 +206,7 @@ void  GameUtility::GameLoop()
 
 		if ( Input::KeyPress( DIK_L ) )
 		{
-				Vector3&  objPos = s_trans->GetLocalPosition();
+				Vector3&  objPos = s_trans[numTrans]->GetLocalPosition();
 				if ( Input::KeyPress( DIK_LEFT ) )
 						objPos.x += -0.05f;
 				else if ( Input::KeyPress( DIK_RIGHT ) )
@@ -193,7 +218,7 @@ void  GameUtility::GameLoop()
 		}
 		else
 		{
-				Vector3&  objPos = s_trans->GetTranslation();
+				Vector3&  objPos = s_trans[numTrans]->GetTranslation();
 				if ( Input::KeyPress( DIK_LEFT ) )
 						objPos.x += -0.005f;
 				else if ( Input::KeyPress( DIK_RIGHT ) )
@@ -206,7 +231,7 @@ void  GameUtility::GameLoop()
 
 		if ( Input::KeyPress( DIK_L ) )
 		{
-				Vector3&  rotate = s_trans->GetLocalEuler();
+				Vector3&  rotate = s_trans[numTrans]->GetLocalEuler();
 				if ( Input::KeyPress( DIK_Q ) )
 				{
 						rotate.y += 1.0f;
@@ -218,7 +243,7 @@ void  GameUtility::GameLoop()
 		}
 		else
 		{
-				Vector3&  rotate = s_trans->GetEuler();
+				Vector3&  rotate = s_trans[numTrans]->GetEuler();
 				if ( Input::KeyPress( DIK_Q ) )
 				{
 						rotate.y += 0.1f;
@@ -229,7 +254,16 @@ void  GameUtility::GameLoop()
 				}
 		}
 
-		s_trans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
+		if ( Input::KeyTrigger( DIK_1 ) )
+				numTrans = 0;
+		if ( Input::KeyTrigger( DIK_2 ) )
+				numTrans = 1;
+		if ( Input::KeyTrigger( DIK_3 ) )
+				numTrans = 2;
+
+		for ( auto trans : s_trans )
+				trans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
+
 		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 
 		if ( isMouse )

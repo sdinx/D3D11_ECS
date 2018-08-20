@@ -65,7 +65,7 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 }
 
 
-HRESULT  VertexBuffer::CreateIndexBuffer( INT*  nPrimitiveVertices, UINT  nIndexCounts )
+HRESULT  VertexBuffer::CreateIndexBuffer( const  INT*  nPrimitiveVertices, const  UINT  nIndexCounts )
 {
 		HRESULT  hr = S_OK;
 		m_numIndexCounts = nIndexCounts;

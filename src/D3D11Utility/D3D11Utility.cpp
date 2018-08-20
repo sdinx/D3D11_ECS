@@ -98,6 +98,7 @@ HRESULT  D3D11Utility::CreateConstantBuffer( ID3D11Buffer*&  ppCB, size_t  byteW
 		return  hr;
 }
 
+
 void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext )
 {
 		D3D11Utility::pd3dDevice = pDevice;
@@ -177,7 +178,7 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 		{
 		case  PRMTV_CUBE:
 				{
-						numVertices = 8;
+						numVertices = 24;
 						ppVertices = new  VERTEX[numVertices];
 						pIndices = new INT[numVertices * 6];
 
@@ -194,6 +195,30 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 								ppVertices[5].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
 								ppVertices[6].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
 								ppVertices[7].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
+
+								// left face
+								ppVertices[8].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
+								ppVertices[9].position = Vector3( position.x - sx, position.y + sy, position.z - sz );
+								ppVertices[10].position = Vector3( position.x - sx, position.y - sy, position.z - sz );
+								ppVertices[11].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
+
+								// right face
+								ppVertices[12].position = Vector3( position.x + sx, position.y + sy, position.z - sz );
+								ppVertices[13].position = Vector3( position.x + sx, position.y + sy, position.z + sz );
+								ppVertices[14].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
+								ppVertices[15].position = Vector3( position.x + sx, position.y - sy, position.z - sz );
+
+								// top face
+								ppVertices[16].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
+								ppVertices[17].position = Vector3( position.x + sx, position.y + sy, position.z + sz );
+								ppVertices[18].position = Vector3( position.x + sx, position.y + sy, position.z - sz );
+								ppVertices[19].position = Vector3( position.x - sx, position.y + sy, position.z - sz );
+
+								// bottom face
+								ppVertices[20].position = Vector3( position.x + sx, position.y - sy, position.z - sz );
+								ppVertices[21].position = Vector3( position.x - sx, position.y - sy, position.z - sz );
+								ppVertices[22].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
+								ppVertices[23].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
 						}
 
 						// 頂点インデックス設定
@@ -217,9 +242,9 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 								pIndices[11] = 7;
 
 								// left face
-								pIndices[12] = 1;
-								pIndices[13] = 4;
-								pIndices[14] = 7;
+								pIndices[12] = 8;
+								pIndices[13] = 9;
+								pIndices[14] = 10;
 
 								pIndices[15] = 1;
 								pIndices[16] = 7;
@@ -255,15 +280,41 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 
 						// テクスチャ座標設定
 						{
+								// front face
 								ppVertices[0].texcoord = Vector2( 0, 0 );
 								ppVertices[1].texcoord = Vector2( 1, 0 );
 								ppVertices[2].texcoord = Vector2( 1, 1 );
 								ppVertices[3].texcoord = Vector2( 0, 1 );
 
+								// back face
 								ppVertices[4].texcoord = Vector2( 0, 0 );
 								ppVertices[5].texcoord = Vector2( 1, 0 );
 								ppVertices[6].texcoord = Vector2( 1, 1 );
 								ppVertices[7].texcoord = Vector2( 0, 1 );
+
+								// left face
+								ppVertices[8].texcoord = Vector2( 0, 0 );
+								ppVertices[9].texcoord = Vector2( 1, 0 );
+								ppVertices[10].texcoord = Vector2( 1, 1 );
+								ppVertices[11].texcoord = Vector2( 0, 1 );
+
+								// right face
+								ppVertices[12].texcoord = Vector2( 0, 0 );
+								ppVertices[13].texcoord = Vector2( 1, 0 );
+								ppVertices[14].texcoord = Vector2( 1, 1 );
+								ppVertices[15].texcoord = Vector2( 0, 1 );
+
+								// top face
+								ppVertices[16].texcoord = Vector2( 0, 0 );
+								ppVertices[17].texcoord = Vector2( 1, 0 );
+								ppVertices[18].texcoord = Vector2( 1, 1 );
+								ppVertices[19].texcoord = Vector2( 0, 1 );
+
+								// bottom face
+								ppVertices[20].texcoord = Vector2( 0, 0 );
+								ppVertices[21].texcoord = Vector2( 1, 0 );
+								ppVertices[22].texcoord = Vector2( 1, 1 );
+								ppVertices[23].texcoord = Vector2( 0, 1 );
 						}
 
 				}// end case PRMTV_CUBE

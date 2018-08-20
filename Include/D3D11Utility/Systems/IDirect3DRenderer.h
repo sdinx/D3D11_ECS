@@ -68,6 +68,12 @@ namespace  D3D11Utility
 						Graphics::VertexShader*  CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel = "vs_5_0" );
 						Graphics::GeometryShader*  CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel = "gs_5_0" );
 						Graphics::PixelShader*  CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel = "ps_5_0" );
+
+						/* Getter */
+						Graphics::VertexShader*  GetVertexShader( size_t  index );
+						Graphics::GeometryShader*  GetGeometryShader( size_t  index );
+						Graphics::PixelShader*  GetPixelShader( size_t  index );
+
 						void  Release();
 						void  Rendering()const;
 

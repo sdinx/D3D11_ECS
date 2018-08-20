@@ -1,41 +1,9 @@
-//-----------------------------------------------------------------------------------
-// CBPerFrame constant buffer
-//-----------------------------------------------------------------------------------
-cbuffer CBuffer : register( b0 )
-{
-		float4x4  view;
-		float4x4  proj;
-};
+#include  "Header\Structs.hlsli"
 
-cbuffer CObject : register( b1 )
+float3  NormalizedLambert( float3  diffuse, float3  lightDir, float3  normal )
 {
-		float4x4  world;
-		float4  meshColor;
-};
-
-//-----------------------------------------------------------------------------------
-// Texture variables
-//-----------------------------------------------------------------------------------
-Texture2D  diffuseTexture : register( t0 );
-SamplerState  diffuseTextureSampler : register( s0 );
-
-//-----------------------------------------------------------------------------------
-// VSInput structure
-//-----------------------------------------------------------------------------------
-struct VSInput
-{
-		float4  position : POSITION;
-		float2  texcoord : TEXCOORD0;
-};
-
-//-----------------------------------------------------------------------------------
-// GSPSInput structure
-//-----------------------------------------------------------------------------------
-struct GSPSInput
-{
-		float4  position : SV_POSITION;
-		float2  texcoord : TEXCOORD0;
-};
+		return diffuse * max( dot( normal, lightDir ), 0.0f ) * ( 1.0f / PI );
+}
 
 //-----------------------------------------------------------------------------------
 //! @brief      頂点シェーダエントリーポイント
@@ -53,7 +21,8 @@ GSPSInput VSFunc( VSInput input )
 		// 射影空間に変換
 		output.position = mul( proj, output.position );
 
-		// テクスチャ座標のセット
+
+		output.normal = normalize( mul( ( float3x3 )world, input.normal ) );
 		output.texcoord = input.texcoord;
 
 		return output;
@@ -91,7 +60,15 @@ void GSFunc( triangle  GSPSInput  input[3], inout  TriangleStream<GSPSInput>  st
 //------------------------------------------------------------------------------------
 float4 PSFunc( GSPSInput input ) : SV_TARGET
 {
-		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.texcoord );
+		float3  light = normalize( float4( 2, 5, -3, 1.0f ) );
 
-		return  meshColor * texel;
+		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.texcoord );
+		
+		float4  color = meshColor * texel;
+		
+		float3  nor = normalize( input.normal );
+		float3  diffuse = NormalizedLambert( float4( 0.5f, 0.5f, 0.5f, 1.0f )*texel.rgb, light, nor );
+
+		return  color;
+		//return  float4( diffuse, 1.0f );
 }
