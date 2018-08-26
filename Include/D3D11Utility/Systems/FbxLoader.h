@@ -36,6 +36,7 @@ namespace  D3D11Utility
 				std::vector<Vector3>  normals;
 				std::vector<Vector2>  texcoords;
 				std::vector<INT>  indices;
+				SkinMesh  skinMeshes;
 				void  Release()
 				{
 						vertices.clear();

@@ -67,6 +67,7 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 				m_modelContainer[i].vertices = LoadVertices( pMesh, m_modelContainer[i].indices.size() );
 				m_modelContainer[i].normals = LoadNormals( pMesh, m_modelContainer[i].indices.size() );
 				m_modelContainer[i].texcoords = LoadTexcoords( pMesh, m_modelContainer[i].indices.size() );
+				m_modelContainer[i].skinMeshes = LoadSkin( pMesh );
 		}
 
 		//for ( i = 0; i < nMaterialCount; i++ )
@@ -327,28 +328,28 @@ Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.diffuse = Vector4( color[0], color[1], color[2], color[3] );
+				mat.diffuse = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
 		}
 
 		prop = material->FindProperty( FbxSurfaceMaterial::sAmbient );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.ambient = Vector4( color[0], color[1], color[2], color[3] );
+				mat.ambient = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
 		}
 
 		prop = material->FindProperty( FbxSurfaceMaterial::sSpecular );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.specular = Vector4( color[0], color[1], color[2], color[3] );
+				mat.specular = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
 		}
 
 		prop = material->FindProperty( FbxSurfaceMaterial::sShininess );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.shininess = Vector4( color[0], color[1], color[2], color[3] );
+				mat.shininess = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
 		}
 
 		return  mat;
@@ -401,9 +402,10 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 
 				for ( j = 0; j < indexCount; j++ )
 				{
-						w = ( float ) weights[j];
+						w = static_cast< float >( weights[j] );
 						for ( k = 0; k < vtxIndexCount; k++ )
-								skin.weights[k][j] = w;
+								if ( vtxIndices[k] == indices[j] )
+										skin.weights[k][i] = w;
 
 				}//end for
 		}// end for
