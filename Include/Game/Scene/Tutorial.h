@@ -9,7 +9,7 @@
 namespace  Scene
 {
 
-		class  Tutorial:  public  _BaseScene
+		class  Tutorial:  public  BaseScene
 		{
 		public:
 				Tutorial();
@@ -19,7 +19,12 @@ namespace  Scene
 				//----------------------------------------------------------------------------------
 				// public methods
 				//----------------------------------------------------------------------------------
-
+				
+				static  Tutorial&  GetInstance()
+				{
+						static  Tutorial  instance;
+						return  instance;
+				}
 				void  Awake();
 				void  Init();
 				void  Update();

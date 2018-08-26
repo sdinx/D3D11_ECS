@@ -12,14 +12,16 @@
 #include  <StateTransition.h>
 
 
+#define  GameScene  _StateTransition<Scene::BaseScene>::GetInstance()
+
 namespace  Scene
 {
-		using  GameScene = _StateTransition<Scene::_BaseScene>;
 
-		class  _BaseScene
+		class  BaseScene
 		{
+
 		protected:
-				_BaseScene() :
+				BaseScene() :
 						m_isAwake( true ),
 						m_isInit( true )
 				{}

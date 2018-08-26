@@ -45,12 +45,13 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 				return;
 		}
 
-		// 三角化
-		FbxGeometryConverter  geometryConverter( s_pFbxManager );
-		geometryConverter.Triangulate( m_pScene, true );
+		// 三角化は処理が重いため予めしておく
+		// FbxGeometryConverter  geometryConverter( s_pFbxManager );
+		// geometryConverter.Triangulate( m_pScene, true );
 
 		INT  nMeshCount = m_pScene->GetMemberCount<FbxMesh>();
 		INT  nNodeCount = m_pScene->GetNodeCount();
+		INT  nMaterialCount = m_pScene->GetMaterialCount();
 		INT  i = 0;
 		FbxNode*  pNode = nullptr;
 		FbxMesh*  pMesh = nullptr;
@@ -67,6 +68,9 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 				m_modelContainer[i].normals = LoadNormals( pMesh, m_modelContainer[i].indices.size() );
 				m_modelContainer[i].texcoords = LoadTexcoords( pMesh, m_modelContainer[i].indices.size() );
 		}
+
+		//for ( i = 0; i < nMaterialCount; i++ )
+		//		m_materials[i] = LoadMaterial( m_pScene->GetMaterial( i ) );
 
 }
 
@@ -123,12 +127,12 @@ std::vector<Vector3>  FbxLoader::LoadNormals( FbxMesh*  pMesh, INT  size )
 		std::vector<Vector3>  normals;
 
 		INT  index = 0;
-		int  normalIndex = 0;
-		int  j = 0;
+		INT  normalIndex = 0;
+		INT  j = 0;
 		FbxVector4  normal;
 		INT*  indexList = pMesh->GetPolygonVertices();
-		int  elementCount = pMesh->GetElementNormalCount();// 何個の法線情報がセットされているか
-		int  polygonSize = 0;
+		INT  elementCount = pMesh->GetElementNormalCount();// 何個の法線情報がセットされているか
+		INT  polygonSize = 0;
 
 		assert( elementCount == 1 );// 1個の法線情報にしか対応しない
 
@@ -310,6 +314,101 @@ std::vector<INT>  FbxLoader::LoadIndices( FbxMesh*  pMesh )
 		}
 
 		return  indices;
+}
+
+
+Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
+{
+		Material  mat;
+		FbxVector4  color;
+		FbxProperty  prop;
+
+		prop = material->FindProperty( FbxSurfaceMaterial::sDiffuse );
+		if ( prop.IsValid() )
+		{
+				color = prop.Get<FbxVector4>();
+				mat.diffuse = Vector4( color[0], color[1], color[2], color[3] );
+		}
+
+		prop = material->FindProperty( FbxSurfaceMaterial::sAmbient );
+		if ( prop.IsValid() )
+		{
+				color = prop.Get<FbxVector4>();
+				mat.ambient = Vector4( color[0], color[1], color[2], color[3] );
+		}
+
+		prop = material->FindProperty( FbxSurfaceMaterial::sSpecular );
+		if ( prop.IsValid() )
+		{
+				color = prop.Get<FbxVector4>();
+				mat.specular = Vector4( color[0], color[1], color[2], color[3] );
+		}
+
+		prop = material->FindProperty( FbxSurfaceMaterial::sShininess );
+		if ( prop.IsValid() )
+		{
+				color = prop.Get<FbxVector4>();
+				mat.shininess = Vector4( color[0], color[1], color[2], color[3] );
+		}
+
+		return  mat;
+}
+
+
+SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
+{
+		SkinMesh  skin;
+
+		const  auto  skinCount = pMesh->GetDeformerCount( FbxDeformer::eSkin );
+		if ( skinCount == 0 )
+				return  skin;// スケルタルアニメーションなし
+
+		// 0番目のスキンデフォーマーを取得
+		FbxSkin*  fbxSkin = static_cast< FbxSkin* >( pMesh->GetDeformer( 0, FbxDeformer::eSkin ) );
+		
+		const  auto  clusterCount = fbxSkin->GetClusterCount();
+		if ( clusterCount == 0 )
+				return  skin;
+
+		skin.weights.resize( pMesh->GetPolygonVertexCount() );
+		for ( auto& weight : skin.weights )
+		{
+				// サイズ確保と初期値代入
+				weight.resize( clusterCount, 0.0f );
+		}// end for
+
+		skin.base_inverse.resize( clusterCount );
+
+		const  auto  vtxIndexCount = pMesh->GetPolygonVertexCount();
+		const  int*  vtxIndices = pMesh->GetPolygonVertices();
+
+		int  k = 0, j = 0;
+		int  indexCount = 0;
+		int*  indices = nullptr;
+		double*  weights = nullptr;
+		float  w = 0;
+		FbxCluster*  cluster = nullptr;
+
+		for ( int i = 0; i < clusterCount; i++ )
+		{
+				cluster = fbxSkin->GetCluster(i);
+
+				assert( cluster->GetLinkMode() == FbxCluster::eNormalize );
+
+				indexCount = cluster->GetControlPointIndicesCount();
+				indices = cluster->GetControlPointIndices();
+				weights = cluster->GetControlPointWeights();
+
+				for ( j = 0; j < indexCount; j++ )
+				{
+						w = ( float ) weights[j];
+						for ( k = 0; k < vtxIndexCount; k++ )
+								skin.weights[k][j] = w;
+
+				}//end for
+		}// end for
+
+		return  skin;
 }
 
 

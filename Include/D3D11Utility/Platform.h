@@ -117,6 +117,15 @@ namespace  D3D11Utility
 		using  Matrix4x4 = DirectX::XMFLOAT4X4;
 		using  Value = void*;// Žg—p‹ÖŽ~
 
+		struct  Material
+		{
+				Vector4  diffuse;
+				Vector4  ambient;
+				Vector4  emissive;
+				Vector4  specular;
+				Vector4  shininess;
+		};
+
 }// namespace D3D11Utility
 
 #endif // ! _INCLUDED_D3D11_UTILITY_PLATFORM_
