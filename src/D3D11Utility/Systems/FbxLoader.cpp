@@ -70,8 +70,9 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 				m_modelContainer[i].skinMeshes = LoadSkin( pMesh );
 		}
 
-		//for ( i = 0; i < nMaterialCount; i++ )
-		//		m_materials[i] = LoadMaterial( m_pScene->GetMaterial( i ) );
+		m_materials.resize( nMaterialCount );
+		for ( i = 0; i < nMaterialCount; i++ )
+				m_materials[i] = LoadMaterial( m_pScene->GetMaterial( i ) );
 
 }
 
@@ -419,6 +420,12 @@ ModelContainer  FbxLoader::LoadMesh( FbxScene*  pScene )
 		ModelContainer  modelMesh;
 
 		return  modelMesh;
+}
+
+
+bool  FbxLoader::SetAnimation( UINT  animationIndex, FbxTime&  fbxTime )
+{
+
 }
 
 

@@ -91,6 +91,8 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 		}
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
 
+		SetDiffuse( loader.GetMaterial( 0 ).diffuse );
+
 		// note: インデックスが正しく設定されていない?
 		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
 
@@ -135,10 +137,6 @@ void  Renderable::Rendering()const
 
 		if ( m_textureId != TEXTURE_ID_INVALID )
 				m_textureManager->SetTexture( m_textureId );
-		else
-		{
-				// テクスチャのNULL化
-		}// end else
 
 		m_pVertexShader->UpdateShader();
 		m_pPixelShader->UpdateShader();
@@ -175,9 +173,15 @@ void  Renderable::UpdateConstantBuffer( Matrix4x4  world )
 }
 
 
-void  Renderable::SetColor( Vector4  v4Color )
+void  Renderable::SetDiffuse( Vector4  v4Color )
 {
 		m_cbuffer.meshColor = v4Color;
+}
+
+
+void  Renderable::SetAmbient( Vector4  v4Color )
+{
+		//m_cbuffer.material.ambient = v4Color;
 }
 
 

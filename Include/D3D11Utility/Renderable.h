@@ -117,7 +117,8 @@ namespace  D3D11Utility
 				{
 						m_pPixelShader = pPixelShader;
 				}
-				void  SetColor( Vector4  v4Color );
+				void  SetDiffuse( Vector4  color );
+				void  SetAmbient( Vector4  color );
 				void  SetTextureId( Graphics::TextureId  textureId,  Systems::TextureManager*  textureManagerInstance = nullptr );
 		};
 

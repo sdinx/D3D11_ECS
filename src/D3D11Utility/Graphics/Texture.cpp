@@ -30,7 +30,7 @@ Texture::~Texture()
 void  Texture::SetTexture()
 {
 		pd3dDeviceContext->PSSetShaderResources( 0, 1, &m_shaderResourceView );
-		// pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
+		pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
 }// end SetTexture() : void
 
 

@@ -86,9 +86,9 @@ void  Tutorial::Awake()
 				cubeTrans->SetLocalPosition( Vector3( 3, 0, 0 ) );
 				cubeTrans->SetLocalEuler( 45, 45, 0 );
 				cubeTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
-				cubeRender->SetColor( Vector4( 1, 1, 0, 0 ) );
+				cubeRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				cubeRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				cubeRender->SetColor( Vector4( 1, 0.5f, 0.5f, 1 ) );
+				cubeRender->SetDiffuse( Vector4( 1, 0.5f, 0.5f, 1 ) );
 		}
 
 
@@ -107,10 +107,21 @@ void  Tutorial::Awake()
 				sphereTrans->SetPosition( Vector3( -3, 0, -3 ) );
 				sphereTrans->SetLocalEuler( 0, 0, 0 );
 				sphereTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
-				sphereRender->SetColor( Vector4( 1, 1, 0, 0 ) );
+				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				sphereRender->SetColor( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
+				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
 		}
+
+
+		/* Init Rifle */
+		static  const  EntityId  rifleId = pEntityManager->CreateEntity( "Rifle" );
+		Entity*  rifleEntity = pEntityManager->GetEntity( rifleId );
+		rifleEntity->SetTag( "Player" );
+		rifleEntity->AddComponent<Renderable>( "res/rifle.fbx" );
+		rifleEntity->AddComponent<Transform>();
+		Renderable*  rifleRender = rifleEntity->GetComponent<Renderable>();
+		rifleRender->SetVertexShader( vs );
+		rifleRender->SetPixelShader( ps );
 
 
 		/* Init Player */
@@ -125,13 +136,13 @@ void  Tutorial::Awake()
 		playerRender->SetPixelShader( ps );
 		{/* Parameter */
 				playerRender->SetTextureId( texId, pTextureManager.get() );
-				playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
+				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetScale();
 				Vector3&  pos2 = trans2->GetPosition();
 				pos2.y -= 3.0f;
 				pos2.z += 5.0f;
-				scale2 = Vector3( .05f, .05f, .05f );
+				scale2 = Vector3( .03f, .03f, .03f );
 		}
 
 
