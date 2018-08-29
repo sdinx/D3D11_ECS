@@ -1,23 +1,14 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
 #include  <Game\Scene\Tutorial.h>
-#include  <D3D11Utility\Camera.h>
+#include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Transform.h>
 #include  <DIKeyboard.h>
 #include  <XInputController.h>
 
-#include  <D3D11Utility\Entity.h>
-#include  <D3D11Utility\Systems\IDirect3DRenderer.h>
-#include  <D3D11Utility\Systems\ComponentManager.h>
-#include  <D3D11Utility\Systems\EntityManager.h>
-#include  <D3D11Utility\Systems\SystemManager.h>
-#include  <D3D11Utility\Systems\TextureManager.h>
-#include  <D3D11Utility\Systems\FbxLoader.h>
-#include  <D3D11Utility\Systems\DebugSystem.h>
-#include  <D3D11Utility\Systems\Timer.h>
+#include <btBulletDynamicsCommon.h>
 
 
 //----------------------------------------------------------------------------------
@@ -28,15 +19,6 @@ using  namespace  Scene;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
 
-//----------------------------------------------------------------------------------
-// global variables
-//----------------------------------------------------------------------------------
-static  std::unique_ptr<ComponentManager>  componentManager;
-static  std::unique_ptr<IDirect3DRenderer>  pd3dRenderer;
-static  std::unique_ptr<EntityManager>  pEntityManager;
-static  std::unique_ptr<SystemManager>  pSystemManager;
-static  std::unique_ptr<TextureManager>  pTextureManager;
-static  Camera*  s_camera = nullptr;
 
 Tutorial::Tutorial()
 {
@@ -50,29 +32,81 @@ Tutorial::~Tutorial()
 }
 
 
+void  Tutorial::InputFPSCamera()
+{
+		auto&  pos = m_FPSCamera->GetComponent<Camera>()->GetTarget();
+		auto&  move = m_FPSCamera->GetComponent<Camera>()->GetPosition();
+		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
+		static  bool  isMouse = false;
+		float  dx = 0.0f;
+		float  dy = 0.0f;
+
+		auto  mx = Input::MouseAxisX();
+		auto  my = Input::MouseAxisY();
+
+		dx = ( float ) mx / 10.0f;
+		dy = ( float ) my / 10.0f;
+
+		if ( isMouse )
+				if ( mx != 0.0f || my != 0.0f )
+				{
+						m_FPSCamera->SetLookRotation( dy, dx, 0.0f );
+				}
+
+		if ( Input::KeyTrigger( DIK_RETURN ) )
+		{
+				isMouse = !isMouse;
+				ShowCursor( isMouse );
+		}
+
+		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
+		{
+				m_FPSCamera->SetTranslation( Vector3( 0, 0, 0.02f ) );
+		}
+		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
+		{
+				m_FPSCamera->SetTranslation( Vector3( 0, 0, -0.02f ) );
+		}
+
+		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
+		{
+				m_FPSCamera->SetTranslation( Vector3( -0.02f, 0, 0 ) );
+		}
+		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
+		{
+				m_FPSCamera->SetTranslation( Vector3( 0.02f, 0, 0 ) );
+		}
+
+		m_FPSCamera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
+
+		if ( isMouse )
+				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
+}
+
+
 void  Tutorial::Awake()
 {
-		componentManager.reset( new  ComponentManager() );
-		pd3dRenderer.reset( new  IDirect3DRenderer( componentManager.get() ) );
-		pSystemManager.reset( new  SystemManager( componentManager.get() ) );
-		pEntityManager.reset( new  EntityManager( componentManager.get() ) );
-		pTextureManager.reset( new  TextureManager );
-		pSystemManager->AddSystem<DebugSystem>();
+		m_pComponentManager.reset( new  ComponentManager() );
+		m_pd3dRenderer.reset( new  IDirect3DRenderer( m_pComponentManager.get() ) );
+		m_pSystemManager.reset( new  SystemManager( m_pComponentManager.get() ) );
+		m_pEntityManager.reset( new  EntityManager( m_pComponentManager.get() ) );
+		m_pTextureManager.reset( new  TextureManager );
+		m_pSystemManager->AddSystem<DebugSystem>();
 
-		Graphics::TextureId  texId = pTextureManager->CreateTexture( L"res/0.png" );
-		Graphics::TextureId  texRifleDiffuseId = pTextureManager->CreateTexture( L"res/rifle_diff.png" );
+		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/0.png" );
+		Graphics::TextureId  texRifleDiffuseId = m_pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 
-		Graphics::VertexShader*  vs = pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
-		//Graphics::ShaderId  gsId = pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
-		Graphics::PixelShader*  ps = pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
+		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
+		//Graphics::ShaderId  gsId = m_pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
+		Graphics::PixelShader*  ps = m_pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
 
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
 
 
 		/* Init Cube */
-		static  const  EntityId  cubeId = pEntityManager->CreateEntity( "Cube" );
-		Entity*  cubeEntity = pEntityManager->GetEntity( cubeId );
+		static  const  EntityId  cubeId = m_pEntityManager->CreateEntity( "Cube" );
+		Entity*  cubeEntity = m_pEntityManager->GetEntity( cubeId );
 		cubeEntity->AddComponent<Renderable>( "res/cube.fbx" );
 		cubeEntity->AddComponent<Transform>();
 		Renderable*  cubeRender = cubeEntity->GetComponent<Renderable>();
@@ -92,8 +126,8 @@ void  Tutorial::Awake()
 
 
 		/* Init Sphere */
-		static  const  EntityId  sphereId = pEntityManager->CreateEntity( "Sphere" );
-		Entity*  sphereEntity = pEntityManager->GetEntity( sphereId );
+		static  const  EntityId  sphereId = m_pEntityManager->CreateEntity( "Sphere" );
+		Entity*  sphereEntity = m_pEntityManager->GetEntity( sphereId );
 		sphereEntity->AddComponent<Renderable>( "res/sphere.fbx" );
 		sphereEntity->AddComponent<Transform>();
 		Renderable*  sphereRender = sphereEntity->GetComponent<Renderable>();
@@ -113,8 +147,8 @@ void  Tutorial::Awake()
 
 
 		/* Init Rifle */
-		static  const  EntityId  rifleId = pEntityManager->CreateEntity( "Rifle" );
-		Entity*  rifleEntity = pEntityManager->GetEntity( rifleId );
+		static  const  EntityId  rifleId = m_pEntityManager->CreateEntity( "Rifle" );
+		Entity*  rifleEntity = m_pEntityManager->GetEntity( rifleId );
 		rifleEntity->SetTag( "Player" );
 		rifleEntity->AddComponent<Renderable>( "res/rifle.fbx" );
 		rifleEntity->AddComponent<Transform>();
@@ -123,7 +157,7 @@ void  Tutorial::Awake()
 		{
 		rifleRender->SetVertexShader( vs );
 		rifleRender->SetPixelShader( ps );
-		rifleRender->SetTextureId( texRifleDiffuseId, pTextureManager.get() );
+		rifleRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
 		rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
 		rifleTrans->SetLocalEuler( 270, 180, 0 );
 		rifleTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
@@ -132,8 +166,8 @@ void  Tutorial::Awake()
 
 
 		/* Init Player */
-		static  const  EntityId  playerId = pEntityManager->CreateEntity( "Player" );
-		Entity*  playerEntity = pEntityManager->GetEntity( playerId );
+		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
+		Entity*  playerEntity = m_pEntityManager->GetEntity( playerId );
 		playerEntity->SetTag( "Player" );
 		playerEntity->AddComponent<Renderable>( "humanoid.fbx" );
 		playerEntity->AddComponent<Transform>();
@@ -142,7 +176,7 @@ void  Tutorial::Awake()
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( ps );
 		{/* Parameter */
-				playerRender->SetTextureId( texId, pTextureManager.get() );
+				playerRender->SetTextureId( texId, m_pTextureManager.get() );
 				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetLocalScale();
@@ -156,8 +190,8 @@ void  Tutorial::Awake()
 
 
 		/* Init Camera */
-		static  const  EntityId  cameraId = pEntityManager->CreateEntity( "Camera" );
-		Entity*  cameraEntity = pEntityManager->GetEntity( cameraId );
+		static  const  EntityId  cameraId = m_pEntityManager->CreateEntity( "Camera" );
+		Entity*  cameraEntity = m_pEntityManager->GetEntity( cameraId );
 		cameraEntity->AddComponent<Camera>();
 		cameraEntity->AddComponent<Transform>();
 		Camera*  cam = cameraEntity->GetComponent<Camera>();
@@ -167,7 +201,7 @@ void  Tutorial::Awake()
 				cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 		}
 
-		s_camera = cam;
+		m_FPSCamera = cam;
 
 		GameScene.SetMethodState( &Scene::BaseScene::Init );
 }
@@ -189,51 +223,12 @@ void  Tutorial::Update()
 		Input::UpdateMouse();
 
 		/* Update systems */
-		pSystemManager->Update( 0 );
-		pd3dRenderer->Rendering();
+		m_pSystemManager->Update( 0 );
+		m_pd3dRenderer->Rendering();
 
-		auto&  pos = s_camera->GetComponent<Camera>()->GetTarget();
-		auto&  move = s_camera->GetComponent<Camera>()->GetPosition();
-		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
-		static  bool  isMouse = false;
-		float  dx = 0.0f;
-		float  dy = 0.0f;
+		InputFPSCamera();
 
-		auto  mx = Input::MouseAxisX();
-		auto  my = Input::MouseAxisY();
 
-		dx = ( float ) mx / 10.0f;
-		dy = ( float ) my / 10.0f;
-
-		if ( isMouse )
-				if ( mx != 0.0f || my != 0.0f )
-				{
-						s_camera->SetLookRotation( dy, dx, 0.0f );
-				}
-
-		if ( Input::KeyTrigger( DIK_RETURN ) )
-		{
-				isMouse = !isMouse;
-				ShowCursor( isMouse );
-		}
-
-		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
-		{
-				s_camera->SetTranslation( Vector3( 0, 0, 0.02f ) );
-		}
-		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
-		{
-				s_camera->SetTranslation( Vector3( 0, 0, -0.02f ) );
-		}
-
-		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
-		{
-				s_camera->SetTranslation( Vector3( -0.02f, 0, 0 ) );
-		}
-		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
-		{
-				s_camera->SetTranslation( Vector3( 0.02f, 0, 0 ) );
-		}
 
 		if ( Input::KeyPress( DIK_L ) )
 		{
@@ -244,8 +239,4 @@ void  Tutorial::Update()
 
 		}
 
-		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
-
-		if ( isMouse )
-				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 }

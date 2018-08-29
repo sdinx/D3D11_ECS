@@ -52,6 +52,12 @@
     <Filter Include="Source\Game\Scene">
       <UniqueIdentifier>{44841112-3327-4e5e-aa40-11e68c7ca5a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Manager">
+      <UniqueIdentifier>{024021d8-ed8c-4494-9eec-9324aa4f93ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Game\Manager">
+      <UniqueIdentifier>{0bc716e1-2e99-4bb8-b499-fb7c5067062d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp">
@@ -149,6 +155,18 @@
     </ClCompile>
     <ClCompile Include="src\Game\Scene\Tutorial.cpp">
       <Filter>Source\Game\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Bullet.cpp">
+      <Filter>Source\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Manager\BulletManager.cpp">
+      <Filter>Source\Game\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GameObject.cpp">
+      <Filter>Source\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\FPSGun.cpp">
+      <Filter>Source\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +313,21 @@
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Light.h">
       <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Game\Bullet.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Game\Manager\BulletManager.h">
+      <Filter>Game\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Game\GameObject.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\Game\FPSGun.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\SystemInclude.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

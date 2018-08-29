@@ -1,18 +1,30 @@
 //-----------------------------------------------------------------------------------
 // CBPerFrame constant buffer
 //-----------------------------------------------------------------------------------
-cbuffer CBuffer : register( b0 )
+cbuffer  CBuffer : register( b0 )
 {
 		float4x4  view;
 		float4x4  proj;
 		float4  light;
 };
 
-cbuffer CObject : register( b1 )
+cbuffer  CObject : register( b1 )
 {
 		float4x4  world;
 		float4  meshColor;
 };
+/*
+cbuffer  CDirectionLight : register ( b2 )
+{
+		float4  dir;
+		float4  color;
+};
+
+cbuffer  CPointLight : register ( b3 )
+{
+		float3  pos;
+		float4  color;
+};*/
 
 //-----------------------------------------------------------------------------------
 // Texture variables

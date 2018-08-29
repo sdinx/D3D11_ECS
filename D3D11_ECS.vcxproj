@@ -59,6 +59,10 @@
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\GameLoop.cpp" />
     <ClCompile Include="src\GameUtility.cpp" />
+    <ClCompile Include="src\Game\Bullet.cpp" />
+    <ClCompile Include="src\Game\FPSGun.cpp" />
+    <ClCompile Include="src\Game\GameObject.cpp" />
+    <ClCompile Include="src\Game\Manager\BulletManager.cpp" />
     <ClCompile Include="src\Game\Scene\Tutorial.cpp" />
     <ClCompile Include="src\XInputController.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -120,6 +124,7 @@
     <ClInclude Include="Include\D3D11Utility\Systems\PhysicalSystem.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\SystemInclude.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
@@ -128,6 +133,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Include\GameUtility.h" />
+    <ClInclude Include="Include\Game\Bullet.h" />
+    <ClInclude Include="Include\Game\FPSGun.h" />
+    <ClInclude Include="Include\Game\GameObject.h" />
+    <ClInclude Include="Include\Game\Manager\BulletManager.h" />
     <ClInclude Include="Include\Game\Scene\BaseScene.h" />
     <ClInclude Include="Include\Game\Scene\Tutorial.h" />
     <ClInclude Include="Include\IGraphicsRenderer.h" />
@@ -212,8 +221,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(LocalDebuggerWorkingDirectory)bullet3\src;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LocalDebuggerWorkingDirectory)bullet3\bin;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

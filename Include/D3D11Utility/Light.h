@@ -17,6 +17,17 @@ namespace  D3D11Utility
 
 		class  Light
 		{
+				struct  CBufferDirectionLight
+				{
+						Vector4  direction;
+						Vector4  color;
+				};
+
+				struct  CBufferPointLight
+				{
+						Vector3  position;
+						Vector4  color;
+				};
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -32,6 +43,13 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
+				static  const  UINT  s_nCBDirectionSlot = 2;
+				static  const  UINT  s_nCBPointSlot = 3;
+				static  ID3D11Buffer  *s_pConstantBufferDirection;
+				static  ID3D11Buffer  *s_pConstantBufferPoint;
+
+				CBufferDirectionLight  m_cbufferDirection;
+				CBufferPointLight  m_cbufferPoint;
 
 		public:
 				//----------------------------------------------------------------------------------
