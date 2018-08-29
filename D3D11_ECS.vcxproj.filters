@@ -293,6 +293,9 @@
     <ClInclude Include="Include\Game\Scene\BaseScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Light.h">
+      <Filter>Header\D3D11Utility\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ChangeLog.txt" />

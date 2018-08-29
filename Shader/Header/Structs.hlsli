@@ -25,9 +25,9 @@ SamplerState  diffuseTextureSampler : register( s0 );
 //-----------------------------------------------------------------------------------
 struct VSInput
 {
-		float4  position		: POSITION;
-		float3  normal			: NORMAL;
-		float2  texcoord		: TEXCOORD0;
+		float4  position				: POSITION;
+		float3  normal					: NORMAL;
+		float2  texcoord				: TEXCOORD0;
 };
 
 //-----------------------------------------------------------------------------------
@@ -35,9 +35,9 @@ struct VSInput
 //-----------------------------------------------------------------------------------
 struct GSPSInput
 {
-		float4  position		: SV_POSITION;
-		float3  normal			: NORMAL;
-		float2  texcoord		: TEXCOORD0;
+		float4  position				: SV_POSITION;
+		float3  normal					: NORMAL;
+		float2  texcoord				: TEXCOORD0;
 };
 
 

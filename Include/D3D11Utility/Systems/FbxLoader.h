@@ -115,7 +115,7 @@ namespace  D3D11Utility
 						Material  LoadMaterial( FbxSurfaceMaterial*  material );
 						SkinMesh  LoadSkin( FbxMesh*  pMesh );
 						ModelContainer  LoadMesh( FbxScene*  pScene );
-						bool  SetAnimation( UINT  animationIndex, FbxTime&  fbxTime );
+						ModelContainer  SetAnimation( UINT  meshIndex, UINT  animationIndex, FbxTime&  fbxTime );
 						void  Release();
 
 				};// class FbxLoader

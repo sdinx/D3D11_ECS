@@ -37,8 +37,6 @@ static  std::unique_ptr<EntityManager>  pEntityManager;
 static  std::unique_ptr<SystemManager>  pSystemManager;
 static  std::unique_ptr<TextureManager>  pTextureManager;
 static  Camera*  s_camera = nullptr;
-static  Transform*  s_trans[3] = { nullptr };
-static  UINT  numTrans = 0;
 
 Tutorial::Tutorial()
 {
@@ -62,6 +60,7 @@ void  Tutorial::Awake()
 		pSystemManager->AddSystem<DebugSystem>();
 
 		Graphics::TextureId  texId = pTextureManager->CreateTexture( L"res/0.png" );
+		Graphics::TextureId  texRifleDiffuseId = pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 
 		Graphics::VertexShader*  vs = pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
 		//Graphics::ShaderId  gsId = pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
@@ -82,7 +81,7 @@ void  Tutorial::Awake()
 		cubeRender->SetPixelShader( ps );
 		{/* Parameter */
 				cubeTrans->SetPosition( Vector3( 0, 1.0f, 6.0f ) );
-				cubeTrans->SetLocalScale( Vector3( 50, 50, 50 ) );
+				cubeTrans->SetLocalScale( Vector3( 1, 1, 1 ) );
 				cubeTrans->SetLocalPosition( Vector3( 3, 0, 0 ) );
 				cubeTrans->SetLocalEuler( 45, 45, 0 );
 				cubeTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
@@ -103,7 +102,7 @@ void  Tutorial::Awake()
 		sphereRender->SetPixelShader( ps );
 		{/* Parameter */
 				sphereTrans->SetPosition( Vector3( 0, 1.0f, 6.0f ) );
-				sphereTrans->SetLocalScale( Vector3( 50, 50, 50 ) );
+				sphereTrans->SetLocalScale( Vector3( 1, 1, 1 ) );
 				sphereTrans->SetPosition( Vector3( -3, 0, -3 ) );
 				sphereTrans->SetLocalEuler( 0, 0, 0 );
 				sphereTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
@@ -120,8 +119,16 @@ void  Tutorial::Awake()
 		rifleEntity->AddComponent<Renderable>( "res/rifle.fbx" );
 		rifleEntity->AddComponent<Transform>();
 		Renderable*  rifleRender = rifleEntity->GetComponent<Renderable>();
+		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
+		{
 		rifleRender->SetVertexShader( vs );
 		rifleRender->SetPixelShader( ps );
+		rifleRender->SetTextureId( texRifleDiffuseId, pTextureManager.get() );
+		rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
+		rifleTrans->SetLocalEuler( 270, 180, 0 );
+		rifleTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
+		}
+
 
 
 		/* Init Player */
@@ -138,11 +145,13 @@ void  Tutorial::Awake()
 				playerRender->SetTextureId( texId, pTextureManager.get() );
 				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				Vector3&  scale2 = trans2->GetScale();
+				Vector3&  scale2 = trans2->GetLocalScale();
 				Vector3&  pos2 = trans2->GetPosition();
 				pos2.y -= 3.0f;
 				pos2.z += 5.0f;
 				scale2 = Vector3( .03f, .03f, .03f );
+				trans2->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
+				rifleTrans->SetParent( trans2 );
 		}
 
 
@@ -159,13 +168,6 @@ void  Tutorial::Awake()
 		}
 
 		s_camera = cam;
-		s_trans[0] = trans2;
-		s_trans[1] = cubeTrans;
-		s_trans[2] = sphereTrans;
-
-		// eŽqŠÖŒW‚ÌÝ’è
-		cubeTrans->SetParent( s_trans[0] );
-		sphereTrans->SetParent( cubeTrans );
 
 		GameScene.SetMethodState( &Scene::BaseScene::Init );
 }
@@ -235,63 +237,12 @@ void  Tutorial::Update()
 
 		if ( Input::KeyPress( DIK_L ) )
 		{
-				Vector3&  objPos = s_trans[numTrans]->GetLocalPosition();
-				if ( Input::KeyPress( DIK_LEFT ) )
-						objPos.x += -0.05f;
-				else if ( Input::KeyPress( DIK_RIGHT ) )
-						objPos.x += 0.05f;
-				if ( Input::KeyPress( DIK_UP ) )
-						objPos.z += 0.05f;
-				else if ( Input::KeyPress( DIK_DOWN ) )
-						objPos.z += -0.05f;
+
 		}
 		else
 		{
-				Vector3&  objPos = s_trans[numTrans]->GetTranslation();
-				if ( Input::KeyPress( DIK_LEFT ) )
-						objPos.x += -0.005f;
-				else if ( Input::KeyPress( DIK_RIGHT ) )
-						objPos.x += 0.005f;
-				if ( Input::KeyPress( DIK_UP ) )
-						objPos.z += 0.005f;
-				else if ( Input::KeyPress( DIK_DOWN ) )
-						objPos.z += -0.005f;
-		}
 
-		if ( Input::KeyPress( DIK_L ) )
-		{
-				Vector3&  rotate = s_trans[numTrans]->GetLocalEuler();
-				if ( Input::KeyPress( DIK_Q ) )
-				{
-						rotate.y += 1.0f;
-				}
-				else if ( Input::KeyPress( DIK_E ) )
-				{
-						rotate.y += -1.0f;
-				}
 		}
-		else
-		{
-				Vector3&  rotate = s_trans[numTrans]->GetEuler();
-				if ( Input::KeyPress( DIK_Q ) )
-				{
-						rotate.y += 0.1f;
-				}
-				else if ( Input::KeyPress( DIK_E ) )
-				{
-						rotate.y += -0.1f;
-				}
-		}
-
-		if ( Input::KeyTrigger( DIK_1 ) )
-				numTrans = 0;
-		if ( Input::KeyTrigger( DIK_2 ) )
-				numTrans = 1;
-		if ( Input::KeyTrigger( DIK_3 ) )
-				numTrans = 2;
-
-		for ( auto trans : s_trans )
-				trans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 
 		s_camera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 

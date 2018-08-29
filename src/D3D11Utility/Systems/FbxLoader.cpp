@@ -234,6 +234,8 @@ std::vector<Vector2>  FbxLoader::LoadTexcoords( FbxMesh*  pMesh, INT  size )
 		INT  indexByPolygonVertex = 0;
 		INT  j = 0;
 
+
+
 		FbxGeometryElementUV* element = pMesh->GetElementUV( uvNo );// UVセットを取得.
 		FbxLayerElement::EMappingMode mappingMode = element->GetMappingMode();// マッピングモードを取得.
 		FbxLayerElement::EReferenceMode referenceMode = element->GetReferenceMode();	// リファレンスモードを取得	.
@@ -423,9 +425,25 @@ ModelContainer  FbxLoader::LoadMesh( FbxScene*  pScene )
 }
 
 
-bool  FbxLoader::SetAnimation( UINT  animationIndex, FbxTime&  fbxTime )
+ModelContainer  FbxLoader::SetAnimation(  UINT  meshIndex, UINT  animationIndex, FbxTime&  fbxTime )
 {
+		FbxSkin*  fbxSkin = static_cast< FbxSkin* >( m_modelContainer[meshIndex].pMesh->GetDeformer( 0, FbxDeformer::eSkin ) );
+		const  int  clusterCount = fbxSkin->GetClusterCount();
+		FbxCluster*  cluster = nullptr;
+		FbxNode*  pNode = nullptr;
+		FbxAMatrix  mtxClusterGlobalCurrentPosition;
 
+		for ( int i = 0; i < clusterCount; i++ )
+		{
+				cluster = fbxSkin->GetCluster( i );
+
+				pNode = cluster->GetLink();
+				mtxClusterGlobalCurrentPosition = pNode->EvaluateGlobalTransform( fbxTime );
+
+
+		}
+
+		return  ModelContainer();
 }
 
 
