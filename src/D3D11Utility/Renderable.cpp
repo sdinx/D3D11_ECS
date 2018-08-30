@@ -35,7 +35,7 @@ Renderable::Renderable() :
 }
 
 
-Renderable::Renderable( PRIMITIVE_TYPE  primitiveType ) :
+Renderable::Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr )
@@ -55,13 +55,13 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType ) :
 
 		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
 		// カリング設定
-		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_BACK, D3D11_FILL_SOLID );
+		m_pVertexBuffer->CreateRasterizer( cullMode, fillMode );
 
 		delete[ ]  vertices;
 }
 
 
-Renderable::Renderable( LPCSTR  fbxString ) :
+Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr )
@@ -94,11 +94,17 @@ Renderable::Renderable( LPCSTR  fbxString ) :
 		SetDiffuse( loader.GetMaterial( 0 ).diffuse );
 
 		// note: インデックスが正しく設定されていない?
-		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
+		m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
 
-		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_FRONT, D3D11_FILL_SOLID );
+		m_pVertexBuffer->CreateRasterizer( cullMode, D3D11_FILL_WIREFRAME );
 
 		delete[ ]  vertices;
+}
+
+
+Renderable::~Renderable()
+{
+		Release();
 }
 
 
@@ -192,4 +198,10 @@ void  Renderable::SetTextureId( Graphics::TextureId  textureId, Systems::Texture
 
 
 		m_textureId = textureId;
+}
+
+
+void  Renderable::Release()
+{
+		SafeRelease( m_pVertexBuffer );
 }

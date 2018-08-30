@@ -69,6 +69,6 @@ float4 PSFunc( GSPSInput input ) : SV_TARGET
 		float3  nor = normalize( input.normal );
 		float3  diffuse = NormalizedLambert( float4( 0.5f, 0.5f, 0.5f, 1.0f )*texel.rgb, light, nor );
 
-		return  color;
-		//return  float4( diffuse, 1.0f );
+		//return  color;
+		return  float4( diffuse, 1.0f );
 }

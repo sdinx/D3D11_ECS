@@ -52,7 +52,11 @@ void  ComponentManager::Release()
 		m_entityComponetIdTable.clear();
 
 		for ( auto componentTable : m_componentTable )
+		{
+				for ( auto component : componentTable )
+						component->Release();
 				componentTable.clear();
+		}
 
 		m_componentTable.clear();
 		m_componentTable.shrink_to_fit();

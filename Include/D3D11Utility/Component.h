@@ -34,7 +34,9 @@ namespace  D3D11Utility
 				Component()
 				{}
 				virtual  ~Component()
-				{}
+				{
+						Release();
+				}
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -63,7 +65,8 @@ namespace  D3D11Utility
 				//virtual  void  FrameUpdate() = 0;// フレーム毎更新
 				virtual  void  Update() = 0;
 				//virtual  void  LateUpdate() = 0;
-				virtual  void  Rendering()const {};
+				virtual  void  Rendering()const {}
+				virtual  void  Release() {}
 
 		public:
 				//----------------------------------------------------------------------------------
