@@ -45,6 +45,7 @@ namespace  D3D11Utility
 
 						BOOL  m_isActive;
 						ComponentManager*  m_pComponentManager;
+						EntityManager*  m_pEntityManager;
 
 				public:
 						//----------------------------------------------------------------------------------

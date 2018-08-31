@@ -356,7 +356,7 @@ public:
 	}
 	btQuaternion getOrientation() const;
 	
-	const btTransform&  getCenterOfMassTransform() const { 
+	btTransform&  getCenterOfMassTransform()  { 
 		return m_worldTransform; 
 	}
 	const btVector3&   getLinearVelocity() const { 

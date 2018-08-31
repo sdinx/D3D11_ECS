@@ -11,8 +11,9 @@ using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 
 
-SystemManager::SystemManager( ComponentManager*  pComponentManagerInstance ) :
-		m_pComponentManager( pComponentManagerInstance )
+SystemManager::SystemManager( ComponentManager*  pComponentManagerInstance, EntityManager*  pEntityManager ) :
+		m_pComponentManager( pComponentManagerInstance ),
+		m_pEntityManager( pEntityManager )
 {
 
 }

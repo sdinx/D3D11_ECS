@@ -42,7 +42,7 @@ namespace  D3D11Utility
 
 				Renderable();
 				Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode = D3D11_CULL_BACK, D3D11_FILL_MODE  fillMode = D3D11_FILL_SOLID );
-				Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode = D3D11_CULL_BACK, D3D11_FILL_MODE  fillMode = D3D11_FILL_SOLID );
+				Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode = D3D11_CULL_FRONT, D3D11_FILL_MODE  fillMode = D3D11_FILL_SOLID );
 				~Renderable();
 
 				enum  MSG_RENDERABLE

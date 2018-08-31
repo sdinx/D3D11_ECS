@@ -46,7 +46,7 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode
 		VERTEX*  vertices;
 		INT* indices;
 		// 定数指定でプリミティブの頂点を生成
-		UINT  numVertices = CreatePrimitive( PRMTV_CUBE, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices, indices );
+		UINT  numVertices = CreatePrimitive( primitiveType, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices, indices );
 		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
 
 		/* インデックス頂点の設定 */
@@ -89,14 +89,22 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 				vertices[i].texcoord = texcoord;
 				i++;
 		}
+
+		i = 0;
+		for ( auto normal : container.normals )
+		{
+				vertices[i].normal = normal;
+				i++;
+		}
+
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
 
 		SetDiffuse( loader.GetMaterial( 0 ).diffuse );
 
 		// note: インデックスが正しく設定されていない?
-		m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
+		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
 
-		m_pVertexBuffer->CreateRasterizer( cullMode, D3D11_FILL_WIREFRAME );
+		m_pVertexBuffer->CreateRasterizer( cullMode, fillMode );
 
 		delete[ ]  vertices;
 }

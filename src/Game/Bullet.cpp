@@ -25,10 +25,9 @@ ComponentId  Bullet::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 
 
 Bullet::Bullet( const  Transform  spawnTransform, const  float  fBulletSpeed ) :
-		m_transform( spawnTransform ),
 		m_fBulletSpeed( fBulletSpeed )
 {
-
+		m_transform = spawnTransform;
 }
 
 

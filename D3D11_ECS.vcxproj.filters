@@ -338,6 +338,9 @@
     <FxCompile Include="Shader\Default.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Shader\Smoothing.hlsl">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Header\Structs.hlsli">

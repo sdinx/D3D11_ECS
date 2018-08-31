@@ -34,8 +34,8 @@ namespace  D3D11Utility
 
 				static  ComponentId  STATIC_COMPONENT_ID;
 
-				Transform  m_transform;
-				float  m_fBulletSpeed;
+				FLOAT  m_fBulletSpeed;
+				UINT  m_nOwner;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -73,10 +73,6 @@ namespace  D3D11Utility
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
 				{}
 				void  Update();
-				Transform&  GetTransform()
-				{
-						return  m_transform;
-				}
 
 		};// class Bullet
 

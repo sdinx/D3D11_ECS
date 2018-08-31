@@ -196,7 +196,7 @@ namespace  D3D11Utility
 
 								if ( componentId == STATIC_ID_INVALID )
 								{
-										std::cout << "<ComponentManager> GetComponents failed." << std::endl;
+										return  std::vector<Component*>();
 								}
 
 								return  m_componentTable[componentId];

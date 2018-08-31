@@ -14,6 +14,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility/Systems/ISystem.h>
+#include  <D3D11Utility\Transform.h>
 
 
 namespace  D3D11Utility
@@ -28,7 +29,7 @@ namespace  D3D11Utility
 						// other
 						//----------------------------------------------------------------------------------
 
-						BulletManager();
+						BulletManager( const  Entity*  bulletOriginal );
 						~BulletManager();
 
 				private:
@@ -37,6 +38,8 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						static  SystemId  STATIC_SYSTEM_ID;
+
+						const  Entity*  m_bulletOriginal;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -65,12 +68,17 @@ namespace  D3D11Utility
 										STATIC_SYSTEM_ID = systemId;
 						}
 
+						/* virtual */
 						SystemId  GetSystemId()const
 						{
 								return  STATIC_SYSTEM_ID;
 						}
 						void  Update( FLOAT  ms );
 						void  Release();
+
+						/* original */
+						void  CreateBullet( const  Transform  spawnTransform, const  float  fBulletSpeed );
+						void  CreateBullet( const  Vector3  spawnPosition,  const  Vector3  spawnRotate, const  float  fBulletSpeed );
 
 				};// class BulletManager
 

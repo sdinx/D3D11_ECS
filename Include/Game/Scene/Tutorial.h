@@ -56,6 +56,7 @@ namespace  Scene
 				void  Awake();
 				void  Init();
 				void  Update();
+				void  Release();
 
 		};// class Tutorial
 

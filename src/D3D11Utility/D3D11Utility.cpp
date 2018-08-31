@@ -347,11 +347,18 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
 						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
 
-
 						ppVertices[0].texcoord = Vector2( 0, 0 );
 						ppVertices[1].texcoord = Vector2( 1, 0 );
 						ppVertices[2].texcoord = Vector2( 1, 1 );
 						ppVertices[3].texcoord = Vector2( 0, 1 );
+
+						pIndices = new INT[6];
+						pIndices[0] = 0;
+						pIndices[1] = 1;
+						pIndices[2] = 2;
+						pIndices[3] = 2;
+						pIndices[4] = 3;
+						pIndices[5] = 0;
 
 				}// end case PRMTV_SPHERE
 				break;

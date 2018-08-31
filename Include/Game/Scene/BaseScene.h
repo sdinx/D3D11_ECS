@@ -42,6 +42,7 @@ namespace  Scene
 				virtual  void  Awake() = 0;
 				virtual  void  Init() = 0;
 				virtual  void  Update() = 0;
+				virtual  void  Release() = 0;
 
 		};// class _BaseScene
 

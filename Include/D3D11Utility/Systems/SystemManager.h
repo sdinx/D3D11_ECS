@@ -31,7 +31,7 @@ namespace  D3D11Utility
 						// other
 						//----------------------------------------------------------------------------------
 
-						SystemManager( ComponentManager*  pComponentManagerInstance );
+						SystemManager( ComponentManager*  pComponentManagerInstance, EntityManager*  pEntityManager );
 						virtual  ~SystemManager();
 
 				private:
@@ -40,6 +40,7 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						ComponentManager*  m_pComponentManager;
+						EntityManager*  m_pEntityManager;
 						std::list<ISystem*>  m_systemList;
 
 				public:
@@ -77,6 +78,7 @@ namespace  D3D11Utility
 								m_systemList.push_back( new  T( std::forward<P>( param )... ) );
 								T*  system = dynamic_cast< T* >( m_systemList.back() );
 								system->m_pComponentManager = m_pComponentManager;
+								system->m_pEntityManager = m_pEntityManager;
 
 								return  system;
 						}
