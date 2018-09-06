@@ -34,5 +34,9 @@ void  SystemManager::Update( float  ms )
 
 void  SystemManager::Release()
 {
+		for ( auto system : m_systemList )
+		{
+				system->Release();
+		}
 		m_systemList.clear();
 }

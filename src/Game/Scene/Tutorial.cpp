@@ -6,6 +6,7 @@
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Transform.h>
+#include  <D3D11Utility\Systems\SystemInclude.h>
 #include  <DIKeyboard.h>
 #include  <XInputController.h>
 
@@ -32,7 +33,7 @@ using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
 
 
-btDynamicsWorld* g_pDynamicsWorld = nullptr;
+BulletEngine*  btEngine = nullptr;
 btRigidBody* g_pSphereBody = nullptr;
 btRigidBody* g_pRBGround = nullptr;
 btRigidBody* g_pHumanoid = nullptr;
@@ -43,27 +44,14 @@ Transform*  s_playerTrans = nullptr;
 
 void  InitBullet()
 {
-		btVector3  pos = btVector3( -1.0, 0.5, 0 );
-		btScalar  mass = 0.03;
-		btScalar  restitution = 0.8;
+		btVector3  pos = btVector3( -1.0f, 0.5f, 0 );
+		btScalar  mass = 0.03f;
+		btScalar  restitution = 0.8f;
 
-		// 衝突検出方法の設定 ( デフォルト設定 )
-		btDefaultCollisionConfiguration*  config = new btDefaultCollisionConfiguration();
-		btCollisionDispatcher*  dispatcher = new btCollisionDispatcher( config );
-
-		// ブロードフェーズ法の設定 ( Dynamic AABB tree method )
-		btDbvtBroadphase*  broadphase = new btDbvtBroadphase();
-
-		// 剛体間リンクのソルバ設定
-		btSequentialImpulseConstraintSolver*  solver = new btSequentialImpulseConstraintSolver();
-
-		// Bullet ワールド作成
-		g_pDynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, broadphase, solver, config );
-		g_pDynamicsWorld->setGravity( btVector3( 0, -.8, 0 ) );
 
 		// 球体形状の設定
-		btCollisionShape*  sphereShape = new btSphereShape( 1.0 );
-		btCollisionShape*  boxShape = new btBoxShape( btVector3( 125, 0.1, 125 ) );
+		btCollisionShape*  sphereShape = new btSphereShape( 1.0f );
+		btCollisionShape*  boxShape = new btBoxShape( btVector3( 125, 0.1f, 125 ) );
 
 		// 慣性モーメントの計算
 		btVector3  inertia( 0, 0, 0 );
@@ -82,24 +70,14 @@ void  InitBullet()
 		g_pSphereBody = new btRigidBody( rbInfo );
 		g_pRBGround = new btRigidBody( rbBoxInfo );
 
-		g_pDynamicsWorld->addRigidBody( g_pSphereBody );
-		g_pDynamicsWorld->addRigidBody( g_pRBGround );
+		btEngine->AddRigidBody( g_pSphereBody );
+		btEngine->AddRigidBody( g_pRBGround );
 }
 
 
 void  UninitBullet()
 {
-		SafeDelete( g_pSphereBody->getMotionState() );
-		g_pDynamicsWorld->removeRigidBody( g_pSphereBody );
-		SafeDelete( g_pSphereBody );
 
-		SafeDelete( g_pRBGround->getMotionState() );
-		g_pDynamicsWorld->removeRigidBody( g_pRBGround );
-		SafeDelete( g_pRBGround );
-
-
-		SafeDelete( g_pDynamicsWorld->getBroadphase() );
-		SafeDelete( g_pDynamicsWorld );
 }
 
 
@@ -169,9 +147,6 @@ void  Tutorial::InputFPSCamera()
 
 void  Tutorial::Awake()
 {
-		// Bullet Physics 初期化
-		InitBullet();
-
 		/* システムクラス生成 */
 		m_pComponentManager.reset( new  ComponentManager() );
 		m_pd3dRenderer.reset( new  IDirect3DRenderer( m_pComponentManager.get() ) );
@@ -179,6 +154,10 @@ void  Tutorial::Awake()
 		m_pEntityManager.reset( new  EntityManager( m_pComponentManager.get() ) );
 		m_pTextureManager.reset( new  TextureManager );
 		m_pSystemManager->AddSystem<DebugSystem>();
+		btEngine = m_pSystemManager->AddSystem<BulletEngine>();
+
+		// Bullet Physics 初期化
+		InitBullet();
 
 		/* テクスチャ作成 */
 		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/0.png" );
@@ -246,7 +225,15 @@ void  Tutorial::Awake()
 		sphereRender->SetPixelShader( ps );
 		{/* Parameter */
 				spTrans = sphereTrans;
-
+				Vector3&  v = sphereTrans->GetPosition();
+				btTransform&  btTrans = g_pSphereBody->getCenterOfMassTransform();
+				btVector3&  btv = btTrans.getOrigin();
+				btScalar*  floats;
+				floats = btv.m_floats;
+				btScalar*  a;
+				a = &floats[0];
+				v.Sync( a, *a, *a );
+				floats[0] = 5;
 				sphereTrans->SetPosition( Vector3( 0, 0, 0 ) );
 				sphereTrans->SetLocalScale( Vector3( 300.f, 300.f, 300.f ) );
 				sphereTrans->SetLocalEuler( 180, 0, 0 );
@@ -330,8 +317,6 @@ void  Tutorial::Init()
 
 void  Tutorial::Update()
 {
-		g_pDynamicsWorld->stepSimulation( 1 / 300.f, 10 );
-
 		/* Update inputs */
 		UpdateController();
 		Input::UpdateKeyboard();
@@ -344,39 +329,39 @@ void  Tutorial::Update()
 		InputFPSCamera();
 
 
-		btTransform&  btTrans = g_pSphereBody->getCenterOfMassTransform();
-		btVector3&  v = btTrans.getOrigin();
-		Vector3  pPos = Vector3( v.m_floats[0], v.m_floats[1], v.m_floats[2] );
-		Vector3  rotate = m_FPSCamera->GetLookRotation();
-		s_playerTrans->SetPosition( pPos );
-		m_FPSCamera->SetPosition( pPos );
-		s_playerTrans->SetEuler( m_FPSCamera->GetLookRotation() );
-		btTransform&  btBoxTrans = g_pRBGround->getCenterOfMassTransform();
-		btVector3&  v2 = btBoxTrans.getOrigin();
-		boxTrans->SetPosition( Vector3( v2.m_floats[0], v2.m_floats[1], v2.m_floats[2] ) );
+		//btTransform&  btTrans = g_pSphereBody->getCenterOfMassTransform();
+		//btVector3&  v = btTrans.getOrigin();
+		//Vector3  pPos = Vector3( v.m_floats[0], v.m_floats[1], v.m_floats[2] );
+		//Vector3  rotate = m_FPSCamera->GetLookRotation();
+		//s_playerTrans->SetPosition( pPos );
+		//m_FPSCamera->SetPosition( pPos );
+		//s_playerTrans->SetEuler( m_FPSCamera->GetLookRotation() );
+		//btTransform&  btBoxTrans = g_pRBGround->getCenterOfMassTransform();
+		//btVector3&  v2 = btBoxTrans.getOrigin();
+		//boxTrans->SetPosition( Vector3( v2.m_floats[0], v2.m_floats[1], v2.m_floats[2] ) );
 
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				v.m_floats[2] += 0.01f;
+				//v.m_floats[2] += 0.01f;
 		}
 		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				v.m_floats[2] += -0.01f;
+				//v.m_floats[2] += -0.01f;
 		}
 
 		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				v.m_floats[0] += -0.01f;
+				//v.m_floats[0] += -0.01f;
 		}
 		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				v.m_floats[0] += 0.01f;
+				//v.m_floats[0] += 0.01f;
 		}
 
 		if ( Input::KeyTrigger( DIK_SPACE ) )
 		{
-				v.m_floats[1] += 10;
+				//v.m_floats[1] += 10;
 		}
 
 

@@ -168,6 +168,12 @@
     <ClCompile Include="src\Game\FPSGun.cpp">
       <Filter>Source\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Systems\BulletEngine.cpp">
+      <Filter>Source\D3D11Utility\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D3D11Utility\Physical\BulletPhysics.cpp">
+      <Filter>Source\D3D11Utility\Physical</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\IGraphicsRenderer.h">
@@ -327,6 +333,12 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\SystemInclude.h">
+      <Filter>Header\D3D11Utility\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Physical\BulletPhysics.h">
+      <Filter>Header\D3D11Utility\Physical</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\D3D11Utility\Systems\BulletEngine.h">
       <Filter>Header\D3D11Utility\Systems</Filter>
     </ClInclude>
   </ItemGroup>

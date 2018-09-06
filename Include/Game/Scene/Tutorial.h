@@ -7,7 +7,7 @@
 #include  <Game\Scene\BaseScene.h>
 #include  <D3D11Utility\Camera.h>
 #include  <D3D11Utility\Entity.h>
-#include  <D3D11Utility\Systems\SystemInclude.h>
+#include  <D3D11Utility\Interface.h>
 
 namespace  Scene
 {

@@ -28,6 +28,7 @@ namespace  D3D11Utility
 				class  SystemManager;
 				class  TextureManager;
 				class  PhysicalSystem;
+				class  BulletEngine;
 
 		}// namespace Systems
 

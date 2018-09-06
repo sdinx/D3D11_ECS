@@ -75,6 +75,10 @@ namespace  D3D11Utility
 				explicit  Vector3( _In_reads_( 3 )  const  float*  pArray ) : DirectX::XMFLOAT3( pArray[0], pArray[1], pArray[2] ) {}
 				Vector3( float  x, float  y, float  z ) :DirectX::XMFLOAT3( x, y, z ) {}
 
+				void  Sync( float*  _x, float&  _y, float&  _z )
+				{
+						_x = &x;
+				}
 				DirectX::XMFLOAT3  operator+( DirectX::XMFLOAT3  f3 )
 				{
 						DirectX::XMFLOAT3  ret( *this );

@@ -695,6 +695,10 @@ public:
 		return m_floats[0] == btScalar(0) && m_floats[1] == btScalar(0) && m_floats[2] == btScalar(0);
 	}
 
+	void  getPtr( btScalar( &floats )[3] )
+	{
+			*floats = *m_floats;
+	}
 
 	SIMD_FORCE_INLINE bool fuzzyZero() const 
 	{
@@ -948,7 +952,6 @@ lerp(const btVector3& v1, const btVector3& v2, const btScalar& t)
 }
 
 
-
 SIMD_FORCE_INLINE btScalar btVector3::distance2(const btVector3& v) const
 {
 	return (v - *this).length2();
@@ -1197,8 +1200,6 @@ public:
 	{
 		return absolute4().maxAxis4();
 	}
-
-	
  
 
   /**@brief Set x,y,z and zero w 

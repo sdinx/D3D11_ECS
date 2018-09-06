@@ -70,6 +70,7 @@ namespace  D3D11Utility
 								m_isActive = isActive;
 						}
 						virtual  void  Update( float  ms ) = 0;
+						virtual  void  Release() = 0;
 
 				};// class ISystem
 
