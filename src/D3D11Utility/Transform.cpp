@@ -54,6 +54,7 @@ void  Transform::Update()
 {
 		// ルート内の行列を計算
 		DirectX::XMMATRIX  mtxWorld = MultiplyRootTransform( this );
+		DirectX::XMStoreFloat4x4( &m_world, mtxWorld );
 
 		// ローカル空間を計算
 		UpdateLocalMatrix();
@@ -109,6 +110,7 @@ void  Transform::UpdateMatrix()
 		// 移動量の初期化
 		m_translation = Vector3( 0, 0, 0 );
 
+		m_isMessages[MSG_UPDATE_LOCAL] = true;
 		m_isMessages[MSG_UPDATE_PARENT] = true;
 		m_isMessages[MSG_UPDATE_MATRIX] = false;
 }
@@ -130,6 +132,7 @@ DirectX::XMMATRIX  Transform::MultiplyRootTransform( Transform*  parent )
 				return  mtxWorld;
 
 		parent->m_isMessages[MSG_UPDATE_PARENT] = false;
+
 		// 子空間へ行列計算していく
 		return  DirectX::XMMatrixMultiply( mtxParent, mtxWorld );
 }

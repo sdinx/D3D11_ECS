@@ -260,10 +260,6 @@ void  Tutorial::Update()
 		Input::UpdateKeyboard();
 		Input::UpdateMouse();
 
-		/* Update systems */
-		m_pSystemManager->Update( 0 );
-		m_pd3dRenderer->Rendering();
-
 		InputFPSCamera();
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
@@ -295,6 +291,9 @@ void  Tutorial::Update()
 				GameScene.SetMethodState( &Scene::BaseScene::Release );
 		}
 
+		/* Update systems */
+		m_pSystemManager->Update( 0 );
+		m_pd3dRenderer->Rendering();
 }
 
 

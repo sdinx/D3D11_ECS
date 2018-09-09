@@ -1,9 +1,14 @@
-#include <DIKeyboard.h>
+#include  <DIKeyboard.h>
+#include  <XInputController.h>
 
 // Global Area
 LPDIRECTINPUT8		 g_pDI = NULL;;			// DirectInput オブジェクト
 LPDIRECTINPUTDEVICE8 g_pdiKeyboard = NULL;	// DirectInput デバイス(キーボード)
 LPDIRECTINPUTDEVICE8 g_pDIDevMouse = NULL;		// DirectInput デバイス(マウス)
+
+#define  INPUT_FPS  ( 60.0f )
+static  bool  g_isInput = true;
+static  bool  g_isInputExit = false;
 
 POINT  g_MousePoint;
 DIMOUSESTATE2  g_mouseState;
@@ -15,6 +20,22 @@ g_aKeyStateTrigger[NUM_KEY_MAX],
 g_aKeyStateRepeat[NUM_KEY_MAX],
 g_aKeyStateRelease[NUM_KEY_MAX];
 int		g_aKeyStateRepeatCnt[NUM_KEY_MAX];
+
+
+void  Input::UpdateInput()
+{
+		while ( g_isInputExit == false )
+		{
+				while ( g_isInput )
+				{
+						UpdateController();
+						UpdateKeyboard();
+						UpdateMouse();
+				}
+		}
+
+}
+
 
 VOID WINAPI  Input::DI_Term() {// DirectInput システムの終了
 	if (g_pDI) {

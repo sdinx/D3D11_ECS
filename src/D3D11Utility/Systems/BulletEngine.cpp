@@ -51,9 +51,11 @@ void  BulletEngine::Update( float  ms )
 		for ( auto rb : m_pComponentManager->GetComponents<Physical::BulletPhysics>() )
 				rb->Update();
 
-		m_pDynamicsWorld->stepSimulation( 1 / ms, 10 );
+		m_pDynamicsWorld->stepSimulation( 1 / 60, 10 );
 
 		Transform*  trans = nullptr;
+		Matrix4x4  mat;
+		Vector3  v;
 		Physical::BulletPhysics*  physics = nullptr;
 		btTransform  btTrans;
 		for ( auto rb : m_pComponentManager->GetComponents<Physical::BulletPhysics>() )
@@ -61,7 +63,10 @@ void  BulletEngine::Update( float  ms )
 				trans = rb->GetComponent<Transform>();
 				physics = rb->GetComponent<Physical::BulletPhysics>();
 				btTrans = physics->GetRigidBody()->getCenterOfMassTransform();
-				BulletConvertMatrix4x4( btTrans );
+				mat = BulletConvertMatrix4x4( btTrans );
+				v = Vector3( mat._41, mat._42, mat._43 );
+				v -= trans->GetLocalPosition();
+				trans->SetPosition( v );
 		}
 }
 

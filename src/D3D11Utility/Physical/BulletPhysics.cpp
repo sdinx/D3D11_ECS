@@ -41,9 +41,8 @@ void  BulletPhysics::HandleMessage( const  GameUtility::Message&  msg )
 
 void  BulletPhysics::Update()
 {
-		Transform  trans = GetComponent<Transform>();
-		trans.Update();
-		m_pRigidBody->setWorldTransform( BulletConvertTransform( trans ) );
+		Transform*  trans = GetComponent<Transform>();
+		m_pRigidBody->setWorldTransform( BulletConvertTransform( *trans ) );
 }
 
 

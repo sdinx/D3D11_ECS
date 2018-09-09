@@ -10,6 +10,7 @@
 namespace Input
 {
 
+		void  UpdateInput();
 		BOOL  WINAPI  DI_Init( HWND hWnd, HINSTANCE hInstance );
 		HRESULT  InitMouse( HWND hWnd );
 		VOID  WINAPI  DI_Term();

@@ -58,7 +58,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				bool  m_isMessages[MSG_UPDATE_ALL];
+				bool  m_isMessages[MSG_UPDATE_ALL];// オブジェクトの移動をチェックする変数.
 				Transform*  m_pParent;// 親のワールド空間.
 				Matrix4x4  m_multiplyWorld;// 親との空間を掛け合わせたワールド空間.
 
