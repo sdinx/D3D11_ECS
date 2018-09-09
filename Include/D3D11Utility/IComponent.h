@@ -14,8 +14,8 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\D3D11Utility.h>
-#include  <D3D11Utility\IEntity.h>
+#include  <D3D11Utility/D3D11Utility.h>
+#include  <D3D11Utility/IEntity.h>
 
 
 namespace  D3D11Utility
@@ -77,6 +77,11 @@ namespace  D3D11Utility
 				// public  methods
 				//----------------------------------------------------------------------------------
 
+				template<class  T, typename  ...P>
+				T*  AddComponent( P&&... param )
+				{
+						return  m_pComponentManager->AddComponent<T>( m_parentsEntityId, std::forward<P>( param )... );
+				}
 				template<typename  T>
 				T*  GetComponent()const
 				{

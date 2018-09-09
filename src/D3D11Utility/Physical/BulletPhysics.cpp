@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Physical\BulletPhysics.h>
 #include  <D3D11Utility\Systems\BulletEngine.h>
+#include  <D3D11Utility\Systems\ComponentManager.h>
 
 
 //----------------------------------------------------------------------------------
@@ -40,7 +41,9 @@ void  BulletPhysics::HandleMessage( const  GameUtility::Message&  msg )
 
 void  BulletPhysics::Update()
 {
-
+		Transform  trans = GetComponent<Transform>();
+		trans.Update();
+		m_pRigidBody->setWorldTransform( BulletConvertTransform( trans ) );
 }
 
 

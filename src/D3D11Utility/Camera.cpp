@@ -143,7 +143,7 @@ void  Camera::SetLookRotation( float  x, float  y, float  z )
 
 void  Camera::SetTranslation( Vector3  trans )
 {
-		m_translation = trans;
+		m_translation += trans;
 }
 
 

@@ -93,6 +93,10 @@ namespace  D3D11Utility
 						void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) {};
 						void  Update();
 						void  Release();
+						btRigidBody*  GetRigidBody()
+						{
+								return  m_pRigidBody;
+						}
 
 				};// class BulletPhysics
 

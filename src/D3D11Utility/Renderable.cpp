@@ -7,6 +7,7 @@
 #include  <D3D11Utility\Systems\TextureManager.h>
 #include  <DirectXMath.h>
 #include  <D3D11Utility\Systems\FbxLoader.h>
+#include  <omp.h>
 
 
 //----------------------------------------------------------------------------------
@@ -134,7 +135,6 @@ void  Renderable::HandleMessage( const  Message&  msg )
 						Transform*  transform = GetComponent<Transform>();
 						if ( transform == nullptr )
 								return;
-						transform->Update();
 						UpdateConstantBuffer( transform->GetWorldMatrix() );
 				}// end case MSG_UPDATE_CBUFFER
 				break;
@@ -149,18 +149,36 @@ void  Renderable::Rendering()const
 		if ( m_isActive == false )
 				return;
 
-		if ( m_textureId != TEXTURE_ID_INVALID )
-				m_textureManager->SetTexture( m_textureId );
-
-		m_pVertexShader->UpdateShader();
-		m_pPixelShader->UpdateShader();
-		//m_pGeometryShader->UpdateShader();
-
 		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &m_cbuffer, 0, 0 );
+//#pragma omp parallel sections num_threads(3)
+		{
 
-		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-		//pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+//#pragma omp section
+				if ( m_textureId != TEXTURE_ID_INVALID ) {
+						m_textureManager->SetTexture( m_textureId );
+				}
+
+//#pragma omp section
+				{
+						m_pVertexShader->UpdateShader();
+						pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+				}
+
+//#pragma omp section
+				{
+						m_pPixelShader->UpdateShader();
+						pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+				}
+
+				/*
+#pragma omp section
+				{
+						m_pGeometryShader->UpdateShader();
+						pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+				}
+				*/
+
+		}// end threads
 
 		m_pVertexBuffer->BindBuffer();
 }
@@ -171,11 +189,9 @@ void  Renderable::Update()
 		if ( m_isUpdating == false )
 				return;
 
-
 		Transform*  transform = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
 		if ( transform == nullptr )
 				return;
-		transform->Update();
 
 		HandleMessage( MSG_UPDATE_CBUFFER );
 }

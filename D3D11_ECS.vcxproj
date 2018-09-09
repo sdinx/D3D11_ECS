@@ -54,6 +54,7 @@
     <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp" />
     <ClCompile Include="src\D3D11Utility\Systems\Timer.cpp" />
+    <ClCompile Include="src\D3D11Utility\Systems\Updater.cpp" />
     <ClCompile Include="src\D3D11Utility\Transform.cpp" />
     <ClCompile Include="src\DIKeyBoard.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -132,6 +133,7 @@
     <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
     <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
+    <ClInclude Include="Include\D3D11Utility\Systems\Updater.h" />
     <ClInclude Include="Include\D3D11Utility\Transform.h" />
     <ClInclude Include="Include\DIKeyboard.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -257,6 +259,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -284,6 +287,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

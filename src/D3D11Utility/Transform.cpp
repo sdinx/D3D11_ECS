@@ -25,6 +25,8 @@ Transform::Transform() :
 		m_scale( 1, 1, 1 ),
 		m_pParent( nullptr )
 {
+		for ( int i = 0; i < MSG_UPDATE_ALL; i++ )
+				m_isMessages[i] = true;
 		HandleMessage( GameUtility::Message( MSG_UPDATE_LOCAL ) );
 }
 
@@ -37,31 +39,51 @@ Transform::Transform( Transform*  parent ) :
 		m_scale( 1, 1, 1 ),
 		m_pParent( parent )
 {
+		for ( int i = 0; i < MSG_UPDATE_ALL; i++ )
+				m_isMessages[i] = true;
 		HandleMessage( GameUtility::Message( MSG_UPDATE_LOCAL ) );
 }
 
 
 void  Transform::HandleMessage( const  GameUtility::Message&  msg )
 {
-		switch ( msg.messageType )
-		{
-		case  MSG_UPDATE_LOCAL:
-				{
-						XMMATRIX  localWorld;
-						Vector3  r( ToRadian( m_localEuler.x ), ToRadian( m_localEuler.y ), ToRadian( m_localEuler.z ) );
-
-						localWorld = XMMatrixMultiply( XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) ), XMMatrixTranslationFromVector( XMLoadFloat3( &m_localPosition ) ) );
-						localWorld = XMMatrixMultiply( XMMatrixScalingFromVector( XMLoadFloat3( &m_localScale ) ), localWorld );
-						XMStoreFloat4x4( &m_localWorld, localWorld );
-
-				}// case MSG_UPDATE_LOCAL
-		}// end switch
-
 }
 
 
 void  Transform::Update()
 {
+		// ルート内の行列を計算
+		DirectX::XMMATRIX  mtxWorld = MultiplyRootTransform( this );
+
+		// ローカル空間を計算
+		UpdateLocalMatrix();
+		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
+
+		DirectX::XMStoreFloat4x4( &m_multiplyWorld, mtxWorld );
+}
+
+
+void  Transform::UpdateLocalMatrix()
+{
+		if ( m_isMessages[MSG_UPDATE_LOCAL] == false )
+				return;
+
+		XMMATRIX  localWorld;
+		Vector3  r( ToRadian( m_localEuler.x ), ToRadian( m_localEuler.y ), ToRadian( m_localEuler.z ) );
+
+		localWorld = XMMatrixMultiply( XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) ), XMMatrixTranslationFromVector( XMLoadFloat3( &m_localPosition ) ) );
+		localWorld = XMMatrixMultiply( XMMatrixScalingFromVector( XMLoadFloat3( &m_localScale ) ), localWorld );
+		XMStoreFloat4x4( &m_localWorld, localWorld );
+
+		m_isMessages[MSG_UPDATE_LOCAL] = false;
+}
+
+
+void  Transform::UpdateMatrix()
+{
+		if ( m_isMessages[MSG_UPDATE_MATRIX] == false )
+				return;
+
 		XMMATRIX  mtxPos, mtxTrans, mtxRotate, mtxScale;
 		Vector3  r( ToRadian( m_euler.x ), ToRadian( m_euler.y ), ToRadian( m_euler.z ) );
 
@@ -86,29 +108,28 @@ void  Transform::Update()
 
 		// 移動量の初期化
 		m_translation = Vector3( 0, 0, 0 );
-}
 
-
-const  Matrix4x4  Transform::GetWorldMatrix()
-{
-		DirectX::XMMATRIX  mtxWorld = MultiplyRootTransform( this );
-		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
-		Matrix4x4  matrix4x4;
-		DirectX::XMStoreFloat4x4( &matrix4x4, mtxWorld );
-
-		return  matrix4x4;
+		m_isMessages[MSG_UPDATE_PARENT] = true;
+		m_isMessages[MSG_UPDATE_MATRIX] = false;
 }
 
 
 DirectX::XMMATRIX  Transform::MultiplyRootTransform( Transform*  parent )
 {
+		// 親のワールド行列を計算
+		parent->UpdateMatrix();
+
+		// 親のワールド行列を取得
 		DirectX::XMMATRIX  mtxWorld = DirectX::XMLoadFloat4x4( &parent->GetWorld() );
 		DirectX::XMMATRIX  mtxParent;
 
+		// 更に親がある場合
 		if ( parent->m_pParent != nullptr )
 				mtxParent = MultiplyRootTransform( parent->m_pParent );
 		else
 				return  mtxWorld;
 
+		parent->m_isMessages[MSG_UPDATE_PARENT] = false;
+		// 子空間へ行列計算していく
 		return  DirectX::XMMatrixMultiply( mtxParent, mtxWorld );
 }

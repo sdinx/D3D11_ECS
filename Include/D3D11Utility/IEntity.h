@@ -105,9 +105,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				template<class  T, typename  ...P>
-				void  AddComponent( P&&...  param )
+				T*  AddComponent( P&&...  param )
 				{
-						m_pComponentManager->AddComponent<T>( m_entityId, std::forward<P>( param )... );
+						return  m_pComponentManager->AddComponent<T>( m_entityId, std::forward<P>( param )... );
 				}
 				template<class  T>
 				T*  GetComponent()const

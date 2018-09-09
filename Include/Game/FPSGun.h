@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <Game\GameObject.h>
+#include  <D3D11Utility\Component.h>
 
 
 #ifndef  _INCLUDED_D3D11_UTILITY_GAME_FPSGUN_
@@ -16,7 +16,7 @@
 namespace  D3D11Utility
 {
 
-		class  FPSGun :public  GameObject
+		class  FPSGun :public  Component
 		{
 		public:
 				//----------------------------------------------------------------------------------

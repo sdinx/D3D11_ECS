@@ -7,6 +7,7 @@
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Transform.h>
 #include  <D3D11Utility\Systems\SystemInclude.h>
+#include  <D3D11Utility\Physical\BulletPhysics.h>
 #include  <DIKeyboard.h>
 #include  <XInputController.h>
 
@@ -31,54 +32,6 @@ using  namespace  D3D11Utility;
 using  namespace  Scene;
 using  namespace  D3D11Utility::Systems;
 using  namespace  GameUtility;
-
-
-BulletEngine*  btEngine = nullptr;
-btRigidBody* g_pSphereBody = nullptr;
-btRigidBody* g_pRBGround = nullptr;
-btRigidBody* g_pHumanoid = nullptr;
-Transform*  spTrans = nullptr;
-Transform*  boxTrans = nullptr;
-Transform*  s_playerTrans = nullptr;
-
-
-void  InitBullet()
-{
-		btVector3  pos = btVector3( -1.0f, 0.5f, 0 );
-		btScalar  mass = 0.03f;
-		btScalar  restitution = 0.8f;
-
-
-		// 球体形状の設定
-		btCollisionShape*  sphereShape = new btSphereShape( 1.0f );
-		btCollisionShape*  boxShape = new btBoxShape( btVector3( 125, 0.1f, 125 ) );
-
-		// 慣性モーメントの計算
-		btVector3  inertia( 0, 0, 0 );
-		sphereShape->calculateLocalInertia( mass, inertia );
-
-		btTransform  transform = btTransform::getIdentity();
-		transform.setOrigin( pos );
-		btTransform  playerTrans = btTransform::getIdentity();
-		playerTrans.setOrigin( btVector3( 0, 50, 0 ) );
-
-		// 剛体オブジェクト生成
-		btDefaultMotionState*  motionState = new btDefaultMotionState( transform );
-		btDefaultMotionState*  playerMotionState = new btDefaultMotionState( playerTrans );
-		btRigidBody::btRigidBodyConstructionInfo  rbInfo( mass, playerMotionState, sphereShape, inertia );
-		btRigidBody::btRigidBodyConstructionInfo  rbBoxInfo( 0, motionState, boxShape, inertia );
-		g_pSphereBody = new btRigidBody( rbInfo );
-		g_pRBGround = new btRigidBody( rbBoxInfo );
-
-		btEngine->AddRigidBody( g_pSphereBody );
-		btEngine->AddRigidBody( g_pRBGround );
-}
-
-
-void  UninitBullet()
-{
-
-}
 
 
 Tutorial::Tutorial()
@@ -150,14 +103,13 @@ void  Tutorial::Awake()
 		/* システムクラス生成 */
 		m_pComponentManager.reset( new  ComponentManager() );
 		m_pd3dRenderer.reset( new  IDirect3DRenderer( m_pComponentManager.get() ) );
-		m_pSystemManager.reset( new  SystemManager( m_pComponentManager.get(), m_pEntityManager.get() ) );
 		m_pEntityManager.reset( new  EntityManager( m_pComponentManager.get() ) );
+		m_pSystemManager.reset( new  SystemManager( m_pComponentManager.get(), m_pEntityManager.get() ) );
 		m_pTextureManager.reset( new  TextureManager );
+		m_pSystemManager->AddSystem<Updater>();
 		m_pSystemManager->AddSystem<DebugSystem>();
-		btEngine = m_pSystemManager->AddSystem<BulletEngine>();
+		auto  btEngine = m_pSystemManager->AddSystem<BulletEngine>();
 
-		// Bullet Physics 初期化
-		InitBullet();
 
 		/* テクスチャ作成 */
 		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/0.png" );
@@ -206,11 +158,11 @@ void  Tutorial::Awake()
 		cubeRender->SetVertexShader( vs );
 		cubeRender->SetPixelShader( psSmooth );
 		{/* Parameter */
-				boxTrans = cubeTrans;
 				cubeTrans->SetLocalScale( Vector3( 250, 0.2f, 250 ) );
-				cubeTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 				cubeRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				cubeRender->SetDiffuse( Vector4( 1, 0.5f, 0.5f, 1 ) );
+				btRigidBody*  rb = btEngine->CreateRigidBody<btBoxShape>( cubeTrans, 0.1f, 0.5f, btVector3( 0, 0, 0 ), btVector3( 125.0f, 0.1f, 125.0f ) );
+				cubeEntity->AddComponent<Physical::BulletPhysics>( rb, btEngine );
 		}
 
 
@@ -224,20 +176,9 @@ void  Tutorial::Awake()
 		sphereRender->SetVertexShader( vs );
 		sphereRender->SetPixelShader( ps );
 		{/* Parameter */
-				spTrans = sphereTrans;
-				Vector3&  v = sphereTrans->GetPosition();
-				btTransform&  btTrans = g_pSphereBody->getCenterOfMassTransform();
-				btVector3&  btv = btTrans.getOrigin();
-				btScalar*  floats;
-				floats = btv.m_floats;
-				btScalar*  a;
-				a = &floats[0];
-				v.Sync( a, *a, *a );
-				floats[0] = 5;
 				sphereTrans->SetPosition( Vector3( 0, 0, 0 ) );
 				sphereTrans->SetLocalScale( Vector3( 300.f, 300.f, 300.f ) );
 				sphereTrans->SetLocalEuler( 180, 0, 0 );
-				sphereTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
@@ -254,7 +195,6 @@ void  Tutorial::Awake()
 		Renderable*  rifleRender = rifleEntity->GetComponent<Renderable>();
 		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
 		{
-				s_playerTrans = rifleTrans;
 				rifleRender->SetVertexShader( vs );
 				rifleRender->SetPixelShader( ps );
 				rifleRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
@@ -262,7 +202,6 @@ void  Tutorial::Awake()
 				rifleTrans->SetLocalPosition( Vector3( 50.f, -50.f, 40.f ) );
 				rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
 				rifleTrans->SetLocalEuler( 270, 180, 0 );
-				rifleTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 		}
 
 
@@ -285,7 +224,6 @@ void  Tutorial::Awake()
 				Vector3&  pos2 = trans2->GetPosition();
 				pos2.z += 5.0f;
 				scale2 = Vector3( .03f, .03f, .03f );
-				trans2->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
 				rifleTrans->SetParent( trans2 );
 		}
 
@@ -328,19 +266,6 @@ void  Tutorial::Update()
 
 		InputFPSCamera();
 
-
-		//btTransform&  btTrans = g_pSphereBody->getCenterOfMassTransform();
-		//btVector3&  v = btTrans.getOrigin();
-		//Vector3  pPos = Vector3( v.m_floats[0], v.m_floats[1], v.m_floats[2] );
-		//Vector3  rotate = m_FPSCamera->GetLookRotation();
-		//s_playerTrans->SetPosition( pPos );
-		//m_FPSCamera->SetPosition( pPos );
-		//s_playerTrans->SetEuler( m_FPSCamera->GetLookRotation() );
-		//btTransform&  btBoxTrans = g_pRBGround->getCenterOfMassTransform();
-		//btVector3&  v2 = btBoxTrans.getOrigin();
-		//boxTrans->SetPosition( Vector3( v2.m_floats[0], v2.m_floats[1], v2.m_floats[2] ) );
-
-
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
 				//v.m_floats[2] += 0.01f;
@@ -365,9 +290,6 @@ void  Tutorial::Update()
 		}
 
 
-		s_playerTrans->HandleMessage( Message( Transform::MSG_UPDATE_LOCAL ) );
-
-
 		if ( Input::KeyPress( DIK_ESCAPE ) )
 		{
 				GameScene.SetMethodState( &Scene::BaseScene::Release );
@@ -378,6 +300,5 @@ void  Tutorial::Update()
 
 void  Tutorial::Release()
 {
-		UninitBullet();
 		exit( 0 );
 }

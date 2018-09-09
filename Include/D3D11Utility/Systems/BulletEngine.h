@@ -166,17 +166,20 @@ namespace  D3D11Utility
 						template<class  T, typename  ...P>
 						btRigidBody*  CreateRigidBody( Transform*  parent, btScalar  mass, btScalar  restitution, btVector3  inertia, P&&... param )
 						{
+								parent->Update();
+
 								btTransform  btTrans = BulletConvertTransform( *parent );
 								btCollisionShape*  pCollisionShape = new  T( std::forward<P>( param )... );
+								pCollisionShape->calculateLocalInertia( mass, inertia );
 
 								btDefaultMotionState*  motionState = new  btDefaultMotionState( btTrans );
 								btRigidBody::btRigidBodyConstructionInfo  rbInfo( mass, motionState, pCollisionShape, inertia );
 
 								// 剛体オブジェクトの登録
-								m_pRigidBodys.push_back( rbInfo );
+								m_pRigidBodys.push_back( new  btRigidBody( rbInfo ) );
 								m_pDynamicsWorld->addRigidBody( m_pRigidBodys.back() );
 
-								return  pRigidBody;
+								return  m_pRigidBodys.back();
 						}
 
 				};// class BulletEngine

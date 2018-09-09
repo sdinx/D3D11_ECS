@@ -1,6 +1,7 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
+#include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <Game/GameObject.h>
 
 
@@ -12,31 +13,14 @@ using  namespace  GameUtility;
 using  namespace  DirectX;
 
 
-//----------------------------------------------------------------------------------
-// static variables
-//----------------------------------------------------------------------------------
-ComponentId  GameObject::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
-
-
-GameObject::GameObject()
+GameObject::GameObject( std::string  name, UINT  id, Systems::ComponentManager*  pComponentManagerInstance ) :
+		Entity( name, id, pComponentManagerInstance )
 {
 
 }
 
 
 GameObject::~GameObject()
-{
-
-}
-
-
-void  GameObject::HandleMessage( const  GameUtility::Message&  msg )
-{
-
-}
-
-
-void  GameObject::Update()
 {
 
 }

@@ -48,6 +48,8 @@ void  IDirect3DRenderer::Rendering()const
 				static  float  fLastTime = 0.0f;
 				static  float  fAll = 0;
 				Timer  timer;
+				int  i = 0;
+
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 				{
 						renderable->Update();
@@ -56,12 +58,12 @@ void  IDirect3DRenderer::Rendering()const
 
 #ifdef  _RENDERING_TIME_COUNT_
 				// •`‰æŽžŠÔŒv‘ª
+#pragma 
 				{
 						float  fThisTime = timer.GetElapsed<Timer::Milliseconds>();
 						printf( "Loop time: %f ms ( %f )\n", fThisTime, fThisTime - fLastTime );
 						fAll += fThisTime;
 						printf( "Average time: %f ms\n", fAll / ( float ) nCount );
-						Sleep( 1000 );
 						nCount++;
 						system( "CLS" );
 						fLastTime = fThisTime;

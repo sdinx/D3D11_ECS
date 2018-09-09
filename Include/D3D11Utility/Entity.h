@@ -19,7 +19,7 @@ namespace  D3D11Utility
 
 		class  Entity :public  IEntity
 		{
-				// TODO: AddComponent()èëÇ±Ç§Ç∫
+
 		public:
 				//----------------------------------------------------------------------------------
 				// other

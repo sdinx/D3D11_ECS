@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\Entity.h>
 #include  <D3D11Utility\Transform.h>
 #include  <D3D11Utility\Renderable.h>
 
@@ -18,30 +18,29 @@
 namespace  D3D11Utility
 {
 
-		class  GameObject : public  Component
+		class  GameObject : public  Entity
 		{
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
 
-				GameObject();
+				GameObject( std::string  name, UINT  id, Systems::ComponentManager*  pComponentManagerInstance );
 				virtual  ~GameObject();
 
 		private:
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
-
-				static  ComponentId  STATIC_COMPONENT_ID;
+				/* NOTHING */
 
 		protected:
 				//----------------------------------------------------------------------------------
 				// protected variables
 				//----------------------------------------------------------------------------------
 
-				Transform  m_transform;
-				Renderable  m_render;
+				Transform*  m_transform;
+				Renderable*  m_render;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -60,30 +59,11 @@ namespace  D3D11Utility
 				// public methods
 				//----------------------------------------------------------------------------------
 
-				/* static */
-				static  ComponentId  GetStaticComponentId()
-				{
-						return  STATIC_COMPONENT_ID;
-				}
-				static  void  SetStaticComponentId( ComponentId  id )
-				{
-						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
-						{
-								STATIC_COMPONENT_ID = id;
-								// TODO: need output debug string.
-						}
-				}
-
-				/* derived virtual */
-				virtual  void  HandleMessage( const  GameUtility::Message&  msg );
-				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var )
-				{}
-				virtual  void  Update();
-				Transform&  GetTransform()
+				Transform*  GetTransform()
 				{
 						return  m_transform;
 				}
-				Renderable&  GetRenderable()
+				Renderable*  GetRenderable()
 				{
 						return  m_render;
 				}

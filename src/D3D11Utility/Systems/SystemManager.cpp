@@ -4,6 +4,7 @@
 #include  <D3D11Utility\Systems\SystemManager.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
 
+
 //----------------------------------------------------------------------------------
 // using
 //----------------------------------------------------------------------------------
@@ -36,7 +37,8 @@ void  SystemManager::Release()
 {
 		for ( auto system : m_systemList )
 		{
-				system->Release();
+				SafeDelete( system );
+				//system->Release();
 		}
 		m_systemList.clear();
 }

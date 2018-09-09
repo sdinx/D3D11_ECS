@@ -81,7 +81,7 @@ namespace  D3D11Utility
 						//! @note:     予め全コンポーネントに固有IDを割り振ると高速化できるかも.
 						//----------------------------------------------------------------------------------
 						template<class  T, typename  ...P>
-						void  AddComponent( const  EntityId  entity, P&&... param )
+						T*  AddComponent( const  EntityId  entity, P&&... param )
 						{
 								const  UINT  entityId = entity.index;
 								UINT  nComponentPosition = 0;
@@ -106,7 +106,7 @@ namespace  D3D11Utility
 
 								// 既にコンポーネントが存在している
 								else  if ( m_entityComponetIdTable[entityId][componentId] != COMPONENT_ID_INVALID )
-										return;
+										return  nullptr;
 
 								m_entityComponetIdTable[entityId][componentId] = nComponentPosition;
 
@@ -119,7 +119,7 @@ namespace  D3D11Utility
 								m_componentTable[componentId].push_back( component );
 								// TODO: need to output debug string.
 
-
+								return  dynamic_cast< T* >( m_componentTable[componentId].back() );
 						}// end AddComponent(const EntityId, T*) : void
 
 						//----------------------------------------------------------------------------------

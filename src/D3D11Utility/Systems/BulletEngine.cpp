@@ -5,6 +5,7 @@
 #include  <D3D11Utility\Systems\BulletEngine.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\EntityManager.h>
+#include  <D3D11Utility\Physical\BulletPhysics.h>
 #include  <GameUtility.h>
 
 
@@ -47,7 +48,21 @@ BulletEngine::~BulletEngine()
 
 void  BulletEngine::Update( float  ms )
 {
+		for ( auto rb : m_pComponentManager->GetComponents<Physical::BulletPhysics>() )
+				rb->Update();
+
 		m_pDynamicsWorld->stepSimulation( 1 / ms, 10 );
+
+		Transform*  trans = nullptr;
+		Physical::BulletPhysics*  physics = nullptr;
+		btTransform  btTrans;
+		for ( auto rb : m_pComponentManager->GetComponents<Physical::BulletPhysics>() )
+		{
+				trans = rb->GetComponent<Transform>();
+				physics = rb->GetComponent<Physical::BulletPhysics>();
+				btTrans = physics->GetRigidBody()->getCenterOfMassTransform();
+				BulletConvertMatrix4x4( btTrans );
+		}
 }
 
 
@@ -59,7 +74,6 @@ void  BulletEngine::Release()
 				m_pDynamicsWorld->removeRigidBody( rb );
 				SafeDelete( rb );
 		}
-		btRigidBody*  pRb = m_pRigidBodys[0];
 		m_pRigidBodys.clear();
 
 		SafeDelete( m_pDynamicsWorld->getBroadphase() );

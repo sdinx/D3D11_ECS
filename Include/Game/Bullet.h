@@ -6,7 +6,8 @@
 //----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
-#include  <Game\GameObject.h>
+#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\Transform.h>
 
 
 #ifndef  _INCLUDED_D3D11_UTILITY_GAME_BULLET_
@@ -16,7 +17,7 @@
 namespace  D3D11Utility
 {
 
-		class  Bullet :public  GameObject
+		class  Bullet :public  Component
 		{
 		public:
 				//----------------------------------------------------------------------------------
@@ -36,6 +37,7 @@ namespace  D3D11Utility
 
 				FLOAT  m_fBulletSpeed;
 				UINT  m_nOwner;
+				Transform*  m_transform;
 
 		public:
 				//----------------------------------------------------------------------------------
