@@ -55,6 +55,11 @@ void  Transform::Update()
 		// ルート内の行列を計算
 		DirectX::XMMATRIX  mtxWorld = MultiplyRootTransform( this );
 		DirectX::XMStoreFloat4x4( &m_world, mtxWorld );
+		
+		// 現在座標を計算後の座標に更新
+		m_position.x = m_world._41;
+		m_position.y = m_world._42;
+		m_position.z = m_world._43;
 
 		// ローカル空間を計算
 		UpdateLocalMatrix();

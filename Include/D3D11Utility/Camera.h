@@ -11,6 +11,7 @@
 // Include
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\Transform.h>
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <GameUtility.h>
 #include  <memory>
@@ -30,8 +31,9 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 
-				Camera();
-				Camera(Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
+				Camera() {}
+				Camera( Transform*  transform );
+				Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
 
 		enum  MSG_CAMERA
@@ -55,11 +57,11 @@ namespace  D3D11Utility
 				Matrix4x4  m_localWorld;// カメラ位置の行列.
 				Matrix4x4  m_view;
 				Matrix4x4  m_projection;
-				Vector3  m_eyePosition;// カメラ位置.
 				Vector3  m_focusTarget;// 注視点 ( カメラ位置からの差分座標として使う )
 				Vector3  m_upDirection;
 				Vector3  m_lookRotation;// カメラ位置と注視点の差分角度.
-				Vector3  m_translation;// 1フレームでの移動量.
+				Vector3*  m_eyePosition;// カメラ位置.
+				Vector3*  m_translation;// 1フレームでの移動量.
 
 
 		public:
@@ -113,7 +115,7 @@ namespace  D3D11Utility
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
 				Vector3&  GetPosition()
 				{
-						return  m_eyePosition;
+						return  *m_eyePosition;
 				}
 				Vector3&  GetTarget()
 				{

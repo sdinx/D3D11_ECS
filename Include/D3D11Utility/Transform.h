@@ -180,6 +180,10 @@ namespace  D3D11Utility
 						m_isMessages[MSG_UPDATE_MATRIX] = true;
 						m_pParent = pParent;
 				}
+				Transform*  GetParentTransform()
+				{
+						return  m_pParent;
+				}
 
 				/* Setter local world */
 				void  SetLocalWorld( Matrix4x4  world )

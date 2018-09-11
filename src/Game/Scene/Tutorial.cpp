@@ -48,9 +48,8 @@ Tutorial::~Tutorial()
 
 void  Tutorial::InputFPSCamera()
 {
-		auto&  pos = m_FPSCamera->GetComponent<Camera>()->GetTarget();
 		auto&  move = m_FPSCamera->GetComponent<Camera>()->GetPosition();
-		static  Vector3  s_vecCamera = Vector3( 0, 0, 0 );
+		Transform*  camTransform = m_FPSCamera->GetComponent<Transform>();
 		static  bool  isMouse = false;
 		float  dx = 0.0f;
 		float  dy = 0.0f;
@@ -75,20 +74,24 @@ void  Tutorial::InputFPSCamera()
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				m_FPSCamera->SetTranslation( Vector3( 0, 0, 0.02f ) );
+				//move += Vector3( 0, 0, 0.02f );
+				camTransform->SetTranslation( Vector3( 0, 0, 0.02f ) );
 		}
 		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				m_FPSCamera->SetTranslation( Vector3( 0, 0, -0.02f ) );
+				//move += Vector3( 0, 0, -0.02f );
+				camTransform->SetTranslation( Vector3( 0, 0, -0.02f ) );
 		}
 
 		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				m_FPSCamera->SetTranslation( Vector3( -0.02f, 0, 0 ) );
+				//move += Vector3( -0.02f, 0, 0 );
+				camTransform->SetTranslation( Vector3( -0.02f, 0, 0 ) );
 		}
 		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				m_FPSCamera->SetTranslation( Vector3( 0.02f, 0, 0 ) );
+				//move += Vector3( 0.02f, 0, 0 );
+				camTransform->SetTranslation( Vector3( 0.02f, 0, 0 ) );
 		}
 
 		m_FPSCamera->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
@@ -198,8 +201,8 @@ void  Tutorial::Awake()
 				rifleRender->SetVertexShader( vs );
 				rifleRender->SetPixelShader( ps );
 				rifleRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
-				rifleTrans->SetPosition( Vector3( 10.f, 60.f, 0.f ) );
-				rifleTrans->SetLocalPosition( Vector3( 50.f, -50.f, 40.f ) );
+				rifleTrans->SetPosition( Vector3( 0.7f, -0.7f, 0.8f ) );
+				rifleTrans->SetLocalPosition( Vector3( 0, -0, 0 ) );
 				rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
 				rifleTrans->SetLocalEuler( 270, 180, 0 );
 		}
@@ -224,16 +227,15 @@ void  Tutorial::Awake()
 				Vector3&  pos2 = trans2->GetPosition();
 				pos2.z += 5.0f;
 				scale2 = Vector3( .03f, .03f, .03f );
-				rifleTrans->SetParent( trans2 );
 		}
 
-		Transform  trans;
 		/* Init Camera */
 		static  const  EntityId  cameraId = m_pEntityManager->CreateEntity( "Camera" );
 		Entity*  cameraEntity = m_pEntityManager->GetEntity( cameraId );
-		cameraEntity->AddComponent<Camera>();
-		cameraEntity->AddComponent<Transform>();
+		Transform*  camTrans = cameraEntity->AddComponent<Transform>();
+		cameraEntity->AddComponent<Camera>( camTrans );
 		Camera*  cam = cameraEntity->GetComponent<Camera>();
+		rifleTrans->SetParent( camTrans );
 		{/* Parameter */
 				cam->SetPosition( Vector3( 0.0f, 0.0f, 0.0f ) );
 				cam->SetTarget( Vector3( 0.0f, 0.0f, 0.75f ) );

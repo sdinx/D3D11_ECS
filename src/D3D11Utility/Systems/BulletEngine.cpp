@@ -51,7 +51,7 @@ void  BulletEngine::Update( float  ms )
 		for ( auto rb : m_pComponentManager->GetComponents<Physical::BulletPhysics>() )
 				rb->Update();
 
-		m_pDynamicsWorld->stepSimulation( 1 / 60, 10 );
+		m_pDynamicsWorld->stepSimulation( 1 / 600.0f, 10 );
 
 		Transform*  trans = nullptr;
 		Matrix4x4  mat;
