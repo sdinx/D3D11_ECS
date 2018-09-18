@@ -63,8 +63,10 @@ void  Transform::Update()
 
 		// ローカル空間を計算
 		UpdateLocalMatrix();
+		// 絶対位置を求める
 		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
 
+		// 絶対位置を設定
 		DirectX::XMStoreFloat4x4( &m_multiplyWorld, mtxWorld );
 }
 

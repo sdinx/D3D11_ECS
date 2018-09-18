@@ -32,7 +32,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				Camera() {}
-				Camera( Transform*  transform );
+				Camera( Transform*  transform, Transform*  targetTransform = nullptr );
 				Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
 
@@ -54,6 +54,7 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 				BOOL  m_isEnable = false;
 
+				Transform*  m_targetTransform;
 				Matrix4x4  m_localWorld;// ÉJÉÅÉâà íuÇÃçsóÒ.
 				Matrix4x4  m_view;
 				Matrix4x4  m_projection;
@@ -145,12 +146,17 @@ namespace  D3D11Utility
 				{
 						m_lookRotation.z = z;
 				}
+				void  SetTargetTransform( Transform*  targetTrans )
+				{
+						m_targetTransform = targetTrans;
+				}
 				void  SetTranslation( Vector3  trans );
 				void  SetUp( Vector3  upDirection );
 				void  Update();
 				void  UpdateView();
 				void  UpdateProjection( FLOAT fovAngleY, FLOAT aspectHByW, FLOAT nearZ, FLOAT farZ );
 				void  UpdateConstantBuffer();
+				void  UpdateTargetTransform();
 				void  Release();
 
 

@@ -201,8 +201,7 @@ void  Tutorial::Awake()
 				rifleRender->SetVertexShader( vs );
 				rifleRender->SetPixelShader( ps );
 				rifleRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
-				rifleTrans->SetPosition( Vector3( 0.7f, -0.7f, 0.8f ) );
-				rifleTrans->SetLocalPosition( Vector3( 0, -0, 0 ) );
+
 				rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
 				rifleTrans->SetLocalEuler( 270, 180, 0 );
 		}
@@ -235,8 +234,10 @@ void  Tutorial::Awake()
 		Transform*  camTrans = cameraEntity->AddComponent<Transform>();
 		cameraEntity->AddComponent<Camera>( camTrans );
 		Camera*  cam = cameraEntity->GetComponent<Camera>();
-		rifleTrans->SetParent( camTrans );
+		//rifleTrans->SetParent( camTrans );
+		cam->SetTargetTransform( rifleTrans );
 		{/* Parameter */
+				camTrans->SetLocalPosition( 0.0f, 2.0f, 0.0f );
 				cam->SetPosition( Vector3( 0.0f, 0.0f, 0.0f ) );
 				cam->SetTarget( Vector3( 0.0f, 0.0f, 0.75f ) );
 				cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );

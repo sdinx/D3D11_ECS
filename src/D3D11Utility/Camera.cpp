@@ -28,9 +28,11 @@ struct  ConstantBufferForPerFrame
 };
 
 
-Camera::Camera( Transform*  transform )
+Camera::Camera( Transform*  transform, Transform*  targetTransform )
 {
 		assert( transform != nullptr );
+
+		m_targetTransform = targetTransform;
 
 		m_eyePosition = &transform->GetPosition();
 		m_translation = &transform->GetTranslation();
@@ -95,6 +97,7 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 				{
 						GetComponent<Transform>()->SetChange( true, Transform::MSG_UPDATE_MATRIX );
 						UpdateView();
+						UpdateTargetTransform();
 						UpdateConstantBuffer();
 				}
 		default:
@@ -184,20 +187,6 @@ void  Camera::UpdateView()
 		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r2 ) );
 		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) );
 
-		/*
-		// Y軸回転 ( 左右視点移動 )
-		distance.x = distance.x*cosf( r.x ) + distance.z*-sinf( r.x );
-		distance.z = distance.x*sinf( r.x ) + distance.z*cosf( r.x );
-		m_focusTarget.x = distance.x + m_eyePosition.x;
-		m_focusTarget.z = distance.z + m_eyePosition.z;
-
-		// X軸回転 ( 上下視点移動 )
-		distance.y = distance.y*cosf( r.y ) + distance.z*sinf( r.y );
-		distance.z = distance.y*-sinf( r.y ) + distance.z*cosf( r.y );
-		m_focusTarget.y = distance.y + m_eyePosition.y;
-		m_focusTarget.z = distance.z + m_eyePosition.z;
-		*/
-
 		// 行列計算
 		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
 		// ワールド行列の更新
@@ -227,8 +216,6 @@ void  Camera::UpdateView()
 						DirectX::XMLoadFloat3( &focusPos ),
 						DirectX::XMLoadFloat3( &m_upDirection ) ) );
 
-		// 移動量の初期化
-		*m_translation = Vector3( 0, 0, 0 );
 }
 
 
@@ -247,10 +234,34 @@ void  Camera::UpdateConstantBuffer()
 		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 
-		//D3D11_MAPPED_SUBRESOURCE  pdata;
-		//pd3dDeviceContext->Map( s_pConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata );
-		//memcpy_s( pdata.pData, pdata.RowPitch, ( void* ) ( &cbuffer ), sizeof( cbuffer ) );
-		//pd3dDeviceContext->Unmap( s_pConstantBuffer, 0 );
+}
+
+
+//----------------------------------------------------------------------------------
+//! @func:     UpdateTargetTransform( void ) : void
+//! @brief:    FPSカメラ用の注視点更新関数.
+//----------------------------------------------------------------------------------
+void  Camera::UpdateTargetTransform()
+{
+		if ( m_targetTransform == nullptr )
+				return;
+
+		m_targetTransform->Update();
+		Matrix4x4  world = m_targetTransform->GetWorld();
+
+		Vector3  pos = m_targetTransform->GetLocalPosition();
+
+		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( DirectX::XMLoadFloat3( &m_lookRotation ) );
+		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( DirectX::XMLoadFloat3( &pos) );
+
+		mtxPos = DirectX::XMMatrixMultiply( mtxAngle, mtxPos );
+		//mtxPos = DirectX::XMMatrixMultiply( mtxPos, DirectX::XMLoadFloat4x4( &world ) );
+		DirectX::XMStoreFloat4x4( &world, mtxPos );
+
+		// TODO: ワールド行列が一時的なものである為更新しても Transform::Update() で更新される.
+		m_targetTransform->SetEuler( m_lookRotation );
+		//m_targetTransform->SetPosition( world._41, world._42, world._43 );
+		m_targetTransform->SetPosition( pos + *m_eyePosition );
 }
 
 

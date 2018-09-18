@@ -60,7 +60,7 @@ namespace  D3D11Utility
 				static  ComponentId  STATIC_COMPONENT_ID;
 				bool  m_isMessages[MSG_UPDATE_ALL];// オブジェクトの移動をチェックする変数.
 				Transform*  m_pParent;// 親のワールド空間.
-				Matrix4x4  m_multiplyWorld;// 親との空間を掛け合わせたワールド空間.
+				Matrix4x4  m_multiplyWorld;// 親との空間を掛け合わせた絶対位置.
 
 				// 子に影響しないローカル空間.
 				Matrix4x4  m_localWorld;
@@ -196,6 +196,13 @@ namespace  D3D11Utility
 						m_isMessages[MSG_UPDATE_LOCAL] = true;
 						m_localPosition = position;
 				}
+				void  SetLocalPosition( float  x, float  y, float  z )
+				{
+						m_isMessages[MSG_UPDATE_LOCAL] = true;
+						m_localPosition.x = x;
+						m_localPosition.y = y;
+						m_localPosition.z = z;
+				}
 				void  SetLocalEuler( Vector3  euler )
 				{
 						m_isMessages[MSG_UPDATE_LOCAL] = true;
@@ -222,6 +229,13 @@ namespace  D3D11Utility
 						m_isMessages[MSG_UPDATE_MATRIX] = true;
 						m_position = position;
 				}
+				void  SetPosition( float  x, float  y, float  z )
+				{
+						m_isMessages[MSG_UPDATE_MATRIX] = true;
+						m_position.x = x;
+						m_position.y = y;
+						m_position.z = z;
+				}
 				void  SetEuler( Vector3  euler )
 				{
 						m_isMessages[MSG_UPDATE_MATRIX] = true;
@@ -230,7 +244,9 @@ namespace  D3D11Utility
 				void  SetEuler( float x, float y, float z )// オイラー角
 				{
 						m_isMessages[MSG_UPDATE_MATRIX] = true;
-						m_euler = Vector3( x, y, z );
+						m_euler.x = x;
+						m_euler.y = y;
+						m_euler.z = z;
 				}
 				void  SetScale( Vector3  scale )
 				{
