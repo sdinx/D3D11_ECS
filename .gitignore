@@ -4,6 +4,9 @@
 My Advisor Results - D3D11_ECS/
 My Amplifier Results - D3D11_ECS/
 
+# Not ignore
+!bullet3/bin/*.lib
+
 # Prerequisites
 *.d
 
@@ -30,7 +33,7 @@ My Amplifier Results - D3D11_ECS/
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
 *.exe
