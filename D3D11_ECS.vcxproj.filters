@@ -40,23 +40,23 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{08596376-7a35-4b9c-b0ee-671122379fc8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{244bfab3-1575-4cde-be26-a583c23257f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Game">
       <UniqueIdentifier>{6b04dae2-1ede-46b5-96ac-c3341d9d8683}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Scene">
-      <UniqueIdentifier>{df42ea04-eaf6-4d79-ad79-996cd51d479f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Game\Scene">
       <UniqueIdentifier>{44841112-3327-4e5e-aa40-11e68c7ca5a8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Manager">
-      <UniqueIdentifier>{024021d8-ed8c-4494-9eec-9324aa4f93ad}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Game\Manager">
       <UniqueIdentifier>{0bc716e1-2e99-4bb8-b499-fb7c5067062d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Game">
+      <UniqueIdentifier>{244bfab3-1575-4cde-be26-a583c23257f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Game\Scene">
+      <UniqueIdentifier>{df42ea04-eaf6-4d79-ad79-996cd51d479f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header\Game\Manager">
+      <UniqueIdentifier>{024021d8-ed8c-4494-9eec-9324aa4f93ad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -315,25 +315,25 @@
       <Filter>Header</Filter>
     </ClInclude>
     <ClInclude Include="Include\Game\Scene\Tutorial.h">
-      <Filter>Game\Scene</Filter>
+      <Filter>Header\Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Include\Game\Scene\BaseScene.h">
-      <Filter>Game\Scene</Filter>
+      <Filter>Header\Game\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Light.h">
       <Filter>Header\D3D11Utility\Components</Filter>
     </ClInclude>
     <ClInclude Include="Include\Game\Bullet.h">
-      <Filter>Game</Filter>
+      <Filter>Header\Game</Filter>
     </ClInclude>
     <ClInclude Include="Include\Game\Manager\BulletManager.h">
-      <Filter>Game\Manager</Filter>
+      <Filter>Header\Game\Manager</Filter>
     </ClInclude>
     <ClInclude Include="Include\Game\GameObject.h">
-      <Filter>Game</Filter>
+      <Filter>Header\Game</Filter>
     </ClInclude>
     <ClInclude Include="Include\Game\FPSGun.h">
-      <Filter>Game</Filter>
+      <Filter>Header\Game</Filter>
     </ClInclude>
     <ClInclude Include="Include\D3D11Utility\Systems\SystemInclude.h">
       <Filter>Header\D3D11Utility\Systems</Filter>

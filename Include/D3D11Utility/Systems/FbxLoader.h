@@ -108,6 +108,7 @@ namespace  D3D11Utility
 										return  m_materials[i];
 								return  Material();
 						}
+						Matrix4x4  GetMeshMatrix( UINT  frame, UINT  meshIndex );
 						std::vector<Vector3>  LoadVertices( FbxMesh*  pMesh, INT  size );
 						std::vector<Vector3>  LoadNormals( FbxMesh*  pMesh, INT  size );
 						std::vector<Vector2>  LoadTexcoords( FbxMesh*  pMesh, INT  size );
@@ -116,6 +117,7 @@ namespace  D3D11Utility
 						SkinMesh  LoadSkin( FbxMesh*  pMesh );
 						ModelContainer  LoadMesh( FbxScene*  pScene );
 						ModelContainer  SetAnimation( UINT  meshIndex, UINT  animationIndex, FbxTime&  fbxTime );
+						void  SetBoneMatrix(UINT  frame,UINT  meshIndex);
 						void  Release();
 
 				};// class FbxLoader

@@ -13,3 +13,6 @@
 
 // 2018.08.30 - ver 0.30
 // Bullet Physics ( v2.86 ) ‚ð’Ç‰Á
+
+// 2018.09.21 - ver 0.32
+// TextureManager‚ðƒVƒ“ƒOƒ‹ƒgƒ“‰»

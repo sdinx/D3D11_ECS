@@ -175,6 +175,7 @@ Graphics::TextureId  TextureManager::CreateTexture( const  std::wstring  &filena
 
 void  TextureManager::SetTexture( Graphics::TextureId  textureId )
 {
+		// note: ‚‘¬‰»‚ÌÈ—ª‘ÎÛ
 		if ( textureId >= ( int ) m_textures.size() )
 				return;
 
