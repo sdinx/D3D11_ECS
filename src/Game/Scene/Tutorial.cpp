@@ -108,7 +108,7 @@ void  Tutorial::Awake()
 		m_pd3dRenderer.reset( new  IDirect3DRenderer( m_pComponentManager.get() ) );
 		m_pEntityManager.reset( new  EntityManager( m_pComponentManager.get() ) );
 		m_pSystemManager.reset( new  SystemManager( m_pComponentManager.get(), m_pEntityManager.get() ) );
-		m_pTextureManager.reset( new  TextureManager );
+		m_pTextureManager = _Singleton<TextureManager>::GetInstance();
 		m_pSystemManager->AddSystem<Updater>();
 		m_pSystemManager->AddSystem<DebugSystem>();
 		auto  btEngine = m_pSystemManager->AddSystem<BulletEngine>();
@@ -212,7 +212,7 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		Entity*  playerEntity = m_pEntityManager->GetEntity( playerId );
 		playerEntity->SetTag( "Player" );
-		playerEntity->AddComponent<Renderable>( "res/humanoid.fbx" );
+		playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
 		playerEntity->AddComponent<Transform>();
 		Renderable*  playerRender = playerEntity->GetComponent<Renderable>();
 		Transform*  trans2 = playerEntity->GetComponent<Transform>();
