@@ -157,6 +157,7 @@ namespace  D3D11Utility
 				void  UpdateProjection( FLOAT fovAngleY, FLOAT aspectHByW, FLOAT nearZ, FLOAT farZ );
 				void  UpdateConstantBuffer();
 				void  UpdateTargetTransform();
+				void  UpdateTargetView();
 				void  Release();
 
 

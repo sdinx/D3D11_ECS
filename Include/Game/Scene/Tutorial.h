@@ -30,6 +30,9 @@ namespace  Scene
 				std::shared_ptr<D3D11Utility::Systems::TextureManager>  m_pTextureManager;
 				D3D11Utility::Camera*  m_FPSCamera = nullptr;
 
+				// ゲームオブジェクト
+				D3D11Utility::Entity*  m_playerEntity;
+
 		public:
 				//----------------------------------------------------------------------------------
 				// public variables

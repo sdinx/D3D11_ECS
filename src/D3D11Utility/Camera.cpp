@@ -265,6 +265,60 @@ void  Camera::UpdateTargetTransform()
 }
 
 
+//----------------------------------------------------------------------------------
+//! @func:     UpdateTargetView( void ) : void
+//! @brief:    TPSカメラ用の注視点更新関数.
+//----------------------------------------------------------------------------------
+void  Camera::UpdateTargetView()
+{
+		if ( m_targetTransform == nullptr )
+				return;
+
+
+		m_targetTransform->Update();
+		Matrix4x4  world = m_targetTransform->GetWorld();
+
+		Matrix4x4  dist;
+		Vector3  focusPos( m_focusTarget );
+		Vector3  r( ToRadian( m_lookRotation.x ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
+		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
+
+		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( m_eyePosition ) );
+		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( m_translation ) );
+		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r2 ) );
+		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) );
+
+		// 行列計算
+		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
+		// ワールド行列の更新
+		XMStoreFloat4x4( &m_localWorld, XMMatrixMultiply( mtxTrans, mtxPos ) );
+
+		// カメラ位置を更新
+		m_eyePosition->x = world._41;
+		m_eyePosition->y = world._42;
+		m_eyePosition->z = world._43;
+
+		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( &focusPos ) );
+		mtxDist = XMMatrixMultiply( mtxDist, mtxPos );
+		mtxDist = XMMatrixMultiply( mtxTrans, mtxDist );
+
+		// ワールド行列の更新
+		XMStoreFloat4x4( &dist, mtxDist );
+
+		focusPos.x = dist._41;
+		focusPos.y = dist._42;
+		focusPos.z = dist._43;
+
+		// ビュー行列変換
+		DirectX::XMStoreFloat4x4(
+				&m_view,
+				DirectX::XMMatrixLookAtLH(
+						DirectX::XMLoadFloat3( &focusPos ),
+						DirectX::XMLoadFloat3( m_eyePosition ),
+						DirectX::XMLoadFloat3( &m_upDirection ) ) );
+}
+
+
 void  Camera::Release()
 {
 		*m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
