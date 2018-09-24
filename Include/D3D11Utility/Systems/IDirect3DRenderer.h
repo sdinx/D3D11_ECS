@@ -18,6 +18,7 @@
 #include  <D3D11Utility\Graphics\GeometryShader.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
 #include  <vector>
+#include  <Singleton.h>
 
 
 namespace  D3D11Utility
@@ -25,15 +26,16 @@ namespace  D3D11Utility
 		namespace  Systems
 		{
 
-				class  IDirect3DRenderer :public  IGraphicsRenderer
+				class  IDirect3DRenderer :public  IGraphicsRenderer, public  _Singleton<IDirect3DRenderer>
 				{
+						friend  class  _Singleton<IDirect3DRenderer>;
 
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 
-						IDirect3DRenderer( ComponentManager*  pComponentManagerInstance );
+						IDirect3DRenderer( ComponentManager*  pComponentManagerInstance = nullptr );
 						~IDirect3DRenderer();
 
 
@@ -76,6 +78,12 @@ namespace  D3D11Utility
 
 						void  Release();
 						void  Rendering()const;
+
+						// index
+						void  SetComponentManager( ComponentManager*  manager )
+						{
+								m_componentManager = manager;
+						}
 
 				};// class IDirect3DRenderer
 

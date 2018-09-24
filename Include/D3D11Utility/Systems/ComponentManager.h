@@ -14,7 +14,7 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Component.h>
+#include  <D3D11Utility\IComponent.h>
 #include  <D3D11Utility\IEntity.h>
 #include  <D3D11Utility\D3D11Utility.h>
 #include  <vector>
@@ -29,7 +29,7 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 
 		using  EntityComponentTable = std::vector<std::vector<ComponentId>>;
-		using  ComponentTable = std::vector<std::vector<Component*>>;
+		using  ComponentTable = std::vector<std::vector<IComponent*>>;
 
 
 		namespace  Systems
@@ -77,11 +77,11 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						//! @func:     AddComponent( const  EntityId,  P&&... ) : void, template<T, P>
 						//! @brief:     始めてテーブルに登録されるコンポーネントの場合, リストの末尾にIDを追加.
-						//! @param:     (param) 追加するコンポーネントのコンストラクタ引数を指定.
+						//! @param:   (param) 追加するコンポーネントのコンストラクタ引数を指定.
 						//! @note:     予め全コンポーネントに固有IDを割り振ると高速化できるかも.
 						//----------------------------------------------------------------------------------
 						template<class  T, typename  ...P>
-						T*  AddComponent( const  EntityId  entity, P&&... param )
+						T*  AddComponent( const  EntityId  entity, P&&...  param )
 						{
 								const  UINT  entityId = entity.index;
 								UINT  nComponentPosition = 0;
@@ -111,7 +111,7 @@ namespace  D3D11Utility
 								m_entityComponetIdTable[entityId][componentId] = nComponentPosition;
 
 								// コンポーネント生成
-								Component*  component = new  T( std::forward<P>( param )... );
+								IComponent*  component = new  T( std::forward<P>( param )... );
 								component->m_parentsEntityId = entity;
 								component->m_pComponentManager = this;
 								component->m_componentId = componentId;
@@ -185,18 +185,18 @@ namespace  D3D11Utility
 						}// end RemoveComponent(const  EntityId) : void
 
 						//----------------------------------------------------------------------------------
-						//! @func:     GetComponents() : std::vector<Component*>, template<T>
+						//! @func:     GetComponents() : std::vector<IComponent*>, template<T>
 						//! @brief:     指定したコンポーネント型の配列を返す
 						//! @TODO:     配列を直接返さずに行えるように変更する必要がある
 						//----------------------------------------------------------------------------------
 						template  <class  T>
-						std::vector<Component*>  GetComponents()
+						std::vector<IComponent*>  GetComponents()
 						{
 								ComponentId  componentId = T::GetStaticComponentId();
 
 								if ( componentId == STATIC_ID_INVALID )
 								{
-										return  std::vector<Component*>();
+										return  std::vector<IComponent*>();
 								}
 
 								return  m_componentTable[componentId];

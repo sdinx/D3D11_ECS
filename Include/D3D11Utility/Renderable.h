@@ -20,6 +20,7 @@
 #include  <GameUtility.h>
 #include  <IRenderable.h>
 #include  <memory>
+#include  <list>
 
 
 namespace  D3D11Utility

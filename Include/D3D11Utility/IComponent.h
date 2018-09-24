@@ -16,6 +16,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility/D3D11Utility.h>
 #include  <D3D11Utility/IEntity.h>
+#include  <GameUtility.h>
 
 
 namespace  D3D11Utility
@@ -103,6 +104,13 @@ namespace  D3D11Utility
 				{
 						m_isActive = isUpdating;
 				}
+
+				virtual  void  HandleMessage( const  GameUtility::Message&  msg ) = 0;
+				virtual  void  HandleMessage( const  GameUtility::Message&  msg, Value  var ) = 0;// !! need change.
+				//virtual  void  BeforeUpdate() = 0;
+				virtual  void  Update() = 0;
+				//virtual  void  AfterUpdate() = 0;
+				virtual  void  Release() {}
 
 		public:
 				//----------------------------------------------------------------------------------

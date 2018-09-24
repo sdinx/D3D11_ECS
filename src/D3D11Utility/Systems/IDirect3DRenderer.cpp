@@ -52,8 +52,8 @@ void  IDirect3DRenderer::Rendering()const
 
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 				{
-						renderable->Update();
-						renderable->Rendering();
+						renderable->HandleMessage( Renderable::MSG_UPDATE_CBUFFER );
+						renderable->GetComponent<Renderable>()->Rendering();
 				}
 
 #ifdef  _RENDERING_TIME_COUNT_
@@ -78,7 +78,7 @@ void  IDirect3DRenderer::Rendering()const
 
 Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel )
 {
-		const  size_t  shaderHash = std::hash<LPCSTR>()( szVSModel );
+		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
 		const  Graphics::ShaderId  shaderId = m_vertexShaderList.size();
 		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
@@ -140,7 +140,7 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 
 Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel )
 {
-		const  size_t  shaderHash = std::hash<LPCSTR>()( szEntryPoint );
+		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
 		const  Graphics::ShaderId  shaderId = m_geometryShaderList.size();
 		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
@@ -184,7 +184,7 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 
 Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel )
 {
-		const  size_t  shaderHash = std::hash<LPCSTR>()( szPSModel );
+		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
 		const  Graphics::ShaderId  shaderId = m_pixelShaderList.size();
 		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 

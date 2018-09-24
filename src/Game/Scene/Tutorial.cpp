@@ -106,9 +106,11 @@ void  Tutorial::Awake()
 {
 		/* システムクラス生成 */
 		m_pComponentManager.reset( new  ComponentManager() );
-		m_pd3dRenderer.reset( new  IDirect3DRenderer( m_pComponentManager.get() ) );
 		m_pEntityManager.reset( new  EntityManager( m_pComponentManager.get() ) );
 		m_pSystemManager.reset( new  SystemManager( m_pComponentManager.get(), m_pEntityManager.get() ) );
+
+		m_pd3dRenderer = _Singleton<IDirect3DRenderer>::GetInstance();
+		m_pd3dRenderer->SetComponentManager( m_pComponentManager.get() );
 		m_pTextureManager = _Singleton<TextureManager>::GetInstance();
 		m_pSystemManager->AddSystem<Updater>();
 		m_pSystemManager->AddSystem<DebugSystem>();
@@ -120,6 +122,7 @@ void  Tutorial::Awake()
 		Graphics::TextureId  texGroundId = m_pTextureManager->CreateTexture( L"res/ground.jpg" );
 		Graphics::TextureId  texRifleDiffuseId = m_pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 		Graphics::TextureId  texSkyId = m_pTextureManager->CreateTexture( L"res/skysphere.jpg" );
+		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/fubuking.png" );
 
 		/* シェーダ作成 */
 		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
@@ -168,7 +171,6 @@ void  Tutorial::Awake()
 				btRigidBody*  rb = btEngine->CreateRigidBody<btBoxShape>( cubeTrans, 0.1f, 0.5f, btVector3( 0, 0, 0 ), btVector3( 125.0f, 0.1f, 125.0f ) );
 				cubeEntity->AddComponent<Physical::BulletPhysics>( rb, btEngine );
 		}
-
 
 		/* Init SkySphere */
 		static  const  EntityId  sphereId = m_pEntityManager->CreateEntity( "SkySphere" );
@@ -220,7 +222,7 @@ void  Tutorial::Awake()
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( ps );
 		{/* Parameter */
-				playerRender->SetTextureId( texId, m_pTextureManager.get() );
+				playerRender->SetTextureId( texFubukiId, m_pTextureManager.get() );
 				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetLocalScale();

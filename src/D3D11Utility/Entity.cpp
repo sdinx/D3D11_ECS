@@ -12,7 +12,7 @@ using  namespace  D3D11Utility;
 
 Entity::Entity( std::string  name, UINT  id, Systems::ComponentManager*  pComponentManagerInstance ) :
 		/* Initialize */
-		IEntity( id, pComponentManagerInstance ),
+		IEntity( name, id, pComponentManagerInstance ),
 		m_isActive( true ),
 		m_tag( "none" )
 {

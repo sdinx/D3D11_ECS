@@ -15,11 +15,13 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <DirectXMath.h>
+#include  <btBulletCollisionCommon.h>
 
 
 namespace  D3D11Utility
 {
 
+		
 		struct  Vector2 :public  DirectX::XMFLOAT2
 		{
 				constexpr  Vector2() :DirectX::XMFLOAT2()
@@ -114,7 +116,9 @@ namespace  D3D11Utility
 						*this = *this - f3;
 				}
 		};
+		
 
+		//using  Vector3 = btVector3;
 		using  Vector4 = DirectX::XMFLOAT4;
 		using  Quaternion = DirectX::XMFLOAT4;
 		using  Matrix3x3 = DirectX::XMFLOAT3X3;

@@ -24,9 +24,9 @@ namespace  Scene
 				//----------------------------------------------------------------------------------
 
 				std::unique_ptr<D3D11Utility::Systems::ComponentManager>  m_pComponentManager;
-				std::unique_ptr<D3D11Utility::Systems::IDirect3DRenderer>  m_pd3dRenderer;
 				std::unique_ptr<D3D11Utility::Systems::EntityManager>  m_pEntityManager;
 				std::unique_ptr<D3D11Utility::Systems::SystemManager>  m_pSystemManager;
+				std::shared_ptr<D3D11Utility::Systems::IDirect3DRenderer>  m_pd3dRenderer;
 				std::shared_ptr<D3D11Utility::Systems::TextureManager>  m_pTextureManager;
 				D3D11Utility::Camera*  m_FPSCamera = nullptr;
 

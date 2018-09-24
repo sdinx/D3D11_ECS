@@ -15,6 +15,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Interface.h>
+#include  <string>
 
 
 namespace  D3D11Utility
@@ -67,7 +68,9 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				IEntity() = delete;
-				IEntity( const  unsigned  id, Systems::ComponentManager*  pComponentManagerInstance ) :
+				IEntity( std::string  name, unsigned  id, Systems::ComponentManager*  pComponentManagerInstance ) :
+						m_name( name ),
+						m_nameHash( std::hash<std::string>()( name ) ),
 						m_entityId( id ),
 						m_pComponentManager( pComponentManagerInstance )
 				{}
@@ -86,6 +89,8 @@ namespace  D3D11Utility
 				// protected variables
 				//----------------------------------------------------------------------------------
 				const  EntityId  m_entityId;
+				const  std::string  m_name;
+				const  size_t  m_nameHash;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -117,6 +122,15 @@ namespace  D3D11Utility
 				inline  const  EntityId  GetEntityId()const
 				{
 						return  m_entityId;
+				}
+
+				inline  bool  operator==( const  std::string  name ) const
+				{
+						return  ( m_nameHash == std::hash<std::string>()( name ) ) ? true : false;
+				}
+				inline  bool  operator!=( const  std::string  name ) const
+				{
+						return  ( m_nameHash != std::hash<std::string>()( name ) ) ? true : false;
 				}
 
 		};// class IEntity

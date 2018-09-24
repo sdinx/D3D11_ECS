@@ -92,14 +92,23 @@ namespace  D3D11Utility
 						return  ( m_isActive != isActive ) ? true : false;
 				}
 
-				//inline  BOOL  operator==( Entity  entity ) const
-				//{
-				//		return  ( GetEntityID() == entity.GetEntityID() ) ? true : false;
-				//}
-				//inline  BOOL  operator!=( Entity  entity ) const
-				//{
-				//		return  ( GetEntityID() != entity.GetEntityID() ) ? true : false;
-				//}
+				inline  BOOL  operator==( const  Entity&  entity ) const
+				{
+						return  ( m_entityId == entity.m_entityId ) ? true : false;
+				}
+				inline  BOOL  operator!=( const  Entity&  entity ) const
+				{
+						return  ( m_entityId != entity.m_entityId ) ? true : false;
+				}
+
+				inline  BOOL  operator==( const  std::string  name ) const
+				{
+						return  ( m_nameHash == std::hash<std::string>()( name ) ) ? true : false;
+				}
+				inline  BOOL  operator!=( const  std::string  name ) const
+				{
+						return  ( m_nameHash != std::hash<std::string>()( name ) ) ? true : false;
+				}
 
 		};// class Entity
 
