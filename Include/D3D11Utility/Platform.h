@@ -64,7 +64,7 @@ namespace  D3D11Utility
 				{
 						*this = *this - f2;
 				}
-		};
+		};/*
 		struct  Vector3 :public  DirectX::XMFLOAT3
 		{
 				constexpr  Vector3() :DirectX::XMFLOAT3() 
@@ -116,12 +116,12 @@ namespace  D3D11Utility
 						*this = *this - f3;
 				}
 		};
-		
+		*/
 
-		//using  Vector3 = btVector3;
+		using  Vector3 = btVector3;
 		using  Vector4 = DirectX::XMFLOAT4;
-		using  Quaternion = DirectX::XMFLOAT4;
-		using  Matrix3x3 = DirectX::XMFLOAT3X3;
+		using  Quaternion = btQuaternion;
+		using  Matrix3x3 = btMatrix3x3;
 		using  Matrix4x4 = DirectX::XMFLOAT4X4;
 		using  Value = void*;// Žg—p‹ÖŽ~
 

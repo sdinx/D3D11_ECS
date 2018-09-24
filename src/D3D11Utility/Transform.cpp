@@ -19,10 +19,12 @@ ComponentId  Transform::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 
 Transform::Transform() :
 		m_localScale( 1, 1, 1 ),
-		m_position( 0, 0, 0 ),
-		m_translation( 0, 0, 0 ),
-		m_euler( 0, 0, 0 ),
 		m_scale( 1, 1, 1 ),
+		m_position( 0, 0, 0 ),
+		m_localPosition( 0, 0, 0 ),
+		m_euler( 0, 0, 0 ),
+		m_localEuler( 0, 0, 0 ),
+		m_translation( 0, 0, 0 ),
 		m_pParent( nullptr )
 {
 		for ( int i = 0; i < MSG_UPDATE_ALL; i++ )
@@ -33,10 +35,12 @@ Transform::Transform() :
 
 Transform::Transform( Transform*  parent ) :
 		m_localScale( 1, 1, 1 ),
-		m_position( 0, 0, 0 ),
-		m_translation( 0, 0, 0 ),
-		m_euler( 0, 0, 0 ),
 		m_scale( 1, 1, 1 ),
+		m_position( 0, 0, 0 ),
+		m_localPosition( 0, 0, 0 ),
+		m_euler( 0, 0, 0 ),
+		m_localEuler( 0, 0, 0 ),
+		m_translation( 0, 0, 0 ),
 		m_pParent( parent )
 {
 		for ( int i = 0; i < MSG_UPDATE_ALL; i++ )
@@ -57,9 +61,9 @@ void  Transform::Update()
 		DirectX::XMStoreFloat4x4( &m_world, mtxWorld );
 		
 		// 現在座標を計算後の座標に更新
-		m_position.x = m_world._41;
-		m_position.y = m_world._42;
-		m_position.z = m_world._43;
+		m_position.m_floats[0] = m_world._41;
+		m_position.m_floats[1] = m_world._42;
+		m_position.m_floats[2] = m_world._43;
 
 		// ローカル空間を計算
 		UpdateLocalMatrix();
@@ -77,10 +81,10 @@ void  Transform::UpdateLocalMatrix()
 				return;
 
 		XMMATRIX  localWorld;
-		Vector3  r( ToRadian( m_localEuler.x ), ToRadian( m_localEuler.y ), ToRadian( m_localEuler.z ) );
+		Vector3  r( ToRadian( m_localEuler.m_floats[0] ), ToRadian( m_localEuler.m_floats[1] ), ToRadian( m_localEuler.m_floats[2] ) );
 
-		localWorld = XMMatrixMultiply( XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) ), XMMatrixTranslationFromVector( XMLoadFloat3( &m_localPosition ) ) );
-		localWorld = XMMatrixMultiply( XMMatrixScalingFromVector( XMLoadFloat3( &m_localScale ) ), localWorld );
+		localWorld = XMMatrixMultiply( XMMatrixRotationRollPitchYawFromVector( r.get128() ), XMMatrixTranslationFromVector( m_localPosition.get128() ) );
+		localWorld = XMMatrixMultiply( XMMatrixScalingFromVector( m_localScale.get128() ), localWorld );
 		XMStoreFloat4x4( &m_localWorld, localWorld );
 
 		m_isMessages[MSG_UPDATE_LOCAL] = false;
@@ -93,13 +97,13 @@ void  Transform::UpdateMatrix()
 				return;
 
 		XMMATRIX  mtxPos, mtxTrans, mtxRotate, mtxScale;
-		Vector3  r( ToRadian( m_euler.x ), ToRadian( m_euler.y ), ToRadian( m_euler.z ) );
+		Vector3  r( ToRadian( m_euler.m_floats[0] ), ToRadian( m_euler.m_floats[1] ), ToRadian( m_euler.m_floats[2] ) );
 
 		// 行列変換
-		mtxPos = XMMatrixTranslationFromVector( XMLoadFloat3( &m_position ) );
-		mtxRotate = XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) );
-		mtxTrans = XMMatrixTranslationFromVector( XMLoadFloat3( &m_translation ) );
-		mtxScale = XMMatrixScalingFromVector( XMLoadFloat3( &m_scale ) );
+		mtxPos = XMMatrixTranslationFromVector( m_position.get128() );
+		mtxRotate = XMMatrixRotationRollPitchYawFromVector( r.get128() );
+		mtxTrans = XMMatrixTranslationFromVector( m_translation.get128() );
+		mtxScale = XMMatrixScalingFromVector( m_scale.get128() );
 
 		// 行列計算
 		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
@@ -110,9 +114,9 @@ void  Transform::UpdateMatrix()
 		XMStoreFloat4x4( &m_world, mtxPos );
 
 		// 現在座標を計算後の座標に更新
-		m_position.x = m_world._41;
-		m_position.y = m_world._42;
-		m_position.z = m_world._43;
+		m_position.m_floats[0] = m_world._41;
+		m_position.m_floats[1] = m_world._42;
+		m_position.m_floats[2] = m_world._43;
 
 		// 移動量の初期化
 		m_translation = Vector3( 0, 0, 0 );

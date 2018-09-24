@@ -80,7 +80,7 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 		VERTEX*  vertices = new  VERTEX[vertexCount];
 		for ( auto vertex : container.vertices )
 		{
-				vertices[i].position = vertex;
+				vertices[i].position = DirectX::XMFLOAT3( vertex.m_floats[0], vertex.m_floats[1], vertex.m_floats[2] );;
 				i++;
 		}
 
@@ -94,7 +94,7 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 		i = 0;
 		for ( auto normal : container.normals )
 		{
-				vertices[i].normal = normal;
+				vertices[i].normal = DirectX::XMFLOAT3( normal.m_floats[0], normal.m_floats[1], normal.m_floats[2] );
 				i++;
 		}
 

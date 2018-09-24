@@ -227,7 +227,7 @@ void  Tutorial::Awake()
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetLocalScale();
 				Vector3&  pos2 = trans2->GetPosition();
-				pos2.z += 5.0f;
+				pos2.m_floats[2] += 5.0f;
 				scale2 = Vector3( .03f, .03f, .03f );
 		}
 
@@ -272,20 +272,20 @@ void  Tutorial::Update()
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				trans.z += 0.01f;
+				trans.m_floats[2] += 0.01f;
 		}
 		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				trans.z += -0.01f;
+				trans.m_floats[2] += -0.01f;
 		}
 
 		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				trans.x += -0.01f;
+				trans.m_floats[0] += -0.01f;
 		}
 		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				trans.x += 0.01f;
+				trans.m_floats[0] += 0.01f;
 		}
 
 		if ( Input::KeyTrigger( DIK_SPACE ) )

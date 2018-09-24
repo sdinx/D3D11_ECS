@@ -108,9 +108,9 @@ void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext* 
 
 UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices )
 {
-		FLOAT  sx = size.x / 2.0f;
-		FLOAT  sy = size.y / 2.0f;
-		FLOAT  sz = size.z / 2.0f;
+		FLOAT  sx = size.m_floats[0] / 2.0f;
+		FLOAT  sy = size.m_floats[1] / 2.0f;
+		FLOAT  sz = size.m_floats[2] / 2.0f;
 		UINT  numVertices = 0;
 
 		switch ( primitiveType )
@@ -133,9 +133,9 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 				{
 						numVertices = 3;
 						ppVertices = new  VERTEX[numVertices];
-						ppVertices[0].position = Vector3( position.x, position.y + sy, position.z );
-						ppVertices[1].position = Vector3( position.x + sx, position.y - sy, position.z );
-						ppVertices[2].position = Vector3( position.x - sx, position.y - sy, position.z );
+						ppVertices[0].position = DirectX::XMFLOAT3( position.m_floats[0], position.m_floats[1] + sy, position.m_floats[2] );
+						ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] );
+						ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] );
 
 				}// end case PRMTV_PLANE
 				break;
@@ -143,16 +143,16 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 				{
 						numVertices = 4;
 						ppVertices = new  VERTEX[numVertices];
-						ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z );
-						ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z );
-						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
-						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
+						ppVertices[0].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] );
+						ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] );
+						ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] );
+						ppVertices[3].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] );
 
 
-						ppVertices[0].texcoord = Vector2( 0, 0 );
-						ppVertices[1].texcoord = Vector2( 1, 0 );
-						ppVertices[2].texcoord = Vector2( 1, 1 );
-						ppVertices[3].texcoord = Vector2( 0, 1 );
+						ppVertices[0].texcoord = DirectX::XMFLOAT2( 0, 0 );
+						ppVertices[1].texcoord = DirectX::XMFLOAT2( 1, 0 );
+						ppVertices[2].texcoord = DirectX::XMFLOAT2( 1, 1 );
+						ppVertices[3].texcoord = DirectX::XMFLOAT2( 0, 1 );
 
 				}// end case PRMTV_SPHERE
 				break;
@@ -169,9 +169,9 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 
 UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices )
 {
-		FLOAT  sx = size.x / 2.0f;
-		FLOAT  sy = size.y / 2.0f;
-		FLOAT  sz = size.z / 2.0f;
+		FLOAT  sx = size.m_floats[0] / 2.0f;
+		FLOAT  sy = size.m_floats[1] / 2.0f;
+		FLOAT  sz = size.m_floats[2] / 2.0f;
 		UINT  numVertices = 0;
 
 		switch ( primitiveType )
@@ -185,40 +185,40 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						// 頂点設定
 						{
 								// front face
-								ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z - sz );
-								ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z - sz );
-								ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z - sz );
-								ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z - sz );
+								ppVertices[0].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] - sz );
+								ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] - sz );
+								ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] - sz );
+								ppVertices[3].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] - sz );
 
 								// back face
-								ppVertices[4].position = Vector3( position.x + sx, position.y + sy, position.z + sz );
-								ppVertices[5].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
-								ppVertices[6].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
-								ppVertices[7].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
+								ppVertices[4].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] + sz );
+								ppVertices[5].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] + sz );
+								ppVertices[6].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] + sz );
+								ppVertices[7].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] + sz );
 
 								// left face
-								ppVertices[8].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
-								ppVertices[9].position = Vector3( position.x - sx, position.y + sy, position.z - sz );
-								ppVertices[10].position = Vector3( position.x - sx, position.y - sy, position.z - sz );
-								ppVertices[11].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
+								ppVertices[8].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] + sz );
+								ppVertices[9].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] - sz );
+								ppVertices[10].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] - sz );
+								ppVertices[11].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] + sz );
 
 								// right face
-								ppVertices[12].position = Vector3( position.x + sx, position.y + sy, position.z - sz );
-								ppVertices[13].position = Vector3( position.x + sx, position.y + sy, position.z + sz );
-								ppVertices[14].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
-								ppVertices[15].position = Vector3( position.x + sx, position.y - sy, position.z - sz );
+								ppVertices[12].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] - sz );
+								ppVertices[13].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] + sz );
+								ppVertices[14].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] + sz );
+								ppVertices[15].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] - sz );
 
 								// top face
-								ppVertices[16].position = Vector3( position.x - sx, position.y + sy, position.z + sz );
-								ppVertices[17].position = Vector3( position.x + sx, position.y + sy, position.z + sz );
-								ppVertices[18].position = Vector3( position.x + sx, position.y + sy, position.z - sz );
-								ppVertices[19].position = Vector3( position.x - sx, position.y + sy, position.z - sz );
+								ppVertices[16].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] + sz );
+								ppVertices[17].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] + sz );
+								ppVertices[18].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] - sz );
+								ppVertices[19].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] - sz );
 
 								// bottom face
-								ppVertices[20].position = Vector3( position.x + sx, position.y - sy, position.z - sz );
-								ppVertices[21].position = Vector3( position.x - sx, position.y - sy, position.z - sz );
-								ppVertices[22].position = Vector3( position.x - sx, position.y - sy, position.z + sz );
-								ppVertices[23].position = Vector3( position.x + sx, position.y - sy, position.z + sz );
+								ppVertices[20].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] - sz );
+								ppVertices[21].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] - sz );
+								ppVertices[22].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] + sz );
+								ppVertices[23].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] + sz );
 						}
 
 						// 頂点インデックス設定
@@ -281,22 +281,22 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						// テクスチャ座標設定
 						{
 								// front face
-								ppVertices[0].texcoord = Vector2( 0, 0 );
-								ppVertices[1].texcoord = Vector2( 1, 0 );
-								ppVertices[2].texcoord = Vector2( 1, 1 );
-								ppVertices[3].texcoord = Vector2( 0, 1 );
+								ppVertices[0].texcoord = DirectX::XMFLOAT2( 0, 0 );
+								ppVertices[1].texcoord = DirectX::XMFLOAT2( 1, 0 );
+								ppVertices[2].texcoord = DirectX::XMFLOAT2( 1, 1 );
+								ppVertices[3].texcoord = DirectX::XMFLOAT2( 0, 1 );
 
 								// back face
-								ppVertices[4].texcoord = Vector2( 0, 0 );
-								ppVertices[5].texcoord = Vector2( 1, 0 );
-								ppVertices[6].texcoord = Vector2( 1, 1 );
-								ppVertices[7].texcoord = Vector2( 0, 1 );
+								ppVertices[4].texcoord = DirectX::XMFLOAT2( 0, 0 );
+								ppVertices[5].texcoord = DirectX::XMFLOAT2( 1, 0 );
+								ppVertices[6].texcoord = DirectX::XMFLOAT2( 1, 1 );
+								ppVertices[7].texcoord = DirectX::XMFLOAT2( 0, 1 );
 
 								// left face
-								ppVertices[8].texcoord = Vector2( 0, 0 );
-								ppVertices[9].texcoord = Vector2( 1, 0 );
-								ppVertices[10].texcoord = Vector2( 1, 1 );
-								ppVertices[11].texcoord = Vector2( 0, 1 );
+								ppVertices[8].texcoord = DirectX::XMFLOAT2( 0, 0 );
+								ppVertices[9].texcoord = DirectX::XMFLOAT2( 1, 0 );
+								ppVertices[10].texcoord = DirectX::XMFLOAT2( 1, 1 );
+								ppVertices[11].texcoord = DirectX::XMFLOAT2( 0, 1 );
 
 								// right face
 								ppVertices[12].texcoord = Vector2( 0, 0 );
@@ -332,9 +332,9 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 				{
 						numVertices = 3;
 						ppVertices = new  VERTEX[numVertices];
-						ppVertices[0].position = Vector3( position.x, position.y + sy, position.z );
-						ppVertices[1].position = Vector3( position.x + sx, position.y - sy, position.z );
-						ppVertices[2].position = Vector3( position.x - sx, position.y - sy, position.z );
+						ppVertices[0].position = DirectX::XMFLOAT3( position.m_floats[0], position.m_floats[1] + sy, position.m_floats[2] );
+						ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] );
+						ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] );
 
 				}// end case PRMTV_PLANE
 				break;
@@ -342,10 +342,10 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 				{
 						numVertices = 4;
 						ppVertices = new  VERTEX[numVertices];
-						ppVertices[0].position = Vector3( position.x - sx, position.y + sy, position.z );
-						ppVertices[1].position = Vector3( position.x + sx, position.y + sy, position.z );
-						ppVertices[2].position = Vector3( position.x + sx, position.y - sy, position.z );
-						ppVertices[3].position = Vector3( position.x - sx, position.y - sy, position.z );
+						ppVertices[0].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] + sy, position.m_floats[2] );
+						ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] + sy, position.m_floats[2] );
+						ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] );
+						ppVertices[3].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] );
 
 						ppVertices[0].texcoord = Vector2( 0, 0 );
 						ppVertices[1].texcoord = Vector2( 1, 0 );

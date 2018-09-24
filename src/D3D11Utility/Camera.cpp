@@ -32,15 +32,16 @@ Camera::Camera( Transform*  transform, Transform*  targetTransform )
 {
 		assert( transform != nullptr );
 
+		m_transform = transform;
 		m_targetTransform = targetTransform;
 
-		m_eyePosition = &transform->GetPosition();
-		m_translation = &transform->GetTranslation();
+		m_eyePosition = transform->GetPosition();
+		m_translation = transform->GetTranslation();
 
 		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
 		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
-		*m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
-		*m_translation = Vector3( 0.0f, 0.0f, 0.0f );
+		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
+		m_translation = Vector3( 0.0f, 0.0f, 0.0f );
 		m_lookRotation = Vector3( 0.0f, 0.0f, 0.0f );
 
 		UpdateView();
@@ -53,10 +54,10 @@ Camera::Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosit
 {
 		assert( transform != nullptr );
 
-		m_eyePosition = &transform->GetPosition();
-		//m_translation = &transform->GetTranslation();
+		m_transform = transform;
+		m_translation = transform->GetTranslation();
 
-		*m_eyePosition = eyePosition;
+		m_eyePosition = eyePosition;
 		m_focusTarget = focusPosition;
 		m_upDirection = upDirection;
 
@@ -128,7 +129,7 @@ void  Camera::SetConstantBuffer()
 
 void  Camera::SetPosition( Vector3  eyePosition )
 {
-		*m_eyePosition = eyePosition;
+		m_eyePosition = eyePosition;
 }
 
 
@@ -146,20 +147,20 @@ void  Camera::SetRotation( float  x, float  y, float  z )
 
 void  Camera::SetLookRotation( float  x, float  y, float  z )
 {
-		m_lookRotation.x += x;
-		m_lookRotation.y += y;
-		m_lookRotation.z += z;
+		m_lookRotation.m_floats[0] += x;
+		m_lookRotation.m_floats[1] += y;
+		m_lookRotation.m_floats[2] += z;
 
 		GetComponent<Transform>()->SetEuler( m_lookRotation );
 
-		if ( m_lookRotation.x > 89.99f || m_lookRotation.x < -90.0f )
-				m_lookRotation.x -= x;
+		if ( m_lookRotation.m_floats[0] > 89.99f || m_lookRotation.m_floats[0] < -90.0f )
+				m_lookRotation.m_floats[0] -= x;
 }
 
 
 void  Camera::SetTranslation( Vector3  trans )
 {
-		*m_translation += trans;
+		m_translation += trans;
 }
 
 
@@ -177,15 +178,19 @@ void  Camera::Update()
 
 void  Camera::UpdateView()
 {
+
+		m_eyePosition = m_transform->GetPosition();
+		m_translation = m_transform->GetTranslation();
+
 		Matrix4x4  dist;
 		Vector3  focusPos( m_focusTarget );
-		Vector3  r( ToRadian( m_lookRotation.x ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
-		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
+		Vector3  r( ToRadian( m_lookRotation.m_floats[0] ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
+		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
 
-		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( m_eyePosition ) );
-		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( m_translation ) );
-		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r2 ) );
-		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) );
+		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( m_eyePosition.get128() );
+		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( m_translation.get128() );
+		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( r2.get128() );
+		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( r.get128() );
 
 		// 行列計算
 		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
@@ -193,28 +198,28 @@ void  Camera::UpdateView()
 		XMStoreFloat4x4( &m_localWorld, XMMatrixMultiply( mtxTrans, mtxPos ) );
 
 		// カメラ位置を更新
-		m_eyePosition->x = m_localWorld._41;
-		m_eyePosition->y = m_localWorld._42;
-		m_eyePosition->z = m_localWorld._43;
+		m_eyePosition.m_floats[0] = m_localWorld._41;
+		m_eyePosition.m_floats[1] = m_localWorld._42;
+		m_eyePosition.m_floats[2] = m_localWorld._43;
 
-		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( &focusPos ) );
+		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( focusPos.get128() );
 		mtxDist = XMMatrixMultiply( mtxDist, mtxPos );
 		mtxDist = XMMatrixMultiply( mtxTrans, mtxDist );
 
 		// ワールド行列の更新
 		XMStoreFloat4x4( &dist, mtxDist );
 
-		focusPos.x = dist._41;
-		focusPos.y = dist._42;
-		focusPos.z = dist._43;
+		focusPos.m_floats[0] = dist._41;
+		focusPos.m_floats[1] = dist._42;
+		focusPos.m_floats[2] = dist._43;
 
 		// ビュー行列変換
 		DirectX::XMStoreFloat4x4(
 				&m_view,
-				DirectX::XMMatrixLookAtLH( 
-						DirectX::XMLoadFloat3( m_eyePosition ),
-						DirectX::XMLoadFloat3( &focusPos ),
-						DirectX::XMLoadFloat3( &m_upDirection ) ) );
+				DirectX::XMMatrixLookAtLH(
+						m_eyePosition.get128(),
+						focusPos.get128(),
+						m_upDirection.get128() ) );
 
 }
 
@@ -251,8 +256,8 @@ void  Camera::UpdateTargetTransform()
 
 		Vector3  pos = m_targetTransform->GetLocalPosition();
 
-		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( DirectX::XMLoadFloat3( &m_lookRotation ) );
-		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( DirectX::XMLoadFloat3( &pos) );
+		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( m_lookRotation.get128() );
+		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( pos.get128() );
 
 		mtxPos = DirectX::XMMatrixMultiply( mtxAngle, mtxPos );
 		//mtxPos = DirectX::XMMatrixMultiply( mtxPos, DirectX::XMLoadFloat4x4( &world ) );
@@ -261,7 +266,7 @@ void  Camera::UpdateTargetTransform()
 		// TODO: ワールド行列が一時的なものである為更新しても Transform::Update() で更新される.
 		m_targetTransform->SetEuler( m_lookRotation );
 		//m_targetTransform->SetPosition( world._41, world._42, world._43 );
-		m_targetTransform->SetPosition( pos + *m_eyePosition );
+		m_targetTransform->SetPosition( pos + m_eyePosition );
 }
 
 
@@ -280,13 +285,13 @@ void  Camera::UpdateTargetView()
 
 		Matrix4x4  dist;
 		Vector3  focusPos( m_focusTarget );
-		Vector3  r( ToRadian( m_lookRotation.x ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
-		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.y ), ToRadian( 0 ) );
+		Vector3  r( ToRadian( m_lookRotation.m_floats[0] ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
+		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
 
-		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( m_eyePosition ) );
-		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( m_translation ) );
-		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r2 ) );
-		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( XMLoadFloat3( &r ) );
+		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( m_eyePosition.get128() );
+		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( m_translation.get128() );
+		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( r2.get128() );
+		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( r.get128() );
 
 		// 行列計算
 		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
@@ -294,34 +299,34 @@ void  Camera::UpdateTargetView()
 		XMStoreFloat4x4( &m_localWorld, XMMatrixMultiply( mtxTrans, mtxPos ) );
 
 		// カメラ位置を更新
-		m_eyePosition->x = world._41;
-		m_eyePosition->y = world._42;
-		m_eyePosition->z = world._43;
+		m_eyePosition.m_floats[0] = world._41;
+		m_eyePosition.m_floats[1] = world._42;
+		m_eyePosition.m_floats[2] = world._43;
 
-		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( XMLoadFloat3( &focusPos ) );
+		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( focusPos.get128() );
 		mtxDist = XMMatrixMultiply( mtxDist, mtxPos );
 		mtxDist = XMMatrixMultiply( mtxTrans, mtxDist );
 
 		// ワールド行列の更新
 		XMStoreFloat4x4( &dist, mtxDist );
 
-		focusPos.x = dist._41;
-		focusPos.y = dist._42;
-		focusPos.z = dist._43;
+		focusPos.m_floats[0] = dist._41;
+		focusPos.m_floats[1] = dist._42;
+		focusPos.m_floats[2] = dist._43;
 
 		// ビュー行列変換
 		DirectX::XMStoreFloat4x4(
 				&m_view,
 				DirectX::XMMatrixLookAtLH(
-						DirectX::XMLoadFloat3( &focusPos ),
-						DirectX::XMLoadFloat3( m_eyePosition ),
-						DirectX::XMLoadFloat3( &m_upDirection ) ) );
+						focusPos.get128(),
+						m_eyePosition.get128(),
+						m_upDirection.get128() ) );
 }
 
 
 void  Camera::Release()
 {
-		*m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
+		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
 		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
 		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 

@@ -23,3 +23,4 @@
 // Entityクラスに名前と文字列をハッシュ値で比較するオペレータを追加.
 // ComponentManagerが全てのコンポーネントのアップデートを行うように変更.
 // 上記に伴いSystems::Updatorを削除.
+// ベクトル変数 Vector3をBullet用のbtVector3に変更.

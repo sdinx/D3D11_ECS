@@ -74,9 +74,9 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 		struct  VERTEX
 		{
-				Vector3  position;
-				Vector3  normal;
-				Vector2  texcoord;
+				DirectX::XMFLOAT3  position;
+				DirectX::XMFLOAT3  normal;
+				DirectX::XMFLOAT2  texcoord;
 		};// struct VERTEX
 
 		//----------------------------------------------------------------------------------

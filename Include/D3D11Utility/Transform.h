@@ -199,9 +199,9 @@ namespace  D3D11Utility
 				void  SetLocalPosition( float  x, float  y, float  z )
 				{
 						m_isMessages[MSG_UPDATE_LOCAL] = true;
-						m_localPosition.x = x;
-						m_localPosition.y = y;
-						m_localPosition.z = z;
+						m_localPosition.m_floats[0] = x;
+						m_localPosition.m_floats[1] = y;
+						m_localPosition.m_floats[2] = z;
 				}
 				void  SetLocalEuler( Vector3  euler )
 				{
@@ -232,9 +232,9 @@ namespace  D3D11Utility
 				void  SetPosition( float  x, float  y, float  z )
 				{
 						m_isMessages[MSG_UPDATE_MATRIX] = true;
-						m_position.x = x;
-						m_position.y = y;
-						m_position.z = z;
+						m_position.m_floats[0] = x;
+						m_position.m_floats[1] = y;
+						m_position.m_floats[2] = z;
 				}
 				void  SetEuler( Vector3  euler )
 				{
@@ -244,9 +244,9 @@ namespace  D3D11Utility
 				void  SetEuler( float x, float y, float z )// ÉIÉCÉâÅ[äp
 				{
 						m_isMessages[MSG_UPDATE_MATRIX] = true;
-						m_euler.x = x;
-						m_euler.y = y;
-						m_euler.z = z;
+						m_euler.m_floats[0] = x;
+						m_euler.m_floats[1] = y;
+						m_euler.m_floats[2] = z;
 				}
 				void  SetScale( Vector3  scale )
 				{

@@ -54,6 +54,7 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 				BOOL  m_isEnable = false;
 
+				Transform*  m_transform;
 				Transform*  m_targetTransform;
 				Matrix4x4  m_localWorld;// カメラ位置の行列.
 				Matrix4x4  m_view;
@@ -61,8 +62,8 @@ namespace  D3D11Utility
 				Vector3  m_focusTarget;// 注視点 ( カメラ位置からの差分座標として使う )
 				Vector3  m_upDirection;
 				Vector3  m_lookRotation;// カメラ位置と注視点の差分角度.
-				Vector3*  m_eyePosition;// カメラ位置.
-				Vector3*  m_translation;// 1フレームでの移動量.
+				Vector3  m_eyePosition;// カメラ位置.
+				Vector3  m_translation;// 1フレームでの移動量.
 
 
 		public:
@@ -116,7 +117,7 @@ namespace  D3D11Utility
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
 				Vector3&  GetPosition()
 				{
-						return  *m_eyePosition;
+						return  m_eyePosition;
 				}
 				Vector3&  GetTarget()
 				{
@@ -136,15 +137,15 @@ namespace  D3D11Utility
 				void  SetLookRotation( float  x, float  y, float  z );
 				void  SetLookRotationX( float  x )
 				{
-						m_lookRotation.x = x;
+						m_lookRotation.m_floats[0] = x;
 				}
 				void  SetLookRotationY( float  y )
 				{
-						m_lookRotation.y = y;
+						m_lookRotation.m_floats[1] = y;
 				}
 				void  SetLookRotationZ( float  z )
 				{
-						m_lookRotation.z = z;
+						m_lookRotation.m_floats[2] = z;
 				}
 				void  SetTargetTransform( Transform*  targetTrans )
 				{
