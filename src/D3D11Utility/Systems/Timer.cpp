@@ -24,6 +24,12 @@ Timer::~Timer()
 }
 
 
+void  Timer::Reset()
+{
+		m_tpStart = std::chrono::system_clock::now();
+}
+
+
 Timer::TimePoint  Timer::Now()
 {
 		return  std::chrono::system_clock::now();

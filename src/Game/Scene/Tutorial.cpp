@@ -112,7 +112,6 @@ void  Tutorial::Awake()
 		m_pd3dRenderer = _Singleton<IDirect3DRenderer>::GetInstance();
 		m_pd3dRenderer->SetComponentManager( m_pComponentManager.get() );
 		m_pTextureManager = _Singleton<TextureManager>::GetInstance();
-		m_pSystemManager->AddSystem<Updater>();
 		m_pSystemManager->AddSystem<DebugSystem>();
 		auto  btEngine = m_pSystemManager->AddSystem<BulletEngine>();
 
@@ -300,6 +299,7 @@ void  Tutorial::Update()
 		}
 
 		/* Update systems */
+		m_pComponentManager->Update();
 		m_pSystemManager->Update( 0 );
 		m_pd3dRenderer->Rendering();
 }

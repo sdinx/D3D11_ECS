@@ -204,7 +204,7 @@ namespace  D3D11Utility
 
 						void  AddEntity( const  EntityId  entity );
 						void  Release();
-						void  Update();
+						void  Update( float  ms );
 
 
 				};// class  ComponentManager

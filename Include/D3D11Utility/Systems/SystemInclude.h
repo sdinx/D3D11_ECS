@@ -11,7 +11,6 @@
 #include  <D3D11Utility\Systems\FbxLoader.h>
 #include  <D3D11Utility\Systems\TextureManager.h>
 #include  <D3D11Utility\Systems\Timer.h>
-#include  <D3D11Utility\Systems\Updater.h>
 
 
 #endif // ! _INCLUDED_D3D11_UTILITY_SYSTEMS_INCLUDE_

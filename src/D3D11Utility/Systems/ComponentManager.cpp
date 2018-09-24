@@ -2,6 +2,7 @@
 // Include
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Systems\ComponentManager.h>
+#include  <D3D11Utility/Systems/Timer.h>
 
 
 //----------------------------------------------------------------------------------
@@ -67,10 +68,12 @@ void  ComponentManager::Release()
 // func: Update() : void
 // brief: Entityに登録されているコンポーネントを更新する
 //----------------------------------------------------------------------------------
-void  ComponentManager::Update()
+void  ComponentManager::Update( float  ms )
 {
 		UINT  i = 0;
 		UINT  listSize = m_componentTable.size();
+
+		//static  Timer  timer;
 
 		for ( ; i < listSize; i++ )
 				for ( auto& component : m_componentTable[i] )
@@ -78,4 +81,9 @@ void  ComponentManager::Update()
 						if ( component != nullptr )
 								component->Update();
 				}
+
+		//system( "CLS" );
+		//printf( "経過時間: %f", timer.GetElapsed<Timer::Milliseconds>() );
+		//timer.Reset();
+
 }// end Update()

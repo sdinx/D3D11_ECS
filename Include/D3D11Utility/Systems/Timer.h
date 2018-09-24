@@ -33,6 +33,7 @@ namespace  D3D11Utility
 						using  ElapsedMilli = std::chrono::duration<float, std::milli >;
 						using  TimePoint = std::chrono::system_clock::time_point;
 						using  Nanoseconds = std::chrono::nanoseconds;
+						using  Microseconds = std::chrono::microseconds;
 						using  Milliseconds = std::chrono::milliseconds;
 						using  Seconds = std::chrono::seconds;
 						using  Hours = std::chrono::hours;
@@ -41,7 +42,7 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// private  variables
 						//----------------------------------------------------------------------------------
-						const  TimePoint  m_tpStart;
+						TimePoint  m_tpStart;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -60,6 +61,7 @@ namespace  D3D11Utility
 						// public  methods
 						//----------------------------------------------------------------------------------
 
+						void  Reset();
 						TimePoint  Now();
 
 						template<typename  T = Milliseconds>
