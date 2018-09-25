@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility/Systems/Timer.h>
+#include  <omp.h>
 
 
 //----------------------------------------------------------------------------------
@@ -70,20 +71,13 @@ void  ComponentManager::Release()
 //----------------------------------------------------------------------------------
 void  ComponentManager::Update( float  ms )
 {
-		UINT  i = 0;
-		UINT  listSize = m_componentTable.size();
+		int  i = 0, k = 0;
+		int  listSize = ( int ) m_componentTable.size();
 
-		//static  Timer  timer;
-
-		for ( ; i < listSize; i++ )
-				for ( auto& component : m_componentTable[i] )
-				{
-						if ( component != nullptr )
-								component->Update();
+		for ( i = 0; i < listSize; i++ ) {
+				for ( k = 0; k < ( int ) m_componentTable[i].size(); k++ ) {
+						m_componentTable[i][k]->Update();
 				}
-
-		//system( "CLS" );
-		//printf( "Œo‰ßŽžŠÔ: %f", timer.GetElapsed<Timer::Milliseconds>() );
-		//timer.Reset();
+		}
 
 }// end Update()

@@ -157,17 +157,19 @@ void  Tutorial::Awake()
 		/* Init Cube */
 		static  const  EntityId  cubeId = m_pEntityManager->CreateEntity( "Cube" );
 		Entity*  cubeEntity = m_pEntityManager->GetEntity( cubeId );
-		cubeEntity->AddComponent<Renderable>( "res/cube.fbx" );
+		cubeEntity->AddComponent<Renderable>( "res/cube.fbx", D3D11_CULL_NONE );
 		cubeEntity->AddComponent<Transform>();
 		Renderable*  cubeRender = cubeEntity->GetComponent<Renderable>();
 		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
 		cubeRender->SetVertexShader( vs );
-		cubeRender->SetPixelShader( psSmooth );
+		cubeRender->SetPixelShader( ps );
+		cubeRender->SetTextureId( texGroundId,m_pTextureManager.get() );
 		{/* Parameter */
+				cubeTrans->SetPosition( 0, -10.0f, 0 );
 				cubeTrans->SetLocalScale( Vector3( 250, 0.2f, 250 ) );
 				cubeRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				cubeRender->SetDiffuse( Vector4( 1, 0.5f, 0.5f, 1 ) );
-				btRigidBody*  rb = btEngine->CreateRigidBody<btBoxShape>( cubeTrans, 0.1f, 0.5f, btVector3( 0, 0, 0 ), btVector3( 125.0f, 0.1f, 125.0f ) );
+				cubeRender->SetDiffuse( Vector4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+				btRigidBody*  rb = btEngine->CreateRigidBody<btBoxShape>( cubeTrans, 0.0f, 0.5f, btVector3( 0, 0, 0 ), btVector3( 125.0f, 0.1f, 125.0f ) );
 				cubeEntity->AddComponent<Physical::BulletPhysics>( rb, btEngine );
 		}
 
@@ -299,7 +301,7 @@ void  Tutorial::Update()
 		}
 
 		/* Update systems */
-		m_pComponentManager->Update();
+		m_pComponentManager->Update( 0 );
 		m_pSystemManager->Update( 0 );
 		m_pd3dRenderer->Rendering();
 }
