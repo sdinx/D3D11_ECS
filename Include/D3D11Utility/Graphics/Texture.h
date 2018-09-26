@@ -20,7 +20,7 @@
 
 namespace  D3D11Utility
 {
-		const  int  TEXTURE_ID_INVALID = -1;
+		const  int  TEXTURE_ID_INVALID = 0;
 
 		namespace  Graphics
 		{

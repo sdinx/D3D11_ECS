@@ -7,6 +7,7 @@
 #include  <D3D11Utility\Renderable.h>
 #include  <D3D11Utility\Systems\ComponentManager.h>
 #include  <D3D11Utility\Systems\IDirect3DRenderer.h>
+#include  <D3D11Utility\Systems\TextureManager.h>
 #include  <GameUtility.h>
 #include  <D3D11Utility\Systems\Timer.h>
 
@@ -49,11 +50,15 @@ void  IDirect3DRenderer::Rendering()const
 				static  float  fAll = 0;
 				Timer  timer;
 				int  i = 0;
+				Renderable*  render;
+				auto  textureManager = _Singleton<TextureManager>::GetInstance();
 
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 				{
 						renderable->HandleMessage( Renderable::MSG_UPDATE_CBUFFER );
-						renderable->GetComponent<Renderable>()->Rendering();
+						render = renderable->GetComponent<Renderable>();
+						textureManager->SetTexture( render->m_textureId );
+						render->Rendering();
 				}
 
 #ifdef  _RENDERING_TIME_COUNT_

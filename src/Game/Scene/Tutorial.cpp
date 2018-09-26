@@ -146,8 +146,8 @@ void  Tutorial::Awake()
 		bulletRender->SetVertexShader( vs );
 		bulletRender->SetPixelShader( ps );
 		{/* Parameter */
-				bulletRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
-				bulletRender->SetDiffuse( Vector4( 0.1f, 0.1f, 0.2f, 1.0f ) );
+				//bulletRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
+				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );
 				bulletTrans->SetPosition( Vector3( 0, 5, 0 ) );
 		}
 
@@ -163,7 +163,7 @@ void  Tutorial::Awake()
 		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
 		cubeRender->SetVertexShader( vs );
 		cubeRender->SetPixelShader( ps );
-		cubeRender->SetTextureId( texGroundId,m_pTextureManager.get() );
+		cubeRender->SetTextureId( texGroundId );
 		{/* Parameter */
 				cubeTrans->SetPosition( 0, -10.0f, 0 );
 				cubeTrans->SetLocalScale( Vector3( 250, 0.2f, 250 ) );
@@ -189,7 +189,7 @@ void  Tutorial::Awake()
 				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
-				sphereRender->SetTextureId( texSkyId, m_pTextureManager.get() );
+				sphereRender->SetTextureId( texSkyId );
 		}
 
 
@@ -204,7 +204,7 @@ void  Tutorial::Awake()
 		{
 				rifleRender->SetVertexShader( vs );
 				rifleRender->SetPixelShader( ps );
-				rifleRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
+				rifleRender->SetTextureId( texRifleDiffuseId );
 
 				rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
 				rifleTrans->SetLocalEuler( 270, 180, 0 );
@@ -223,7 +223,7 @@ void  Tutorial::Awake()
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( ps );
 		{/* Parameter */
-				playerRender->SetTextureId( texFubukiId, m_pTextureManager.get() );
+				playerRender->SetTextureId( texFubukiId );
 				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetLocalScale();

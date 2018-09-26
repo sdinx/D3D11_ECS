@@ -61,12 +61,11 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				ConstantBufferForPerFrame  m_cbuffer;
-				Graphics::TextureId  m_textureId = TEXTURE_ID_INVALID;
-				Graphics::VertexBuffer*  m_pVertexBuffer = nullptr;
-				Graphics::VertexShader*  m_pVertexShader = nullptr;
-				Graphics::PixelShader*  m_pPixelShader = nullptr;
-				Graphics::GeometryShader*  m_pGeometryShader = nullptr;
-				Systems::TextureManager*  m_textureManager = nullptr;
+				Graphics::TextureId  m_textureId;
+				Graphics::VertexBuffer*  m_pVertexBuffer;
+				Graphics::VertexShader*  m_pVertexShader;
+				Graphics::PixelShader*  m_pPixelShader ;
+				Graphics::GeometryShader*  m_pGeometryShader;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -119,7 +118,7 @@ namespace  D3D11Utility
 				}
 				void  SetDiffuse( Vector4  color );
 				void  SetAmbient( Vector4  color );
-				void  SetTextureId( Graphics::TextureId  textureId,  Systems::TextureManager*  textureManagerInstance = nullptr );
+				void  SetTextureId( Graphics::TextureId  textureId );
 				void  Release();
 		};
 

@@ -15,10 +15,10 @@ using  namespace  D3D11Utility;
 using  namespace  D3D11Utility::Systems;
 
 
-
 TextureManager::TextureManager()
 {
-
+		// テクスチャ未設定時の初期テクスチャ
+		CreateTexture( L"res/none.png" );
 }
 
 

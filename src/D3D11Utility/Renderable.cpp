@@ -28,18 +28,22 @@ ID3D11Buffer*  Renderable::s_pConstantBuffer = nullptr;
 
 
 Renderable::Renderable() :
+		m_pVertexBuffer( nullptr ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
-		m_pPixelShader( nullptr )
+		m_pPixelShader( nullptr ),
+		m_textureId( TEXTURE_ID_INVALID )
 {
 
 }
 
 
 Renderable::Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
+		m_pVertexBuffer( nullptr ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
-		m_pPixelShader( nullptr )
+		m_pPixelShader( nullptr ),
+		m_textureId( TEXTURE_ID_INVALID )
 {
 		m_isRendering = true;
 
@@ -63,9 +67,11 @@ Renderable::Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode
 
 
 Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
+		m_pVertexBuffer( nullptr ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
-		m_pPixelShader( nullptr )
+		m_pPixelShader( nullptr ),
+		m_textureId( TEXTURE_ID_INVALID )
 {
 		m_isRendering = true;
 
@@ -150,35 +156,17 @@ void  Renderable::Rendering()const
 				return;
 
 		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &m_cbuffer, 0, 0 );
-//#pragma omp parallel sections num_threads(3)
-		{
 
-//#pragma omp section
-				if ( m_textureId != TEXTURE_ID_INVALID ) {
-						m_textureManager->SetTexture( m_textureId );
-				}
+		m_pVertexShader->UpdateShader();
+		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 
-//#pragma omp section
-				{
-						m_pVertexShader->UpdateShader();
-						pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-				}
+		m_pPixelShader->UpdateShader();
+		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 
-//#pragma omp section
-				{
-						m_pPixelShader->UpdateShader();
-						pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-				}
-
-				/*
-#pragma omp section
-				{
-						m_pGeometryShader->UpdateShader();
-						pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-				}
-				*/
-
-		}// end threads
+		/*
+				m_pGeometryShader->UpdateShader();
+				pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		*/
 
 		m_pVertexBuffer->BindBuffer();
 }
@@ -186,14 +174,14 @@ void  Renderable::Rendering()const
 
 void  Renderable::Update()
 {
-		if ( m_isUpdating == false )
-				return;
-
-		Transform*  transform = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
-		if ( transform == nullptr )
-				return;
-
-		HandleMessage( MSG_UPDATE_CBUFFER );
+		//if ( m_isUpdating == false )
+		//		return;
+		//
+		//Transform*  transform = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
+		//if ( transform == nullptr )
+		//		return;
+		//
+		//HandleMessage( MSG_UPDATE_CBUFFER );
 }
 
 
@@ -215,12 +203,8 @@ void  Renderable::SetAmbient( Vector4  v4Color )
 }
 
 
-void  Renderable::SetTextureId( Graphics::TextureId  textureId, Systems::TextureManager*  textureManagerInstance )
+void  Renderable::SetTextureId( Graphics::TextureId  textureId )
 {
-		if ( textureManagerInstance != nullptr )
-				m_textureManager = textureManagerInstance;
-
-
 		m_textureId = textureId;
 }
 
