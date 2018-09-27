@@ -29,30 +29,20 @@ struct  ConstantBufferForPerFrame
 
 
 Camera::Camera() :
-		m_focusTarget( 0.0f, 0.0f, 1.0f ),
-		m_upDirection( 0.0f, 1.0f, 0.0f ),
-		m_eyePosition( 0.0f, 1.0f, 0.0f ),
-		m_translation( 0.0f, 0.0f, 0.0f ),
-		m_lookRotation( 0.0f, 0.0f, 0.0f )
+		m_focusPosition( 0.0f, 0.0f, 1.0f ),
+		m_upDirection( 0.0f, 1.0f, 0.0f )
 {
 
 }
 
 
 Camera::Camera( Transform*  transform, Transform*  targetTransform ) :
-		m_focusTarget( 0.0f, 0.0f, 1.0f ),
-		m_upDirection( 0.0f, 1.0f, 0.0f ),
-		m_eyePosition( 0.0f, 1.0f, 0.0f ),
-		m_translation( 0.0f, 0.0f, 0.0f ),
-		m_lookRotation( 0.0f, 0.0f, 0.0f )
+		m_focusPosition( 0.0f, 0.0f, 1.0f ),
+		m_upDirection( 0.0f, 1.0f, 0.0f )
 {
 		assert( transform != nullptr );
 
 		m_transform = transform;
-		m_targetTransform = targetTransform;
-
-		m_eyePosition = transform->GetPosition();
-		m_translation = transform->GetTranslation();
 
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
@@ -61,19 +51,14 @@ Camera::Camera( Transform*  transform, Transform*  targetTransform ) :
 
 
 Camera::Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ ) :
-		m_focusTarget( 0.0f, 0.0f, 1.0f ),
-		m_upDirection( 0.0f, 1.0f, 0.0f ),
-		m_eyePosition( 0.0f, 1.0f, 0.0f ),
-		m_translation( 0.0f, 0.0f, 0.0f ),
-		m_lookRotation( 0.0f, 0.0f, 0.0f )
+		m_focusPosition( 0.0f, 0.0f, 1.0f ),
+		m_upDirection( 0.0f, 1.0f, 0.0f )
 {
 		assert( transform != nullptr );
 
 		m_transform = transform;
-		m_translation = transform->GetTranslation();
 
-		m_eyePosition = eyePosition;
-		m_focusTarget = focusPosition;
+		m_focusPosition = focusPosition;
 		m_upDirection = upDirection;
 
 		UpdateView();
@@ -96,8 +81,7 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 						Transform*  trans = m_pComponentManager->GetComponent<Transform>( m_parentsEntityId );
 						if ( trans != nullptr )
 						{
-								trans->Update();
-								XMMATRIX  localWorld = XMLoadFloat4x4( &trans->GetWorldMatrix() );
+								XMMATRIX  localWorld = XMLoadFloat4x4( &trans->GetWorld() );
 
 								XMStoreFloat4x4( &m_view, XMMatrixMultiply( XMLoadFloat4x4( &m_view ), localWorld ) );
 						}// end if
@@ -113,7 +97,6 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 				{
 						GetComponent<Transform>()->SetChange( true, Transform::MSG_UPDATE_MATRIX );
 						UpdateView();
-						UpdateTargetTransform();
 						UpdateConstantBuffer();
 				}
 		default:
@@ -142,49 +125,6 @@ void  Camera::SetConstantBuffer()
 }
 
 
-void  Camera::SetPosition( Vector3  eyePosition )
-{
-		m_eyePosition = eyePosition;
-}
-
-
-void  Camera::SetTarget( Vector3  focusPosition )
-{
-		m_focusTarget = focusPosition;
-}
-
-
-void  Camera::SetRotation( float  x, float  y, float  z )
-{
-
-}
-
-
-void  Camera::SetLookRotation( float  x, float  y, float  z )
-{
-		m_lookRotation.m_floats[0] += x;
-		m_lookRotation.m_floats[1] += y;
-		m_lookRotation.m_floats[2] += z;
-
-		GetComponent<Transform>()->SetEuler( m_lookRotation );
-
-		if ( m_lookRotation.m_floats[0] > 89.99f || m_lookRotation.m_floats[0] < -90.0f )
-				m_lookRotation.m_floats[0] -= x;
-}
-
-
-void  Camera::SetTranslation( Vector3  trans )
-{
-		m_translation += trans;
-}
-
-
-void  Camera::SetUp( Vector3  upDirection )
-{
-		m_upDirection = upDirection;
-}
-
-
 void  Camera::Update()
 {
 		/* NOTHING */
@@ -193,47 +133,17 @@ void  Camera::Update()
 
 void  Camera::UpdateView()
 {
+		Matrix4x4  mtxWorld = m_transform->GetWorld();
 
-		m_eyePosition = m_transform->GetPosition();
-		m_translation = m_transform->GetTranslation();
-
-		Matrix4x4  dist;
-		Vector3  focusPos( m_focusTarget );
-		Vector3  r( ToRadian( m_lookRotation.m_floats[0] ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
-		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
-
-		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( m_eyePosition.get128() );
-		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( m_translation.get128() );
-		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( r2.get128() );
-		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( r.get128() );
-
-		// 行列計算
-		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
-		// ワールド行列の更新
-		XMStoreFloat4x4( &m_localWorld, XMMatrixMultiply( mtxTrans, mtxPos ) );
-
-		// カメラ位置を更新
-		m_eyePosition.m_floats[0] = m_localWorld._41;
-		m_eyePosition.m_floats[1] = m_localWorld._42;
-		m_eyePosition.m_floats[2] = m_localWorld._43;
-
-		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( focusPos.get128() );
-		mtxDist = XMMatrixMultiply( mtxDist, mtxPos );
-		mtxDist = XMMatrixMultiply( mtxTrans, mtxDist );
-
-		// ワールド行列の更新
-		XMStoreFloat4x4( &dist, mtxDist );
-
-		focusPos.m_floats[0] = dist._41;
-		focusPos.m_floats[1] = dist._42;
-		focusPos.m_floats[2] = dist._43;
+		auto  mtxFocus = DirectX::XMMatrixTranslationFromVector( m_focusPosition.get128() );
+		mtxFocus = XMMatrixMultiply( mtxFocus, XMLoadFloat4x4( &mtxWorld ) );
 
 		// ビュー行列変換
 		DirectX::XMStoreFloat4x4(
 				&m_view,
 				DirectX::XMMatrixLookAtLH(
-						m_eyePosition.get128(),
-						focusPos.get128(),
+						m_transform->GetPosition().get128(),
+						XMVector.get128(),
 						m_upDirection.get128() ) );
 
 }
@@ -299,7 +209,7 @@ void  Camera::UpdateTargetView()
 		Matrix4x4  world = m_targetTransform->GetWorld();
 
 		Matrix4x4  dist;
-		Vector3  focusPos( m_focusTarget );
+		Vector3  focusPos( m_focusPosition );
 		Vector3  r( ToRadian( m_lookRotation.m_floats[0] ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
 		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
 
@@ -342,7 +252,7 @@ void  Camera::UpdateTargetView()
 void  Camera::Release()
 {
 		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
-		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
+		m_focusPosition = Vector3( 0.0f, 0.0f, 1.0f );
 		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
 		UpdateView();

@@ -75,24 +75,20 @@ void  Tutorial::InputFPSCamera()
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				//move += Vector3( 0, 0, 0.02f );
-				camTransform->SetTranslation( Vector3( 0, 0, 0.02f ) );
+				move += Vector3( 0, 0, 0.02f );
 		}
 		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				//move += Vector3( 0, 0, -0.02f );
-				camTransform->SetTranslation( Vector3( 0, 0, -0.02f ) );
+				move += Vector3( 0, 0, -0.02f );
 		}
 
 		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				//move += Vector3( -0.02f, 0, 0 );
-				camTransform->SetTranslation( Vector3( -0.02f, 0, 0 ) );
+				move += Vector3( -0.02f, 0, 0 );
 		}
 		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				//move += Vector3( 0.02f, 0, 0 );
-				camTransform->SetTranslation( Vector3( 0.02f, 0, 0 ) );
+				move += Vector3( 0.02f, 0, 0 );
 		}
 
 		m_FPSCamera->UpdateTargetView();
@@ -272,7 +268,7 @@ void  Tutorial::Update()
 
 		InputFPSCamera();
 
-		Vector3&  trans = m_playerEntity->GetComponent<Transform>()->GetTranslation();
+		Vector3&  trans = m_playerEntity->GetComponent<Transform>()->GetPosition();
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{

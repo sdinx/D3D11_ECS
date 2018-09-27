@@ -54,15 +54,10 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				Transform*  m_transform;
-				Transform*  m_targetTransform;
-				Matrix4x4  m_localWorld;// カメラ位置の行列.
 				Matrix4x4  m_view;
 				Matrix4x4  m_projection;
-				Vector3  m_focusTarget;// 注視点 ( カメラ位置からの差分座標として使う )
+				Vector3  m_focusPosition;// 注視点 ( カメラ位置からの差分座標として使う )
 				Vector3  m_upDirection;
-				Vector3  m_lookRotation;// カメラ位置と注視点の差分角度.
-				Vector3  m_eyePosition;// カメラ位置.
-				Vector3  m_translation;// 1フレームでの移動量.
 
 
 		public:
@@ -114,50 +109,26 @@ namespace  D3D11Utility
 				}
 				void  HandleMessage( const  GameUtility::Message&  msg );
 				void  HandleMessage( const  GameUtility::Message&  msg, Value  var );
-				Vector3&  GetPosition()
+				Vector3&  GetFocusPosition()
 				{
-						return  m_eyePosition;
+						return  m_focusPosition;
 				}
-				Vector3&  GetTarget()
-				{
-						return  m_focusTarget;
-				}
-				Vector3&  GetUp()
+				Vector3&  GetUpDirection()
 				{
 						return  m_upDirection;
 				}
-				Vector3&  GetLookRotation()
+				void  SetFocusPosition( Vector3  focusPosition )
 				{
-						return  m_lookRotation;
+						m_focusPosition = focusPosition;
 				}
-				void  SetPosition( Vector3  eyePosition );
-				void  SetTarget( Vector3  focusPosition );
-				void  SetRotation( float  x, float  y, float  z );
-				void  SetLookRotation( float  x, float  y, float  z );
-				void  SetLookRotationX( float  x )
+				void  SetUpDirection( Vector3  upDirection )
 				{
-						m_lookRotation.m_floats[0] = x;
+						m_upDirection = upDirection;
 				}
-				void  SetLookRotationY( float  y )
-				{
-						m_lookRotation.m_floats[1] = y;
-				}
-				void  SetLookRotationZ( float  z )
-				{
-						m_lookRotation.m_floats[2] = z;
-				}
-				void  SetTargetTransform( Transform*  targetTrans )
-				{
-						m_targetTransform = targetTrans;
-				}
-				void  SetTranslation( Vector3  trans );
-				void  SetUp( Vector3  upDirection );
 				void  Update();
 				void  UpdateView();
 				void  UpdateProjection( FLOAT fovAngleY, FLOAT aspectHByW, FLOAT nearZ, FLOAT farZ );
 				void  UpdateConstantBuffer();
-				void  UpdateTargetTransform();
-				void  UpdateTargetView();
 				void  Release();
 
 
