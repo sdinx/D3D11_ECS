@@ -51,6 +51,7 @@ void  Tutorial::InputFPSCamera()
 		auto&  move = m_FPSCamera->GetComponent<Camera>()->GetPosition();
 		Transform*  camTransform = m_FPSCamera->GetComponent<Transform>();
 		static  bool  isMouse = false;
+		static  bool  isShowMouse = false;
 		float  dx = 0.0f;
 		float  dy = 0.0f;
 
@@ -97,8 +98,10 @@ void  Tutorial::InputFPSCamera()
 		m_FPSCamera->UpdateTargetView();
 		m_FPSCamera->UpdateConstantBuffer();
 
-		if ( isMouse )
+		if ( isMouse ) {
 				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
+				ShowCursor( false );
+		}
 }
 
 

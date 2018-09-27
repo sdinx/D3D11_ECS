@@ -28,7 +28,23 @@ struct  ConstantBufferForPerFrame
 };
 
 
-Camera::Camera( Transform*  transform, Transform*  targetTransform )
+Camera::Camera() :
+		m_focusTarget( 0.0f, 0.0f, 1.0f ),
+		m_upDirection( 0.0f, 1.0f, 0.0f ),
+		m_eyePosition( 0.0f, 1.0f, 0.0f ),
+		m_translation( 0.0f, 0.0f, 0.0f ),
+		m_lookRotation( 0.0f, 0.0f, 0.0f )
+{
+
+}
+
+
+Camera::Camera( Transform*  transform, Transform*  targetTransform ) :
+		m_focusTarget( 0.0f, 0.0f, 1.0f ),
+		m_upDirection( 0.0f, 1.0f, 0.0f ),
+		m_eyePosition( 0.0f, 1.0f, 0.0f ),
+		m_translation( 0.0f, 0.0f, 0.0f ),
+		m_lookRotation( 0.0f, 0.0f, 0.0f )
 {
 		assert( transform != nullptr );
 
@@ -38,19 +54,18 @@ Camera::Camera( Transform*  transform, Transform*  targetTransform )
 		m_eyePosition = transform->GetPosition();
 		m_translation = transform->GetTranslation();
 
-		m_focusTarget = Vector3( 0.0f, 0.0f, 1.0f );
-		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
-		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
-		m_translation = Vector3( 0.0f, 0.0f, 0.0f );
-		m_lookRotation = Vector3( 0.0f, 0.0f, 0.0f );
-
 		UpdateView();
 		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
 		UpdateConstantBuffer();
 }
 
 
-Camera::Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ )
+Camera::Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ ) :
+		m_focusTarget( 0.0f, 0.0f, 1.0f ),
+		m_upDirection( 0.0f, 1.0f, 0.0f ),
+		m_eyePosition( 0.0f, 1.0f, 0.0f ),
+		m_translation( 0.0f, 0.0f, 0.0f ),
+		m_lookRotation( 0.0f, 0.0f, 0.0f )
 {
 		assert( transform != nullptr );
 

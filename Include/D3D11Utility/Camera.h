@@ -31,7 +31,7 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 
-				Camera() {}
+				Camera();
 				Camera( Transform*  transform, Transform*  targetTransform = nullptr );
 				Camera( Transform*  transform, Vector3  eyePosition, Vector3  focusPosition, Vector3  upDirection, FLOAT FovAngleY, FLOAT AspectHByW, FLOAT NearZ, FLOAT FarZ );
 				~Camera();
@@ -52,7 +52,6 @@ namespace  D3D11Utility
 				static  ComponentId  STATIC_COMPONENT_ID;
 				static  const  UINT  s_nConstantBufferSlot = 0;
 				static  ID3D11Buffer  *s_pConstantBuffer;
-				BOOL  m_isEnable = false;
 
 				Transform*  m_transform;
 				Transform*  m_targetTransform;

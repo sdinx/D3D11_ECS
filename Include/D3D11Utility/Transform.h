@@ -67,6 +67,7 @@ namespace  D3D11Utility
 				Vector3  m_localPosition;
 				Vector3  m_localEuler;
 				Vector3  m_localScale;
+				Quaternion  m_localRotation;
 
 				// 子に影響するワールド空間.
 				Matrix4x4  m_world;
@@ -74,6 +75,7 @@ namespace  D3D11Utility
 				Vector3  m_euler;
 				Vector3  m_scale;
 				Vector3  m_translation;// 移動行列.
+				Quaternion  m_rotation;
 
 
 		public:
