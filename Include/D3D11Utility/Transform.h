@@ -180,11 +180,11 @@ namespace  D3D11Utility
 				}
 				void  SetLocalEuler( Vector3  euler )
 				{
-						m_localRotation.setEuler( euler.m_floats[1], euler.m_floats[0], euler.m_floats[2] );
+						m_localRotation.setEuler( ToRadian( euler.m_floats[1] ), ToRadian( euler.m_floats[0] ), ToRadian( euler.m_floats[2] ) );
 				}
 				void  SetLocalEuler( float x, float y, float z )// オイラー角
 				{
-						m_localRotation.setEuler( y, x, z );
+						m_localRotation.setEuler( ToRadian( y ), ToRadian( x ), ToRadian( z ) );
 				}
 				void  SetLocalScale( Vector3  scale )
 				{
@@ -207,11 +207,11 @@ namespace  D3D11Utility
 				}
 				void  SetEuler( Vector3  euler )
 				{
-						m_rotation.setEuler( euler.m_floats[1], euler.m_floats[0], euler.m_floats[2] );
+						m_rotation.setEuler( ToRadian( euler.m_floats[1] ), ToRadian( euler.m_floats[0] ), ToRadian( euler.m_floats[2] ) );
 				}
 				void  SetEuler( float x, float y, float z )// オイラー角
 				{
-						m_rotation.setEuler( y, x, z );
+						m_rotation.setEuler( ToRadian( y ), ToRadian( x ), ToRadian( z ) );
 				}
 				void  SetScale( Vector3  scale )
 				{

@@ -61,8 +61,8 @@ void  Tutorial::InputFPSCamera()
 		auto  mx = Input::MouseAxisX();
 		auto  my = Input::MouseAxisY();
 
-		dx = ( float ) mx / 100.0f;
-		dy = ( float ) my / 100.0f;
+		dx = ( float ) mx / 10.0f;
+		dy = ( float ) my / 10.0f;
 
 
 		if ( isMouse )
@@ -70,7 +70,6 @@ void  Tutorial::InputFPSCamera()
 				{
 						angle_x += dy;
 						angle_y += dx;
-						// camTransform->SetEuler( dy, dx, 0.0f );
 						camTransform->SetEuler( angle_x, angle_y, 0.0f );
 				}
 
@@ -188,7 +187,7 @@ void  Tutorial::Awake()
 		{/* Parameter */
 				sphereTrans->SetPosition( Vector3( 0, 0, 0 ) );
 				sphereTrans->SetLocalScale( Vector3( 300.f, 300.f, 300.f ) );
-				sphereTrans->SetLocalEuler( 180, 0, 0 );
+				sphereTrans->SetEuler( 180, 0, 0 );
 				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
