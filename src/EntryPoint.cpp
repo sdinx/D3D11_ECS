@@ -8,6 +8,7 @@
 #include  <XInputController.h>
 #include  <DIKeyboard.h>
 #include  <StateTransition.h>
+#include  <D3D11Utility\Systems\Timer.h>
 
 
 INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCmdLine, INT  nCmdShow )

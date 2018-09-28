@@ -45,5 +45,5 @@ void  Bullet::HandleMessage( const  GameUtility::Message&  msg )
 
 void  Bullet::Update()
 {
-		m_transform->SetTranslation( Vector3( 0, 0, m_fBulletSpeed ) );
+
 }

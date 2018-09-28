@@ -75,16 +75,15 @@ void  Transform::UpdateLocalMatrix()
 
 void  Transform::UpdateMatrix()
 {
-		XMMATRIX  mtxPos, mtxTrans, mtxRotate, mtxScale;
+		XMMATRIX  mtxPos, mtxRotate, mtxScale;
 
 		// 行列変換
 		mtxPos = XMMatrixTranslationFromVector( m_position.get128() );
-		mtxRotate = XMMatrixRotationRollPitchYawFromVector( m_rotation.get128() );
+		mtxRotate = XMMatrixRotationQuaternion( m_rotation.get128() );
 		mtxScale = XMMatrixScalingFromVector( m_scale.get128() );
 
 		// 行列計算
 		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
-		mtxPos = XMMatrixMultiply( mtxTrans, mtxPos );
 		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
 
 		// ワールド行列の更新

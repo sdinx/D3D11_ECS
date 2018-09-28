@@ -95,7 +95,6 @@ void  Camera::HandleMessage( const  GameUtility::Message&  msg )
 				break;
 		case  MSG_UPDATE_ALL:
 				{
-						GetComponent<Transform>()->SetChange( true, Transform::MSG_UPDATE_MATRIX );
 						UpdateView();
 						UpdateConstantBuffer();
 				}
@@ -127,7 +126,8 @@ void  Camera::SetConstantBuffer()
 
 void  Camera::Update()
 {
-		/* NOTHING */
+		UpdateView();
+		UpdateConstantBuffer();
 }
 
 
@@ -137,13 +137,13 @@ void  Camera::UpdateView()
 
 		auto  mtxFocus = DirectX::XMMatrixTranslationFromVector( m_focusPosition.get128() );
 		mtxFocus = XMMatrixMultiply( mtxFocus, XMLoadFloat4x4( &mtxWorld ) );
-
+		
 		// ビュー行列変換
 		DirectX::XMStoreFloat4x4(
 				&m_view,
 				DirectX::XMMatrixLookAtLH(
 						m_transform->GetPosition().get128(),
-						XMVector.get128(),
+						mtxFocus.r[3],
 						m_upDirection.get128() ) );
 
 }
@@ -167,92 +167,10 @@ void  Camera::UpdateConstantBuffer()
 }
 
 
-//----------------------------------------------------------------------------------
-//! @func:     UpdateTargetTransform( void ) : void
-//! @brief:    FPSカメラ用の注視点更新関数.
-//----------------------------------------------------------------------------------
-void  Camera::UpdateTargetTransform()
-{
-		if ( m_targetTransform == nullptr )
-				return;
-
-		m_targetTransform->Update();
-		Matrix4x4  world = m_targetTransform->GetWorld();
-
-		Vector3  pos = m_targetTransform->GetLocalPosition();
-
-		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( m_lookRotation.get128() );
-		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( pos.get128() );
-
-		mtxPos = DirectX::XMMatrixMultiply( mtxAngle, mtxPos );
-		//mtxPos = DirectX::XMMatrixMultiply( mtxPos, DirectX::XMLoadFloat4x4( &world ) );
-		DirectX::XMStoreFloat4x4( &world, mtxPos );
-
-		// TODO: ワールド行列が一時的なものである為更新しても Transform::Update() で更新される.
-		m_targetTransform->SetEuler( m_lookRotation );
-		//m_targetTransform->SetPosition( world._41, world._42, world._43 );
-		m_targetTransform->SetPosition( pos + m_eyePosition );
-}
-
-
-//----------------------------------------------------------------------------------
-//! @func:     UpdateTargetView( void ) : void
-//! @brief:    TPSカメラ用の注視点更新関数.
-//----------------------------------------------------------------------------------
-void  Camera::UpdateTargetView()
-{
-		if ( m_targetTransform == nullptr )
-				return;
-
-
-		m_targetTransform->Update();
-		Matrix4x4  world = m_targetTransform->GetWorld();
-
-		Matrix4x4  dist;
-		Vector3  focusPos( m_focusPosition );
-		Vector3  r( ToRadian( m_lookRotation.m_floats[0] ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
-		Vector3  r2( ToRadian( 0 ), ToRadian( m_lookRotation.m_floats[1] ), ToRadian( 0 ) );
-
-		auto  mtxPos = DirectX::XMMatrixTranslationFromVector( m_eyePosition.get128() );
-		auto  mtxTrans = DirectX::XMMatrixTranslationFromVector( m_translation.get128() );
-		auto  mtxRotate = DirectX::XMMatrixRotationRollPitchYawFromVector( r2.get128() );
-		auto  mtxAngle = DirectX::XMMatrixRotationRollPitchYawFromVector( r.get128() );
-
-		// 行列計算
-		mtxPos = XMMatrixMultiply( mtxAngle, mtxPos );
-		// ワールド行列の更新
-		XMStoreFloat4x4( &m_localWorld, XMMatrixMultiply( mtxTrans, mtxPos ) );
-
-		// カメラ位置を更新
-		m_eyePosition.m_floats[0] = world._41;
-		m_eyePosition.m_floats[1] = world._42;
-		m_eyePosition.m_floats[2] = world._43;
-
-		auto  mtxDist = DirectX::XMMatrixTranslationFromVector( focusPos.get128() );
-		mtxDist = XMMatrixMultiply( mtxDist, mtxPos );
-		mtxDist = XMMatrixMultiply( mtxTrans, mtxDist );
-
-		// ワールド行列の更新
-		XMStoreFloat4x4( &dist, mtxDist );
-
-		focusPos.m_floats[0] = dist._41;
-		focusPos.m_floats[1] = dist._42;
-		focusPos.m_floats[2] = dist._43;
-
-		// ビュー行列変換
-		DirectX::XMStoreFloat4x4(
-				&m_view,
-				DirectX::XMMatrixLookAtLH(
-						focusPos.get128(),
-						m_eyePosition.get128(),
-						m_upDirection.get128() ) );
-}
-
-
 void  Camera::Release()
 {
-		m_eyePosition = Vector3( 0.0f, 1.0f, 0.0f );
-		m_focusPosition = Vector3( 0.0f, 0.0f, 1.0f );
+		Vector3&  pos = m_transform->GetPosition();
+		m_focusPosition = Vector3( 0.0f, 0.0f, 1.0f ) + pos;
 		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
 		UpdateView();

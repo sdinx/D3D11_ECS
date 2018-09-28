@@ -26,70 +26,17 @@ namespace  D3D11Utility
 		inline  btTransform  BulletConvertTransform( Transform  origin )
 		{
 				btTransform  btOut;
-				const  Matrix4x4  mat = origin.GetWorldMatrix();
+				const  Matrix4x4  mat = origin.GetWorld();
 
+				//çsóÒÇ÷äiî[
 				btMatrix3x3  btMat;
-				btMat.setValue(
-						mat._11, mat._12, mat._13,
-						mat._21, mat._22, mat._23,
-						mat._31, mat._32, mat._33
-				);
+				btMat.setRotation( origin.GetRotation() );
 
 				// çsóÒÇ÷äiî[
-				btOut.setBasis( btMat );
-				btOut.setOrigin( btVector3( mat._41, mat._42, mat._43 ) );
+				btOut.setRotation( origin.GetRotation() );
+				btOut.setOrigin( origin.GetPosition() );
 
 				return  btOut;
-		}
-		inline  Matrix4x4  BulletConvertMatrix4x4( btTransform  btOrigin )
-		{
-				btMatrix3x3  btMat = btOrigin.getBasis();
-				btVector3  v = btOrigin.getOrigin();
-
-				Matrix4x4  out;
-				{
-						out._11 = btMat[0].m_floats[0];
-						out._12 = btMat[0].m_floats[1];
-						out._13 = btMat[0].m_floats[2];
-						out._14 = 0.0f;
-
-						out._21 = btMat[1].m_floats[0];
-						out._22 = btMat[1].m_floats[1];
-						out._23 = btMat[1].m_floats[2];
-						out._24 = 0.0f;
-
-						out._31 = btMat[2].m_floats[0];
-						out._32 = btMat[2].m_floats[1];
-						out._33 = btMat[2].m_floats[2];
-						out._34 = 0.0f;
-
-						out._41 = v.m_floats[0];
-						out._42 = v.m_floats[1];
-						out._43 = v.m_floats[2];
-						out._44 = 0.0f;
-				}
-
-				return  out;
-		}
-		inline  btTransform  BulletMultiply( const  btTransform&  btOrigin, const  Transform&  trans )
-		{
-				btTransform  btOut = btOrigin;
-				btTransform  btTrans = BulletConvertTransform( trans );
-
-				btOut *= btTrans;
-
-				return  btOut;
-		}
-		inline  Matrix4x4  BulletMultiply( const  Matrix4x4&  origin, const  btTransform&  btTrans )
-		{
-				Matrix4x4  out = origin;
-				Matrix4x4  mat = BulletConvertMatrix4x4( btTrans );
-
-				DirectX::XMStoreFloat4x4( 
-						&out, DirectX::XMMatrixMultiply( 
-								DirectX::XMLoadFloat4x4( &out ), DirectX::XMLoadFloat4x4( &mat ) ) );
-
-				return  out;
 		}
 
 		namespace  Systems

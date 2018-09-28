@@ -141,7 +141,7 @@ void  Renderable::HandleMessage( const  Message&  msg )
 						Transform*  transform = GetComponent<Transform>();
 						if ( transform == nullptr )
 								return;
-						UpdateConstantBuffer( transform->GetWorldMatrix() );
+						UpdateConstantBuffer( transform->GetWorld() );
 				}// end case MSG_UPDATE_CBUFFER
 				break;
 		default: {return; }

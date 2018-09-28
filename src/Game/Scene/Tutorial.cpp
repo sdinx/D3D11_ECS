@@ -48,23 +48,30 @@ Tutorial::~Tutorial()
 
 void  Tutorial::InputFPSCamera()
 {
-		auto&  move = m_FPSCamera->GetComponent<Camera>()->GetPosition();
+		auto&  move = m_FPSCamera->GetComponent<Transform>()->GetPosition();
 		Transform*  camTransform = m_FPSCamera->GetComponent<Transform>();
 		static  bool  isMouse = false;
 		static  bool  isShowMouse = false;
+		static  Quaternion&  rotate = camTransform->GetRotation();
 		float  dx = 0.0f;
 		float  dy = 0.0f;
+		static  float  angle_x = 0.0f;
+		static  float  angle_y = 0.0f;
 
 		auto  mx = Input::MouseAxisX();
 		auto  my = Input::MouseAxisY();
 
-		dx = ( float ) mx / 10.0f;
-		dy = ( float ) my / 10.0f;
+		dx = ( float ) mx / 100.0f;
+		dy = ( float ) my / 100.0f;
+
 
 		if ( isMouse )
 				if ( mx != 0.0f || my != 0.0f )
 				{
-						m_FPSCamera->SetLookRotation( -dy, dx, 0.0f );
+						angle_x += dy;
+						angle_y += dx;
+						// camTransform->SetEuler( dy, dx, 0.0f );
+						camTransform->SetEuler( angle_x, angle_y, 0.0f );
 				}
 
 		if ( Input::KeyTrigger( DIK_RETURN ) )
@@ -90,9 +97,6 @@ void  Tutorial::InputFPSCamera()
 		{
 				move += Vector3( 0.02f, 0, 0 );
 		}
-
-		m_FPSCamera->UpdateTargetView();
-		m_FPSCamera->UpdateConstantBuffer();
 
 		if ( isMouse ) {
 				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
@@ -238,11 +242,8 @@ void  Tutorial::Awake()
 		cameraEntity->AddComponent<Camera>( camTrans );
 		Camera*  cam = cameraEntity->GetComponent<Camera>();
 		//rifleTrans->SetParent( camTrans );
-		cam->SetTargetTransform( rifleTrans );
 		{/* Parameter */
-				camTrans->SetLocalPosition( 0.0f, 2.0f, 0.0f );
-				cam->SetPosition( Vector3( 0.0f, 0.0f, 0.0f ) );
-				cam->SetTarget( Vector3( 0.0f, 0.0f, 0.75f ) );
+				camTrans->SetPosition( 0.0f, 2.0f, 0.0f );
 				cam->HandleMessage( GameUtility::Message( Camera::MSG_UPDATE_ALL ) );
 		}
 
@@ -272,20 +273,20 @@ void  Tutorial::Update()
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				trans.m_floats[2] += 0.01f;
+				//trans.m_floats[2] += 0.01f;
 		}
 		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				trans.m_floats[2] += -0.01f;
+				//trans.m_floats[2] += -0.01f;
 		}
 
 		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				trans.m_floats[0] += -0.01f;
+				//trans.m_floats[0] += -0.01f;
 		}
 		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				trans.m_floats[0] += 0.01f;
+				//trans.m_floats[0] += 0.01f;
 		}
 
 		if ( Input::KeyTrigger( DIK_SPACE ) )
