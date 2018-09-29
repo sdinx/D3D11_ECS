@@ -57,7 +57,7 @@ void  Transform::Update()
 		// ローカル空間を計算
 		UpdateLocalMatrix();
 		// 絶対位置を求める
-		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
+		mtxWorld = DirectX::XMMatrixMultiply( mtxWorld, DirectX::XMLoadFloat4x4( &m_localWorld ) );
 
 		XMStoreFloat4x4( &m_world, mtxWorld );
 }
@@ -65,11 +65,17 @@ void  Transform::Update()
 
 void  Transform::UpdateLocalMatrix()
 {
-		XMMATRIX  localWorld;
+		XMMATRIX  mtxPos, mtxRotate, mtxScale;
 
-		localWorld = XMMatrixMultiply( XMMatrixRotationQuaternion( m_localRotation.get128() ), XMMatrixTranslationFromVector( m_localPosition.get128() ) );
-		localWorld = XMMatrixMultiply( XMMatrixScalingFromVector( m_localScale.get128() ), localWorld );
-		XMStoreFloat4x4( &m_localWorld, localWorld );
+		// 行列変換
+		mtxPos = XMMatrixTranslationFromVector( m_localPosition.get128() );
+		mtxRotate = XMMatrixRotationQuaternion( m_localRotation.get128() );
+		mtxScale = XMMatrixScalingFromVector( m_localScale.get128() );
+
+		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
+		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
+
+		XMStoreFloat4x4( &m_localWorld, mtxPos );
 }
 
 

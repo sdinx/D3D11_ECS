@@ -266,27 +266,30 @@ void  Tutorial::Update()
 		Input::UpdateKeyboard();
 		Input::UpdateMouse();
 
-		InputFPSCamera();
+		//InputFPSCamera();
 
 		Vector3&  trans = m_playerEntity->GetComponent<Transform>()->GetPosition();
+		static  Vector3  euler( 0, 0, 0 );
 
 		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				//trans.m_floats[2] += 0.01f;
+				trans.m_floats[2] += 0.01f;
 		}
 		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				//trans.m_floats[2] += -0.01f;
+				trans.m_floats[2] += -0.01f;
 		}
 
 		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				//trans.m_floats[0] += -0.01f;
+				euler.m_floats[1] += 0.1f;
 		}
 		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				//trans.m_floats[0] += 0.01f;
+				euler.m_floats[1] += -0.1f;
 		}
+
+		m_playerEntity->GetComponent<Transform>()->SetEuler( euler );
 
 		if ( Input::KeyTrigger( DIK_SPACE ) )
 		{
