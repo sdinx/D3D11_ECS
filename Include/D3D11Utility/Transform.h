@@ -178,6 +178,10 @@ namespace  D3D11Utility
 						m_localPosition.m_floats[1] = y;
 						m_localPosition.m_floats[2] = z;
 				}
+				void  SetLocalRotation( Quaternion  q )
+				{
+						m_localRotation = q;
+				}
 				void  SetLocalEuler( Vector3  euler )
 				{
 						m_localRotation.setEuler( ToRadian( euler.m_floats[1] ), ToRadian( euler.m_floats[0] ), ToRadian( euler.m_floats[2] ) );
@@ -190,6 +194,7 @@ namespace  D3D11Utility
 				{
 						m_localScale = scale;
 				}
+
 				/* Setter world */
 				void  SetWorld( Matrix4x4  world )
 				{
@@ -204,6 +209,10 @@ namespace  D3D11Utility
 						m_position.m_floats[0] = x;
 						m_position.m_floats[1] = y;
 						m_position.m_floats[2] = z;
+				}
+				void  SetRotation( Quaternion  q )
+				{
+						m_rotation = q;
 				}
 				void  SetEuler( Vector3  euler )
 				{

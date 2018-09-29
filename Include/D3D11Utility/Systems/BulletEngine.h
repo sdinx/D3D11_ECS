@@ -26,11 +26,6 @@ namespace  D3D11Utility
 		inline  btTransform  BulletConvertTransform( Transform  origin )
 		{
 				btTransform  btOut;
-				const  Matrix4x4  mat = origin.GetWorld();
-
-				//çsóÒÇ÷äiî[
-				btMatrix3x3  btMat;
-				btMat.setRotation( origin.GetRotation() );
 
 				// çsóÒÇ÷äiî[
 				btOut.setRotation( origin.GetRotation() );

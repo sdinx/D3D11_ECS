@@ -57,7 +57,7 @@ void  Transform::Update()
 		// ローカル空間を計算
 		UpdateLocalMatrix();
 		// 絶対位置を求める
-		mtxWorld = DirectX::XMMatrixMultiply( mtxWorld, DirectX::XMLoadFloat4x4( &m_localWorld ) );
+		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
 
 		XMStoreFloat4x4( &m_world, mtxWorld );
 }
@@ -65,35 +65,66 @@ void  Transform::Update()
 
 void  Transform::UpdateLocalMatrix()
 {
-		XMMATRIX  mtxPos, mtxRotate, mtxScale;
+		XMMATRIX  mtxWorld;
 
-		// 行列変換
-		mtxPos = XMMatrixTranslationFromVector( m_localPosition.get128() );
-		mtxRotate = XMMatrixRotationQuaternion( m_localRotation.get128() );
-		mtxScale = XMMatrixScalingFromVector( m_localScale.get128() );
+		Matrix3x3  matRotate;
+		matRotate.setRotation( m_localRotation );
 
-		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
-		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
+		mtxWorld.r[0].m128_f32[0] = m_localScale.m_floats[0] * matRotate[0].m_floats[0];
+		mtxWorld.r[0].m128_f32[1] = m_localScale.m_floats[0] * matRotate[0].m_floats[1];
+		mtxWorld.r[0].m128_f32[2] = m_localScale.m_floats[0] * matRotate[0].m_floats[2];
 
-		XMStoreFloat4x4( &m_localWorld, mtxPos );
+		mtxWorld.r[1].m128_f32[0] = m_localScale.m_floats[1] * matRotate[1].m_floats[0];
+		mtxWorld.r[1].m128_f32[1] = m_localScale.m_floats[1] * matRotate[1].m_floats[1];
+		mtxWorld.r[1].m128_f32[2] = m_localScale.m_floats[1] * matRotate[1].m_floats[2];
+
+		mtxWorld.r[2].m128_f32[0] = m_localScale.m_floats[2] * matRotate[2].m_floats[0];
+		mtxWorld.r[2].m128_f32[1] = m_localScale.m_floats[2] * matRotate[2].m_floats[1];
+		mtxWorld.r[2].m128_f32[2] = m_localScale.m_floats[2] * matRotate[2].m_floats[2];
+
+		mtxWorld.r[3].m128_f32[0] = m_localPosition.m_floats[0];
+		mtxWorld.r[3].m128_f32[1] = m_localPosition.m_floats[1];
+		mtxWorld.r[3].m128_f32[2] = m_localPosition.m_floats[2];
+
+		mtxWorld.r[0].m128_f32[3] = 0.0f;
+		mtxWorld.r[1].m128_f32[3] = 0.0f;
+		mtxWorld.r[2].m128_f32[3] = 0.0f;
+		mtxWorld.r[3].m128_f32[3] = 1.0f;
+
+		XMStoreFloat4x4( &m_localWorld, mtxWorld );
 }
 
 
 void  Transform::UpdateMatrix()
 {
-		XMMATRIX  mtxPos, mtxRotate, mtxScale;
+		XMMATRIX  mtxWorld;
 
-		// 行列変換
-		mtxPos = XMMatrixTranslationFromVector( m_position.get128() );
-		mtxRotate = XMMatrixRotationQuaternion( m_rotation.get128() );
-		mtxScale = XMMatrixScalingFromVector( m_scale.get128() );
+		Matrix3x3  matRotate;
+		matRotate.setRotation( m_rotation );
 
-		// 行列計算
-		mtxPos = XMMatrixMultiply( mtxRotate, mtxPos );
-		mtxPos = XMMatrixMultiply( mtxScale, mtxPos );
+		mtxWorld.r[0].m128_f32[0] = m_scale.m_floats[0] * matRotate[0].m_floats[0];
+		mtxWorld.r[0].m128_f32[1] = m_scale.m_floats[0] * matRotate[0].m_floats[1];
+		mtxWorld.r[0].m128_f32[2] = m_scale.m_floats[0] * matRotate[0].m_floats[2];
+
+		mtxWorld.r[1].m128_f32[0] = m_scale.m_floats[1] * matRotate[1].m_floats[0];
+		mtxWorld.r[1].m128_f32[1] = m_scale.m_floats[1] * matRotate[1].m_floats[1];
+		mtxWorld.r[1].m128_f32[2] = m_scale.m_floats[1] * matRotate[1].m_floats[2];
+
+		mtxWorld.r[2].m128_f32[0] = m_scale.m_floats[2] * matRotate[2].m_floats[0];
+		mtxWorld.r[2].m128_f32[1] = m_scale.m_floats[2] * matRotate[2].m_floats[1];
+		mtxWorld.r[2].m128_f32[2] = m_scale.m_floats[2] * matRotate[2].m_floats[2];
+
+		mtxWorld.r[3].m128_f32[0] = m_position.m_floats[0];
+		mtxWorld.r[3].m128_f32[1] = m_position.m_floats[1];
+		mtxWorld.r[3].m128_f32[2] = m_position.m_floats[2];
+
+		mtxWorld.r[0].m128_f32[3] = 0.0f;
+		mtxWorld.r[1].m128_f32[3] = 0.0f;
+		mtxWorld.r[2].m128_f32[3] = 0.0f;
+		mtxWorld.r[3].m128_f32[3] = 1.0f;
 
 		// ワールド行列の更新
-		XMStoreFloat4x4( &m_world, mtxPos );
+		XMStoreFloat4x4( &m_world, mtxWorld );
 }
 
 

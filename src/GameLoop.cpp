@@ -8,6 +8,8 @@
 //----------------------------------------------------------------------------------
 #include  <GameUtility.h>
 #include  <Game\Scene\Tutorial.h>
+#include  <D3D11Utility/Systems/Timer.h>
+using  namespace  D3D11Utility::Systems;
 
 
 void  GameUtility::GameInit()

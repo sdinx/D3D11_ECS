@@ -51,14 +51,16 @@ void  BulletEngine::Update( float  ms )
 		m_pDynamicsWorld->stepSimulation( 1 / 600.0f, 10 );
 
 		Transform*  trans = nullptr;
-		Physical::BulletPhysics*  physics = nullptr;
 		btTransform  btTrans;
 		for ( auto rb : m_pComponentManager->GetComponents<Physical::BulletPhysics>() )
 		{
 				trans = rb->GetComponent<Transform>();
-				physics = rb->GetComponent<Physical::BulletPhysics>();
-				btTrans = physics->GetRigidBody()->getCenterOfMassTransform();
+				// 物理計算後のワールド行列を取得
+				btTrans = rb->GetComponent<Physical::BulletPhysics>()->GetRigidBody()->getWorldTransform();
+
+				// 物理計算後の位置情報を設定
 				trans->SetPosition( btTrans.getOrigin() );
+				trans->SetRotation( btTrans.getRotation() );
 		}
 }
 

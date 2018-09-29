@@ -27,6 +27,7 @@
     <ClCompile Include="src\D3D11Utility\Graphics\Texture.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
+    <ClCompile Include="src\D3D11Utility\InputMove.cpp" />
     <ClCompile Include="src\D3D11Utility\Physical\BoxCollider.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -93,6 +94,7 @@
     <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h" />
     <ClInclude Include="Include\D3D11Utility\IComponent.h" />
     <ClInclude Include="Include\D3D11Utility\IEntity.h" />
+    <ClInclude Include="Include\D3D11Utility\InputMove.h" />
     <ClInclude Include="Include\D3D11Utility\Interface.h" />
     <ClInclude Include="Include\D3D11Utility\Light.h" />
     <ClInclude Include="Include\D3D11Utility\Object.h" />

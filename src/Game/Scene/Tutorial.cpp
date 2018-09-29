@@ -228,7 +228,7 @@ void  Tutorial::Awake()
 				playerRender->SetTextureId( texFubukiId );
 				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				Vector3&  scale2 = trans2->GetLocalScale();
+				Vector3&  scale2 = trans2->GetScale();
 				Vector3&  pos2 = trans2->GetPosition();
 				pos2.m_floats[2] += 5.0f;
 				scale2 = Vector3( .03f, .03f, .03f );
