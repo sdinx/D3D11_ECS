@@ -24,8 +24,14 @@ Transform::Transform() :
 		m_localPosition( 0, 0, 0 ),
 		m_rotation( 0, 0, 0 ),
 		m_localRotation( 0, 0, 0 ),
+		m_up( 0, 1, 0 ),
+		m_forward( 0, 0, 1 ),
+		m_right( 1, 0, 0 ),
 		m_pParent( nullptr )
 {
+		m_up = m_up.normalized();
+		m_forward = m_up.normalized();
+		m_right = m_up.normalized();
 		HandleMessage( GameUtility::Message( MSG_UPDATE_LOCAL ) );
 }
 
@@ -39,6 +45,9 @@ Transform::Transform( Transform*  parent ) :
 		m_localRotation( 0, 0, 0 ),
 		m_pParent( parent )
 {
+		m_up = m_up.normalized();
+		m_forward = m_up.normalized();
+		m_right = m_up.normalized();
 		HandleMessage( GameUtility::Message( MSG_UPDATE_LOCAL ) );
 }
 
@@ -57,7 +66,7 @@ void  Transform::Update()
 		// ローカル空間を計算
 		UpdateLocalMatrix();
 		// 絶対位置を求める
-		mtxWorld = DirectX::XMMatrixMultiply( DirectX::XMLoadFloat4x4( &m_localWorld ), mtxWorld );
+		mtxWorld = DirectX::XMMatrixMultiply( mtxWorld , DirectX::XMLoadFloat4x4( &m_localWorld ) );
 
 		XMStoreFloat4x4( &m_world, mtxWorld );
 }

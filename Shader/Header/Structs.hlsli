@@ -53,4 +53,4 @@ struct GSPSInput
 };
 
 
-const float PI = 3.1415926535f;
+static  const  float  PI = 3.1415926535f;

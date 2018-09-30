@@ -71,6 +71,9 @@ namespace  D3D11Utility
 				Quaternion  m_rotation;
 				Vector3  m_position;
 				Vector3  m_scale;
+				Vector3  m_up;// y軸（緑軸）
+				Vector3  m_forward;// z軸（青軸）
+				Vector3  m_right;// x軸（赤軸）
 
 
 		public:
@@ -149,6 +152,18 @@ namespace  D3D11Utility
 				{
 						return  m_scale;
 				}
+				Vector3&  GetUp()
+				{
+						return  m_up;
+				}
+				Vector3&  GetForward()
+				{
+						return  m_forward;
+				}
+				Vector3&  GetRight()
+				{
+						return  m_right;
+				}
 
 				/* Setter */
 				void  SetParent( Transform*  pParent )
@@ -225,6 +240,18 @@ namespace  D3D11Utility
 				void  SetScale( Vector3  scale )
 				{
 						m_scale = scale;
+				}
+				void  GetUp( Vector3  up )
+				{
+						m_up = up;
+				}
+				void  GetForward( Vector3  forward )
+				{
+						m_forward = forward;
+				}
+				void  GetRight( Vector3  right )
+				{
+						m_right = right;
 				}
 
 		public:

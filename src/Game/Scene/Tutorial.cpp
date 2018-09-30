@@ -67,32 +67,32 @@ void  Tutorial::InputFPSCamera()
 
 		if ( isMouse )
 				if ( mx != 0.0f || my != 0.0f )
-				{
+				{ 
 						angle_x += dy;
 						angle_y += dx;
 						camTransform->SetEuler( angle_x, angle_y, 0.0f );
 				}
 
-		if ( Input::KeyTrigger( DIK_RETURN ) )
+		if ( Input::IsKeyTrigger( DIK_RETURN ) )
 		{
 				isMouse = !isMouse;
 				ShowCursor( isMouse );
 		}
 
-		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
+		if ( Input::IsKeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
 				move += Vector3( 0, 0, 0.02f );
 		}
-		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
+		else if ( Input::IsKeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
 				move += Vector3( 0, 0, -0.02f );
 		}
 
-		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
+		if ( Input::IsKeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
 				move += Vector3( -0.02f, 0, 0 );
 		}
-		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
+		else if ( Input::IsKeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
 				move += Vector3( 0.02f, 0, 0 );
 		}
@@ -129,7 +129,7 @@ void  Tutorial::Awake()
 		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
 		//Graphics::ShaderId  gsId = m_pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
 		Graphics::PixelShader*  ps = m_pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
-		Graphics::PixelShader*  psSmooth = m_pd3dRenderer->CreatePixelShader( L"Shader/Smoothing.hlsl", "PSSmooth" );
+		Graphics::PixelShader*  psSmooth = m_pd3dRenderer->CreatePixelShader( L"Shader/Smoothing.hlsl", "main" );
 
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
@@ -223,7 +223,7 @@ void  Tutorial::Awake()
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		playerRender->SetVertexShader( vs );
-		playerRender->SetPixelShader( ps );
+		playerRender->SetPixelShader( psSmooth );
 		{/* Parameter */
 				playerRender->SetTextureId( texFubukiId );
 				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
@@ -266,38 +266,38 @@ void  Tutorial::Update()
 		Input::UpdateKeyboard();
 		Input::UpdateMouse();
 
-		//InputFPSCamera();
+		InputFPSCamera();
 
 		Vector3&  trans = m_playerEntity->GetComponent<Transform>()->GetPosition();
 		static  Vector3  euler( 0, 0, 0 );
 
-		if ( Input::KeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
+		if ( Input::IsKeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
 				trans.m_floats[2] += 0.01f;
 		}
-		else if ( Input::KeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
+		else if ( Input::IsKeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
 				trans.m_floats[2] += -0.01f;
 		}
 
-		if ( Input::KeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
+		if ( Input::IsKeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
 				euler.m_floats[1] += 0.1f;
 		}
-		else if ( Input::KeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
+		else if ( Input::IsKeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
 				euler.m_floats[1] += -0.1f;
 		}
 
 		m_playerEntity->GetComponent<Transform>()->SetEuler( euler );
 
-		if ( Input::KeyTrigger( DIK_SPACE ) )
+		if ( Input::IsKeyTrigger( DIK_SPACE ) )
 		{
 				//v.m_floats[1] += 10;
 		}
 
 
-		if ( Input::KeyPress( DIK_ESCAPE ) )
+		if ( Input::IsKeyPress( DIK_ESCAPE ) )
 		{
 				GameScene.SetMethodState( &Scene::BaseScene::Release );
 		}

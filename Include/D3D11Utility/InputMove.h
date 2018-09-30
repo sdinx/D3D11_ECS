@@ -16,6 +16,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Transform.h>
+#include  <D3D11Utility/Camera.h>
 
 
 namespace  D3D11Utility
@@ -30,7 +31,7 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 
-				InputMove( Transform*  target );
+				InputMove( Transform*  target, Camera*  camera );
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -39,6 +40,7 @@ namespace  D3D11Utility
 
 				static  ComponentId  STATIC_COMPONENT_ID;
 				Transform*  m_target;
+				Camera*  m_camera;
 
 		public:
 				//----------------------------------------------------------------------------------

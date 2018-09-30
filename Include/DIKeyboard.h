@@ -2,7 +2,7 @@
 #define  _INCLUDED_DIKEYBOARD_
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
-#include <dinput.h>
+#include  <dinput.h>
 
 #define NUM_KEY_MAX			256
 #define LIMIT_COUNT_REPEEAT	20
@@ -19,10 +19,12 @@ namespace Input
 		HRESULT  UpdateMouse();
 
 		// Get key functions
-		bool KeyPress( int nKey );
-		bool KeyTrigger( int nKey );
-		bool KeyRepeat( int nKey );
-		bool KeyRelease( int nKey );
+		bool IsKeyPress( int nKey );
+		bool IsKeyTrigger( int nKey );
+		bool IsKeyRepeat( int nKey );
+		bool IsKeyRelease( int nKey );
+		float KeyVertical();
+		float KeyHorizontal();
 
 		// Get mouse functions
 		bool MouseLeftPress( void );
@@ -31,11 +33,11 @@ namespace Input
 		bool MouseRightTrigger( void );
 		bool MouseCenterPress( void );
 		bool MouseCenterTrigger( void );
-		long MouseAxisX( void );
-		long MouseAxisY( void );
-		long MouseAxisZ( void );
-		long MouseX( void );
-		long MouseY( void );
+		float MouseAxisX( void );
+		float MouseAxisY( void );
+		float MouseAxisZ( void );
+		float MouseX( void );
+		float MouseY( void );
 
 }
 

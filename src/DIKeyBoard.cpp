@@ -142,22 +142,37 @@ BOOL WINAPI  Input::DI_Init(HWND hWnd, HINSTANCE hInstance) {
 	return TRUE;
 }
 
-bool  Input::KeyPress(int nKey) {
+/* Get boolean */
+
+bool  Input::IsKeyPress(int nKey) {
 	return (g_aKeyState[nKey] & 0x80) ? true : false;
 }
 
-bool  Input::KeyTrigger(int nKey) {
+
+bool  Input::IsKeyTrigger(int nKey) {
 	return (g_aKeyStateTrigger[nKey] & 0x80) ? true : false;
 }
 
-bool  Input::KeyRepeat(int nKey) {
+
+bool  Input::IsKeyRepeat(int nKey) {
 	return (g_aKeyStateRepeat[nKey] & 0x80) ? true : false;
 }
 
-bool  Input::KeyRelease(int nKey) {
+
+bool  Input::IsKeyRelease(int nKey) {
 	return (g_aKeyStateRelease[nKey] & 0x80) ? true : false;
 }
 
+/* get float value */
+
+float  Input::KeyVertical() {
+		return  float( g_aKeyState[DIK_W] & 0x80 ) + -float( g_aKeyState[DIK_S] & 0x80 );
+}
+
+
+float  Input::KeyHorizontal() {
+		return  float( g_aKeyState[DIK_D] & 0x80 ) + -float( g_aKeyState[DIK_A] & 0x80 );
+}
 
 //=============================================================================
 // マウスの初期化
@@ -310,38 +325,38 @@ bool  Input::MouseCenterTrigger( void )
 //=============================================================================
 // マウスデータ取得(Ｘ軸移動)
 //=============================================================================
-long  Input::MouseAxisX( void )
+float  Input::MouseAxisX( void )
 {
-		return g_mouseState.lX;
+		return  ( float ) g_mouseState.lX;
 }
 
 //=============================================================================
 // マウスデータ取得(Ｙ軸移動)
 //=============================================================================
-long  Input::MouseAxisY( void )
+float  Input::MouseAxisY( void )
 {
-		return g_mouseState.lY;
+		return  ( float ) g_mouseState.lY;
 }
 
 //=============================================================================
 // マウスデータ取得(Ｚ軸移動)
 //=============================================================================
-long  Input::MouseAxisZ( void )
+float  Input::MouseAxisZ( void )
 {
-		return g_mouseState.lZ;
+		return  ( float ) g_mouseState.lZ;
 }
 //=============================================================================
 // マウス座標取得(X)
 //=============================================================================
-long  Input::MouseX( void )
+float  Input::MouseX( void )
 {
-		return g_MousePoint.x;
+		return  ( float ) g_MousePoint.x;
 }
 
 //=============================================================================
 // マウス座標取得(Y)
 //=============================================================================
-long  Input::MouseY( void )
+float  Input::MouseY( void )
 {
-		return g_MousePoint.y;
+		return  ( float ) g_MousePoint.y;
 }
