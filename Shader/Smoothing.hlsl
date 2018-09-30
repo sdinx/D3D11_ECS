@@ -15,7 +15,7 @@ float4  main( GSPSInput input ) : SV_TARGET
 		float4  color = meshColor * texel;
 		
 		float3  nor = normalize( input.normal );
-		float3  diffuse = NormalizedLambert( float3( 0.5f, 0.5f, 0.5f )*meshColor.rgb, light, nor );
+		float3  diffuse = NormalizedLambert( float3( 1.0f, 1.0f, 1.0f )*meshColor.rgb, light, nor );
 		
 		//return  texel;
 		return  float4( diffuse*texel.rgb, 1.0f );

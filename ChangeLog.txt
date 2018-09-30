@@ -24,3 +24,8 @@
 // ComponentManagerが全てのコンポーネントのアップデートを行うように変更.
 // 上記に伴いSystems::Updatorを削除.
 // ベクトル変数 Vector3をBullet用のbtVector3に変更.
+
+// 2018.09.30 - ver 0.34
+// Transformを大幅に変更してメンバ変数減少と計算コストの削減と向きベクトル（up, forward, right）を追加.
+// Cameraから座標関連を削除してTransformから座標を計算するように変更.
+// これ以降オブジェクトまたはカメラの移動は別コンポーネントを作成して行う.

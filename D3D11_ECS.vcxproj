@@ -19,161 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\D3D11Utility\Camera.cpp" />
-    <ClCompile Include="src\D3D11Utility\D3D11Utility.cpp" />
-    <ClCompile Include="src\D3D11Utility\Entity.cpp" />
-    <ClCompile Include="src\D3D11Utility\Graphics\GeometryShader.cpp" />
-    <ClCompile Include="src\D3D11Utility\Graphics\PixelShader.cpp" />
-    <ClCompile Include="src\D3D11Utility\Graphics\Texture.cpp" />
-    <ClCompile Include="src\D3D11Utility\Graphics\VertexBuffer.cpp" />
-    <ClCompile Include="src\D3D11Utility\Graphics\VertexShader.cpp" />
-    <ClCompile Include="src\D3D11Utility\InputMove.cpp" />
-    <ClCompile Include="src\D3D11Utility\Physical\BoxCollider.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Physical\BoxCollider2D.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Physical\BulletPhysics.cpp" />
-    <ClCompile Include="src\D3D11Utility\Physical\Collider.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Physical\IPhysical.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Physical\SphereCollider.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Renderable.cpp" />
-    <ClCompile Include="src\D3D11Utility\Scene.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\BulletEngine.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\ComponentManager.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\DebugSystem.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\EntityManager.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\FbxLoader.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\IDirect3D.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\IDirect3DRenderer.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\PhysicalSystem.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\D3D11Utility\Systems\SystemManager.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\TextureManager.cpp" />
-    <ClCompile Include="src\D3D11Utility\Systems\Timer.cpp" />
-    <ClCompile Include="src\D3D11Utility\Transform.cpp" />
-    <ClCompile Include="src\DIKeyBoard.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="src\EntryPoint.cpp" />
-    <ClCompile Include="src\GameLoop.cpp" />
-    <ClCompile Include="src\GameUtility.cpp" />
-    <ClCompile Include="src\Game\Bullet.cpp" />
-    <ClCompile Include="src\Game\FPSGun.cpp" />
-    <ClCompile Include="src\Game\GameObject.cpp" />
-    <ClCompile Include="src\Game\Manager\BulletManager.cpp" />
-    <ClCompile Include="src\Game\Scene\Tutorial.cpp" />
-    <ClCompile Include="src\XInputController.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Include\D3D11Utility\Camera.h" />
-    <ClInclude Include="Include\D3D11Utility\Component.h" />
-    <ClInclude Include="Include\D3D11Utility\D3D11Utility.h" />
-    <ClInclude Include="Include\D3D11Utility\Entity.h" />
-    <ClInclude Include="Include\D3D11Utility\Graphics\GeometryShader.h" />
-    <ClInclude Include="Include\D3D11Utility\Graphics\IShader.h" />
-    <ClInclude Include="Include\D3D11Utility\Graphics\PixelShader.h" />
-    <ClInclude Include="Include\D3D11Utility\Graphics\Texture.h" />
-    <ClInclude Include="Include\D3D11Utility\Graphics\VertexBuffer.h" />
-    <ClInclude Include="Include\D3D11Utility\Graphics\VertexShader.h" />
-    <ClInclude Include="Include\D3D11Utility\IComponent.h" />
-    <ClInclude Include="Include\D3D11Utility\IEntity.h" />
-    <ClInclude Include="Include\D3D11Utility\InputMove.h" />
-    <ClInclude Include="Include\D3D11Utility\Interface.h" />
-    <ClInclude Include="Include\D3D11Utility\Light.h" />
-    <ClInclude Include="Include\D3D11Utility\Object.h" />
-    <ClInclude Include="Include\D3D11Utility\Physical\BulletPhysics.h" />
-    <ClInclude Include="Include\D3D11Utility\Physical\Collider.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\Collider2D.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\BoxCollider2D.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\BoxCollider.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\IPhysics.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\Physics.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\Physics2D.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\SphereCollider.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Physical\SphereCollider2D.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Platform.h" />
-    <ClInclude Include="Include\D3D11Utility\Renderable.h" />
-    <ClInclude Include="Include\D3D11Utility\Scene.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\BulletEngine.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\ComponentManager.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\DebugSystem.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\EntityManager.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\FbxLoader.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\IDirect3D.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\IDirect3DRenderer.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\ISystem.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\PhysicalSystem.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\D3D11Utility\Systems\SystemInclude.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\SystemManager.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\TextureManager.h" />
-    <ClInclude Include="Include\D3D11Utility\Systems\Timer.h" />
-    <ClInclude Include="Include\D3D11Utility\Transform.h" />
-    <ClInclude Include="Include\DIKeyboard.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Include\GameUtility.h" />
-    <ClInclude Include="Include\Game\Bullet.h" />
-    <ClInclude Include="Include\Game\FPSGun.h" />
-    <ClInclude Include="Include\Game\GameObject.h" />
-    <ClInclude Include="Include\Game\Manager\BulletManager.h" />
-    <ClInclude Include="Include\Game\Scene\BaseScene.h" />
-    <ClInclude Include="Include\Game\Scene\Tutorial.h" />
-    <ClInclude Include="Include\IGraphicsRenderer.h" />
-    <ClInclude Include="Include\IRenderable.h" />
-    <ClInclude Include="Include\Singleton.h" />
-    <ClInclude Include="Include\StateTransition.h" />
-    <ClInclude Include="Include\XInputController.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="ChangeLog.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </Text>
@@ -182,22 +27,157 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shader\Default.fx">
+    <ClInclude Include="header\D3D11Utility.h" />
+    <ClInclude Include="header\d3d11utility\Component.h" />
+    <ClInclude Include="header\d3d11utility\components\Camera.h" />
+    <ClInclude Include="header\d3d11utility\components\InputMove.h" />
+    <ClInclude Include="header\d3d11utility\components\Light.h" />
+    <ClInclude Include="header\d3d11utility\components\Renderable.h" />
+    <ClInclude Include="header\d3d11utility\components\Transform.h" />
+    <ClInclude Include="header\d3d11utility\DIKeyboard.h" />
+    <ClInclude Include="header\d3d11utility\Entity.h" />
+    <ClInclude Include="header\d3d11utility\graphics\GeometryShader.h" />
+    <ClInclude Include="header\d3d11utility\graphics\IShader.h" />
+    <ClInclude Include="header\d3d11utility\graphics\PixelShader.h" />
+    <ClInclude Include="header\d3d11utility\graphics\Texture.h" />
+    <ClInclude Include="header\d3d11utility\graphics\VertexBuffer.h" />
+    <ClInclude Include="header\d3d11utility\graphics\VertexShader.h" />
+    <ClInclude Include="header\d3d11utility\IComponent.h" />
+    <ClInclude Include="header\d3d11utility\IEntity.h" />
+    <ClInclude Include="header\d3d11utility\Interface.h" />
+    <ClInclude Include="header\d3d11utility\physical\BoxCollider.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\BoxCollider2D.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\BulletPhysics.h" />
+    <ClInclude Include="header\d3d11utility\physical\Collider.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\Collider2D.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\IPhysics.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\Physics.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\Physics2D.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\SphereCollider.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\physical\SphereCollider2D.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\Platform.h" />
+    <ClInclude Include="header\d3d11utility\systems\BulletEngine.h" />
+    <ClInclude Include="header\d3d11utility\systems\ComponentManager.h" />
+    <ClInclude Include="header\d3d11utility\systems\DebugSystem.h" />
+    <ClInclude Include="header\d3d11utility\systems\EntityManager.h" />
+    <ClInclude Include="header\d3d11utility\systems\FbxLoader.h" />
+    <ClInclude Include="header\d3d11utility\systems\IDirect3D.h" />
+    <ClInclude Include="header\d3d11utility\systems\IDirect3DRenderer.h" />
+    <ClInclude Include="header\d3d11utility\systems\ISystem.h" />
+    <ClInclude Include="header\d3d11utility\systems\PhysicalSystem.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\systems\SystemInclude.h" />
+    <ClInclude Include="header\d3d11utility\systems\SystemManager.h" />
+    <ClInclude Include="header\d3d11utility\systems\TextureManager.h" />
+    <ClInclude Include="header\d3d11utility\Timer.h" />
+    <ClInclude Include="header\d3d11utility\XInputController.h" />
+    <ClInclude Include="header\game\GameObject.h" />
+    <ClInclude Include="header\game\GameUtility.h" />
+    <ClInclude Include="header\game\scene\BaseScene.h" />
+    <ClInclude Include="header\game\scene\Tutorial.h" />
+    <ClInclude Include="header\IGraphicsRenderer.h" />
+    <ClInclude Include="header\IRenderable.h" />
+    <ClInclude Include="header\Singleton.h" />
+    <ClInclude Include="header\StateTransition.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\D3D11Utility.cpp" />
+    <ClCompile Include="source\d3d11utility\Camera.cpp" />
+    <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp" />
+    <ClCompile Include="source\d3d11utility\Entity.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\PixelShader.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\Texture.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\VertexBuffer.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\VertexShader.cpp" />
+    <ClCompile Include="source\d3d11utility\InputMove.cpp" />
+    <ClCompile Include="source\d3d11utility\physical\BoxCollider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\physical\BoxCollider2D.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\physical\BulletPhysics.cpp" />
+    <ClCompile Include="source\d3d11utility\physical\Collider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\physical\IPhysical.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\physical\SphereCollider.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\Renderable.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\BulletEngine.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\ComponentManager.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\DebugSystem.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\EntityManager.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\FbxLoader.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\IDirect3D.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\IDirect3DRenderer.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\PhysicalSystem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\systems\SystemManager.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\TextureManager.cpp" />
+    <ClCompile Include="source\d3d11utility\systems\Timer.cpp" />
+    <ClCompile Include="source\d3d11utility\Transform.cpp" />
+    <ClCompile Include="source\d3d11utility\XInputController.cpp" />
+    <ClCompile Include="source\EntryPoint.cpp" />
+    <ClCompile Include="source\GameLoop.cpp" />
+    <ClCompile Include="source\game\GameObject.cpp" />
+    <ClCompile Include="source\game\GameUtility.cpp" />
+    <ClCompile Include="source\game\scene\Tutorial.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shader\Default.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Shader\Smoothing.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    <FxCompile Include="shader\Smoothing.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shader\Header\Structs.hlsli">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    <None Include="shader\header\Structs.hlsli">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -258,7 +238,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(LocalDebuggerWorkingDirectory)bullet3\src;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(LocalDebuggerWorkingDirectory)bullet3\src;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)header\;$(IncludePath)</IncludePath>
     <LibraryPath>$(LocalDebuggerWorkingDirectory)bullet3\bin;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x86\debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -266,7 +246,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(LocalDebuggerWorkingDirectory)bullet3\src;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)Include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(LocalDebuggerWorkingDirectory)bullet3\src;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\include;$(LocalDebuggerWorkingDirectory)header\;$(IncludePath)</IncludePath>
     <LibraryPath>$(LocalDebuggerWorkingDirectory)bullet3\bin;C:\Program Files\Autodesk\FBX\FBX SDK\2018.1.1\lib\vs2015\x86\release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
