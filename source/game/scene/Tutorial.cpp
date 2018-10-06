@@ -5,23 +5,11 @@
 #include  <game/scene/Tutorial.h>
 #include  <d3d11utility/components/Renderable.h>
 #include  <d3d11utility/components/Transform.h>
-#include  <d3d11utility/Systems/SystemInclude.h>
-#include  <d3d11utility/Physical/BulletPhysics.h>
+#include  <d3d11utility/systems/SystemInclude.h>
+#include  <d3d11utility/physical/BulletPhysics.h>
 #include  <d3d11utility/DIKeyboard.h>
 #include  <d3d11utility/XInputController.h>
-
-#include <btBulletCollisionCommon.h>
-#include <btBulletDynamicsCommon.h>
-
-#if  defined(DEBUG)||(_DEBUG)
-#pragma  comment(lib, "BulletCollision_vs2010_debug.lib")
-#pragma  comment(lib, "BulletDynamics_vs2010_debug.lib")
-#pragma  comment(lib, "LinearMath_vs2010_debug.lib")
-#else
-#pragma  comment(lib, "BulletCollision_vs2010.lib")
-#pragma  comment(lib, "BulletDynamics_vs2010.lib")
-#pragma  comment(lib, "LinearMath_vs2010.lib")
-#endif
+#include  <d3d11utility/systems/BulletEngine.h>
 
 
 //----------------------------------------------------------------------------------
@@ -145,7 +133,7 @@ void  Tutorial::Awake()
 		Renderable*  bulletRender = bulletEntity->GetComponent<Renderable>();
 		Transform*  bulletTrans = bulletEntity->GetComponent<Transform>();
 		bulletRender->SetVertexShader( vs );
-		bulletRender->SetPixelShader( ps );
+		bulletRender->SetPixelShader( psSmooth );
 		{/* Parameter */
 				//bulletRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
 				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );

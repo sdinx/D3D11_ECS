@@ -20,6 +20,20 @@
 #include  <vector>
 
 
+//----------------------------------------------------------------------------------
+// pragmas
+//----------------------------------------------------------------------------------
+#if  defined(DEBUG)||(_DEBUG)
+#pragma  comment(lib, "BulletCollision_vs2010_debug.lib")
+#pragma  comment(lib, "BulletDynamics_vs2010_debug.lib")
+#pragma  comment(lib, "LinearMath_vs2010_debug.lib")
+#else
+#pragma  comment(lib, "BulletCollision_vs2010.lib")
+#pragma  comment(lib, "BulletDynamics_vs2010.lib")
+#pragma  comment(lib, "LinearMath_vs2010.lib")
+#endif
+
+
 namespace  D3D11Utility
 {
 		/* (dxmath to bullet) or (bullet to dxmath) */
