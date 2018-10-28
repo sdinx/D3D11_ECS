@@ -114,12 +114,12 @@ void  VertexBuffer::BindBuffer()
 		// ラスタライズ
 		pd3dDeviceContext->RSSetState( m_pRasterState );
 		// プリミティブの種類を設定
-		pd3dDeviceContext->IASetPrimitiveTopology( primitiveType );
+		//pd3dDeviceContext->IASetPrimitiveTopology( primitiveType );
 
-		if ( m_pIndexBuffer == nullptr )
-				pd3dDeviceContext->Draw( m_numVertexCounts, 0 );
-		else
-				pd3dDeviceContext->DrawIndexed( m_numIndexCounts, 0, 0 );
+		//if ( m_pIndexBuffer == nullptr )
+		pd3dDeviceContext->Draw( m_numVertexCounts, 0 );
+		//else
+		//		pd3dDeviceContext->DrawIndexed( m_numIndexCounts, 0, 0 );
 }
 
 

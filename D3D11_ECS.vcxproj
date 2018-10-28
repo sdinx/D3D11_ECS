@@ -111,7 +111,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\D3D11Utility.cpp" />
-    <ClCompile Include="source\d3d11utility\Camera.cpp" />
+    <ClCompile Include="source\d3d11utility\components\Camera.cpp" />
+    <ClCompile Include="source\d3d11utility\components\InputMove.cpp" />
+    <ClCompile Include="source\d3d11utility\components\Renderable.cpp" />
+    <ClCompile Include="source\d3d11utility\components\Transform.cpp" />
     <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp" />
     <ClCompile Include="source\d3d11utility\Entity.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp" />
@@ -119,7 +122,6 @@
     <ClCompile Include="source\d3d11utility\graphics\Texture.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\VertexBuffer.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\VertexShader.cpp" />
-    <ClCompile Include="source\d3d11utility\InputMove.cpp" />
     <ClCompile Include="source\d3d11utility\physical\BoxCollider.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -141,7 +143,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="source\d3d11utility\Renderable.cpp" />
     <ClCompile Include="source\d3d11utility\systems\BulletEngine.cpp" />
     <ClCompile Include="source\d3d11utility\systems\ComponentManager.cpp" />
     <ClCompile Include="source\d3d11utility\systems\DebugSystem.cpp" />
@@ -156,7 +157,6 @@
     <ClCompile Include="source\d3d11utility\systems\SystemManager.cpp" />
     <ClCompile Include="source\d3d11utility\systems\TextureManager.cpp" />
     <ClCompile Include="source\d3d11utility\systems\Timer.cpp" />
-    <ClCompile Include="source\d3d11utility\Transform.cpp" />
     <ClCompile Include="source\d3d11utility\XInputController.cpp" />
     <ClCompile Include="source\EntryPoint.cpp" />
     <ClCompile Include="source\GameLoop.cpp" />
@@ -168,6 +168,22 @@
     <FxCompile Include="shader\Default.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="shader\Deferred.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="shader\GeometryShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="shader\Smoothing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

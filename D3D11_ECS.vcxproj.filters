@@ -294,19 +294,7 @@
     <ClCompile Include="source\d3d11utility\systems\Timer.cpp">
       <Filter>source\d3d11utility\systems</Filter>
     </ClCompile>
-    <ClCompile Include="source\d3d11utility\InputMove.cpp">
-      <Filter>source\d3d11utility</Filter>
-    </ClCompile>
-    <ClCompile Include="source\d3d11utility\Renderable.cpp">
-      <Filter>source\d3d11utility</Filter>
-    </ClCompile>
-    <ClCompile Include="source\d3d11utility\Transform.cpp">
-      <Filter>source\d3d11utility</Filter>
-    </ClCompile>
     <ClCompile Include="source\d3d11utility\XInputController.cpp">
-      <Filter>source\d3d11utility</Filter>
-    </ClCompile>
-    <ClCompile Include="source\d3d11utility\Camera.cpp">
       <Filter>source\d3d11utility</Filter>
     </ClCompile>
     <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp">
@@ -333,12 +321,30 @@
     <ClCompile Include="source\game\GameUtility.cpp">
       <Filter>source\game</Filter>
     </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\Renderable.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\Transform.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\Camera.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\InputMove.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\Default.fx">
       <Filter>shader</Filter>
     </FxCompile>
     <FxCompile Include="shader\Smoothing.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\GeometryShader.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="shader\Deferred.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
   </ItemGroup>
