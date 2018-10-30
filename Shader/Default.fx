@@ -3,9 +3,9 @@
 //-----------------------------------------------------------------------------------
 //! @brief      頂点シェーダエントリーポイント
 //-----------------------------------------------------------------------------------
-GSPSInput VSFunc( VSInput input )
+PSInput VSFunc( VSInput input )
 {
-		GSPSInput output = ( GSPSInput ) 0;
+		PSInput output = ( PSInput ) 0;
 
 		// ワールド空間に変換
 		output.position = mul( world, input.position );
@@ -27,13 +27,13 @@ GSPSInput VSFunc( VSInput input )
 //! @brief      ジオメトリシェーダエントリーポイント
 //-----------------------------------------------------------------------------------
 [maxvertexcount( 3 )]
-void GSFunc( triangle  GSPSInput  input[3], inout  TriangleStream<GSPSInput>  stream )
+void GSFunc( triangle  PSInput  input[3], inout  TriangleStream<PSInput>  stream )
 {
-		GSPSInput output;
+		PSInput output;
 
 		for ( int i = 0; i < 3; ++i )
 		{
-				output = ( GSPSInput ) 0;
+				output = ( PSInput ) 0;
 
 				// ワールド空間に変換
 				output.position = mul( world, input[i].position );
@@ -53,11 +53,15 @@ void GSFunc( triangle  GSPSInput  input[3], inout  TriangleStream<GSPSInput>  st
 //------------------------------------------------------------------------------------
 //! @brief      ピクセルシェーダエントリーポイント
 //------------------------------------------------------------------------------------
-float4 PSFunc( GSPSInput input ) : SV_TARGET
+PSOutput PSFunc( PSInput IN )// : SV_TARGET
 {
-		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.texcoord );
-		
-		float4  color = meshColor * texel;
+		PSOutput  OUT = ( PSOutput ) 0;
 
-		return  color;
+		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, IN.texcoord );
+
+		OUT.normal = IN.normal;
+		OUT.color = meshColor * texel;
+		OUT.specular = 0.2;
+
+		return  OUT;
 }

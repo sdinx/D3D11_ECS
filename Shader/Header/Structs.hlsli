@@ -13,18 +13,7 @@ cbuffer  CObject : register( b1 )
 		float4x4  world;
 		float4  meshColor;
 };
-/*
-cbuffer  CDirectionLight : register ( b2 )
-{
-		float4  dir;
-		float4  color;
-};
 
-cbuffer  CPointLight : register ( b3 )
-{
-		float3  pos;
-		float4  color;
-};*/
 
 //-----------------------------------------------------------------------------------
 // Texture variables
@@ -35,7 +24,7 @@ SamplerState  diffuseTextureSampler : register( s0 );
 //-----------------------------------------------------------------------------------
 // VSInput structure
 //-----------------------------------------------------------------------------------
-struct VSInput
+struct  VSInput
 {
 		float4  position				: POSITION;
 		float3  normal					: NORMAL;
@@ -43,13 +32,21 @@ struct VSInput
 };
 
 //-----------------------------------------------------------------------------------
-// GSPSInput structure
+// PSInput structure
 //-----------------------------------------------------------------------------------
-struct GSPSInput
+struct  PSInput
 {
 		float4  position				: SV_POSITION;
 		float3  normal					: NORMAL;
 		float2  texcoord				: TEXCOORD0;
+};
+
+
+struct  PSOutput
+{
+		float3  normal : SV_Target0;
+		float4  color : SV_Target1;
+		float  specular : SV_Target2;
 };
 
 

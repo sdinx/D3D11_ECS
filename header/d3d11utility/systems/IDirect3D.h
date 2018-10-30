@@ -33,35 +33,12 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						friend  class  _Singleton<IDirect3D>;
 
-						struct  RenderTarget
-						{
-								enum  eViews
-								{
-										Depth_Stencil = 0,
-										Normal,
-										Diffuse,
-										Specular,
-								};
-
-								RenderTarget() :
-										m_pRTView( nullptr ),
-										m_pTexture( nullptr ),
-										m_pSRView( nullptr )
-								{}
-								eViews  m_numViews;
-								ID3D11RenderTargetView* m_pRTView = nullptr;
-								ID3D11Texture2D*  m_pTexture = nullptr;
-								ID3D11ShaderResourceView*  m_pSRView = nullptr;
-						};
-
 				public:
 						//----------------------------------------------------------------------------------
 						// other
 						//----------------------------------------------------------------------------------
 						IDirect3D();
 						virtual ~IDirect3D();
-
-						using  eRTViews = RenderTarget::eViews;
 
 				private:
 						//----------------------------------------------------------------------------------
@@ -99,7 +76,6 @@ namespace  D3D11Utility
 						ID3D11Texture2D*  m_pDSTexture = nullptr;
 						ID3D11ShaderResourceView*  m_pRTShaderResourceView = nullptr;
 						ID3D11ShaderResourceView*  m_pDSShaderResourceView = nullptr;
-						std::vector<RenderTarget>  m_renderTagets;
 
 
 				private:
@@ -127,8 +103,6 @@ namespace  D3D11Utility
 						HRESULT  CreateDevice();
 						// デフォルトの深度ステンシルバッファ作成
 						HRESULT  CreateDefaultDepthStencil();
-						// レンダーターゲットビューの生成 ( MRT用 )
-						HRESULT  CreateMultipleRenderTargetView();
 
 						//----------------------------------------------------------------------------------
 						// Utility
@@ -136,7 +110,7 @@ namespace  D3D11Utility
 						VOID  MainLoop();
 						// スクリーンサイズの更新
 						VOID  SetWindow( INT  screenWidth, INT  screenHeight );
-						// レンダリングのクリア
+						// レンダリング
 						VOID  BeginRender();
 						// レンダリングの表示
 						VOID  EndRender();
@@ -166,7 +140,6 @@ namespace  D3D11Utility
 						ID3D11ShaderResourceView* GetRTShaderResourceView() { return  m_pRTShaderResourceView; }
 						ID3D11ShaderResourceView* GetDSShaderResourceView() { return  m_pDSShaderResourceView; }
 						POINT  GetScreenSize() { return{ m_nScreenWidth, m_nScreenHeight }; }
-						RenderTarget&  GetRenderTargets( UINT  index ) { return  m_renderTagets[index]; }
 
 				}; // class IDirect3D
 

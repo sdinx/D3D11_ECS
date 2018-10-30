@@ -277,58 +277,6 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 }// end CreateDefaultDepthStencil()
 
 
-HRESULT  IDirect3D::CreateMultipleRenderTargetView()
-{
-		HRESULT  hr;
-
-		D3D11_TEXTURE2D_DESC  texDesc;
-		ZeroMemory( &texDesc, sizeof( texDesc ) );
-		texDesc.Width = m_nScreenWidth;
-		texDesc.Height = m_nScreenHeight;
-		texDesc.MipLevels = 1;
-		texDesc.ArraySize = 1;
-		texDesc.SampleDesc.Count = m_nMultiSampleCount;
-		texDesc.SampleDesc.Quality = m_nMultiSampleQuality;
-		texDesc.Usage = D3D11_USAGE_DEFAULT;
-		texDesc.CPUAccessFlags = 0;
-		texDesc.MiscFlags = 0;
-
-		D3D11_TEXTURE2D_DESC  texDescs[3] = { texDesc,texDesc,texDesc };
-		const  size_t  descSize = ARRAYSIZE( texDescs );
-
-		// 法線
-		texDescs[0].Format = DXGI_FORMAT_R11G11B10_FLOAT;
-		texDescs[0].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
-
-		// ディフューズ
-		texDescs[1].Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		texDescs[1].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
-
-		// スペキュラ
-		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;
-		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
-
-		m_renderTagets.resize( descSize );
-
-		for ( int i = 0; i < descSize; i++ )
-		{
-				hr = m_pd3dDevice->CreateTexture2D( &texDescs[i], nullptr, &m_renderTagets[i].m_pTexture );
-				if ( FAILED( hr ) )
-				{
-						printf( "<IDirect3D> CreateMultiRenderTargetView() failed" );
-						return  hr;
-				}// end if
-
-				hr = m_pd3dDevice->CreateRenderTargetView( m_renderTagets[i].m_pTexture, nullptr, &m_renderTagets[i].m_pRTView );
-				hr = m_pd3dDevice->CreateShaderResourceView( m_renderTagets[i].m_pTexture, nullptr, &m_renderTagets[i].m_pSRView );
-
-		}// end for
-
-		return  hr;
-
-}// end CreateMultiRenderTargetView() : HRESULT
-
-
 VOID  IDirect3D::MainLoop()
 {
 		// デバイスのポインタを名前空間のグローバル変数へ保持させる
@@ -383,27 +331,15 @@ VOID  IDirect3D::SetWindow( INT  screenWidth, INT  screenHeight )
 
 VOID  IDirect3D::BeginRender()
 {
-		// ステンシルシャドウ
-		m_pd3dDeviceContext->OMSetRenderTargets( 0, nullptr, m_pDSView );
-
-		// 法線
-		m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_renderTagets[0].m_pRTView, m_pDSView );
-		m_pd3dDeviceContext->ClearRenderTargetView( m_renderTagets[0].m_pRTView, m_fClearColors );
-
-		// ディフューズ
-		m_pd3dDeviceContext->OMSetRenderTargets( 2, &m_renderTagets[1].m_pRTView, m_pDSView );
-		m_pd3dDeviceContext->ClearRenderTargetView( m_renderTagets[1].m_pRTView, m_fClearColors );
-
-		// スペキュラ
-		m_pd3dDeviceContext->OMSetRenderTargets( 3, &m_renderTagets[2].m_pRTView, m_pDSView );
-		m_pd3dDeviceContext->ClearRenderTargetView( m_renderTagets[2].m_pRTView, m_fClearColors );
-
 		// 最終描画結果のレンダーターゲット
 		m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
 		// ビューをクリア
 		m_pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
 		m_pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
-}// end BeginRender()
+
+
+
+}
 
 
 VOID  IDirect3D::EndRender()
@@ -415,7 +351,7 @@ VOID  IDirect3D::EndRender()
 
 VOID  IDirect3D::Release()
 {
-		if ( m_pd3dDeviceContext ) 
+		if ( m_pd3dDeviceContext )
 		{
 				// ステートをクリア
 				m_pd3dDeviceContext->ClearState();

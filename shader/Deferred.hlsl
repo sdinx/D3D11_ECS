@@ -1,14 +1,27 @@
-struct  VS_OUTPUT
-{
-		float4  pos : SV_Position;
-		float3  nor : NORMAL;
-		float  dep : DEPTH_VIEW_SPACE;
-};
+#include  "header/DeferredStruct.hlsli"
 
-struct  PS_OUTPUT
+Texture2D<float3>  texNormal : register( t0 );
+SamplerState  ssNormal : register( s0 );
+Texture2D<float4>  texDiffuse : register( t1 );
+SamplerState  ssDiffuse : register( s1 );
+Texture2D<float>  texSpecular : register( t2 );
+SamplerState  ssSpecular : register( s2 );
+
+PSInput  vsmain( VSInput  IN )
 {
-		float  depth : SV_Target0;
-		float3  normal : SV_Target1;
-		float4  diffuse : SV_Target2;
-		float  specular : SV_Target3;
-};
+		PSInput  OUT = ( PSInput ) 0;
+
+		OUT.position = IN.position;
+		OUT.texcoord = IN.texcoord;
+		OUT.color = IN.color;
+
+		return  OUT;
+}
+
+
+float4  psmain( PSInput  IN ) : SV_Target
+{
+		float4  diff = texDiffuse.Sample( ssDiffuse, 2 * ( IN.texcoord - float2( 0,0.5 ) ) );
+		return  float4( 0.5, 0.5, 0.5, 1 );
+		return  diff;
+}

@@ -23,7 +23,7 @@ IDirect3DRenderer::IDirect3DRenderer( ComponentManager*  pComponentManagerInstan
 		m_componentManager( pComponentManagerInstance ),
 		m_pID3D( _Singleton<IDirect3D>::GetInstance() )
 {
-
+		CreateMultipleRenderTargetView();
 }
 
 
@@ -43,8 +43,19 @@ void  IDirect3DRenderer::Release()
 
 void  IDirect3DRenderer::Rendering()const
 {
-		m_pID3D->BeginRender();
-		{/* Begin rendering */
+		ID3D11RenderTargetView*  rtvs[RT_ARRAY_COUNTS];
+
+		int  i = 0;
+		for ( auto& rt : m_renderTagets )
+		{
+				rtvs[i] = rt.m_pRTView;
+				pd3dDeviceContext->ClearRenderTargetView( rt.m_pRTView, m_fClearColors );
+				i++;
+		}
+
+		pd3dDeviceContext->OMSetRenderTargets( RT_ARRAY_COUNTS, rtvs, m_pDSView );
+
+		{/* Begin first rendering */
 				static  UINT  nCount = 1;
 				static  float  fLastTime = 0.0f;
 				static  float  fAll = 0;
@@ -75,13 +86,158 @@ void  IDirect3DRenderer::Rendering()const
 				}
 #endif // _RENDERING_TIME_COUNT_
 
-		}/* Done rendering */
+		}/* Done first rendering */
+
+		{/* Begin deferred rendering */
+
+				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
+				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
+
+				UINT stride = 36;
+				UINT offset = 0;
+				m_pVShader->UpdateShader();
+				pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVtxBuffer, &stride, &offset );
+				pd3dDeviceContext->RSSetState( m_rasterState );
+
+				ID3D11ShaderResourceView*  srvs[RT_ARRAY_COUNTS];
+				ID3D11SamplerState*  ss[RT_ARRAY_COUNTS];
+				int  nSRViewCounts = 0;
+				for ( auto& rt : m_renderTagets )
+				{
+						srvs[nSRViewCounts] = rt.m_pSRView;
+						ss[nSRViewCounts] = m_sampler;
+						nSRViewCounts++;
+				}
+
+				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
+				pd3dDeviceContext->PSSetShaderResources( 0, nSRViewCounts, srvs );
+				pd3dDeviceContext->PSSetSamplers( 0, nSRViewCounts, ss );
+				m_pPShader->UpdateShader();
+
+				pd3dDeviceContext->Draw( 4, 0 );
+
+		}/* Done deferred rendering */
+
 		m_pID3D->EndRender();
 
 }// end Rendering()const
 
 
-Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel )
+
+HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
+{
+		HRESULT  hr;
+
+		hr = m_pID3D->GetSwapChain()->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* ) &m_pRTTexture );
+		if ( FAILED( hr ) )
+				return hr;
+
+		// レンダーターゲットビューを生成
+		hr = pd3dDevice->CreateRenderTargetView( m_pRTTexture, NULL, &m_pRTView );
+		if ( FAILED( hr ) )
+				return hr;
+
+		// レンダーターゲットのシェーダリソースビューを生成
+		hr = pd3dDevice->CreateShaderResourceView( m_pRTTexture, NULL, &m_pRTShaderResourceView );
+		if ( FAILED( hr ) )
+				return  hr;
+
+		POINT  screen = m_pID3D->GetScreenSize();
+
+		D3D11_TEXTURE2D_DESC  texDesc;
+		ZeroMemory( &texDesc, sizeof( texDesc ) );
+		texDesc.Width = screen.x;
+		texDesc.Height = screen.y;
+		texDesc.MipLevels = 1;
+		texDesc.ArraySize = 1;
+		texDesc.SampleDesc.Count = 1;
+		texDesc.SampleDesc.Quality = 0;
+		texDesc.Usage = D3D11_USAGE_DEFAULT;
+		texDesc.CPUAccessFlags = 0;
+		texDesc.MiscFlags = 0;
+
+		D3D11_TEXTURE2D_DESC  texDescs[RT_ARRAY_COUNTS] = { texDesc,texDesc,texDesc };
+		const  size_t  descSize = ARRAYSIZE( texDescs );
+
+		// 法線
+		texDescs[0].Format = DXGI_FORMAT_R11G11B10_FLOAT;
+		texDescs[0].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+
+		// ディフューズ
+		texDescs[1].Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		texDescs[1].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+
+		// スペキュラ
+		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;
+		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+
+		m_renderTagets.resize( descSize );
+
+		for ( int i = 0; i < descSize; i++ )
+		{
+				hr = pd3dDevice->CreateTexture2D( &texDescs[i], nullptr, &m_renderTagets[i].m_pTexture );
+				if ( FAILED( hr ) )
+				{
+						printf( "<IDirect3D> CreateMultiRenderTargetView() failed" );
+						return  hr;
+				}// end if
+
+				hr = pd3dDevice->CreateRenderTargetView( m_renderTagets[i].m_pTexture, nullptr, &m_renderTagets[i].m_pRTView );
+				hr = pd3dDevice->CreateShaderResourceView( m_renderTagets[i].m_pTexture, nullptr, &m_renderTagets[i].m_pSRView );
+
+		}// end for
+
+		D3D11_SAMPLER_DESC sampDesc;
+		ZeroMemory( &sampDesc, sizeof( sampDesc ) );
+		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		pd3dDevice->CreateSamplerState( &sampDesc, &m_sampler );
+
+
+		D3D11_INPUT_ELEMENT_DESC  layout[ ] = {
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 20, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		};
+		UINT  numLayouts = ARRAYSIZE( layout );
+		m_pVShader = CreateVertexShader( L"shader/Deferred.hlsl", "vsmain", "vs_5_0", numLayouts, layout );
+		m_pPShader = CreatePixelShader( L"shader/Deferred.hlsl", "psmain" );
+
+		float  vertex[4 * 9] = {
+				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
+				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
+				-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
+				1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
+		};
+
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory( &bd, sizeof( bd ) );
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof( vertex );
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+		D3D11_SUBRESOURCE_DATA InitData;
+		ZeroMemory( &InitData, sizeof( InitData ) );
+		InitData.pSysMem = vertex;
+		pd3dDevice->CreateBuffer( &bd, &InitData, &m_pVtxBuffer );
+
+		D3D11_RASTERIZER_DESC  rdc = { };
+		rdc.CullMode = D3D11_CULL_NONE;
+		rdc.FillMode = D3D11_FILL_SOLID;
+		rdc.FrontCounterClockwise = TRUE;
+		pd3dDevice->CreateRasterizerState( &rdc, &m_rasterState );
+
+		return  hr;
+
+}// end CreateMultiRenderTargetView() : HRESULT
+
+
+Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel, UINT  numLayouts, D3D11_INPUT_ELEMENT_DESC*  layouts )
 {
 		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
 		const  Graphics::ShaderId  shaderId = m_vertexShaderList.size();
@@ -116,21 +272,33 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 				return  nullptr;
 		}
 
-
-		// 入力レイアウトの定義
-		const  D3D11_INPUT_ELEMENT_DESC  layout[ ] = {
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-		const  UINT  numElements = ARRAYSIZE( layout );
-
-		hr = pd3dDevice->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &pInputLayout );
-		SafeRelease( pVSBlob );
-		if ( FAILED( hr ) )
+		if ( numLayouts == 0 )
 		{
-				std::cout << "<IDirect3DRenderer>  Create input layout failed." << std::endl;
-				return  nullptr;
+				// 入力レイアウトの定義
+				const  D3D11_INPUT_ELEMENT_DESC  elementDescs[ ] = {
+						{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+						{ "NORMAL", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+						{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				};
+				const  UINT  numElements = ARRAYSIZE( elementDescs );
+
+				hr = pd3dDevice->CreateInputLayout( elementDescs, numElements, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &pInputLayout );
+				SafeRelease( pVSBlob );
+				if ( FAILED( hr ) )
+				{
+						std::cout << "<IDirect3DRenderer>  Create input layout failed." << std::endl;
+						return  nullptr;
+				}
+		}
+		else
+		{
+				hr = pd3dDevice->CreateInputLayout( layouts, numLayouts, pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), &pInputLayout );
+				SafeRelease( pVSBlob );
+				if ( FAILED( hr ) )
+				{
+						std::cout << "<IDirect3DRenderer>  Create input layout failed." << std::endl;
+						return  nullptr;
+				}
 		}
 
 		// シェーダ生成

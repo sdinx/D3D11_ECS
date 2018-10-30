@@ -1,8 +1,7 @@
 Texture2D  texDepth : register( t0 );
-Texture2D  texStencil : register( t0 );
-Texture2D  texNormal : register( t0 );
-Texture2D  texDiffuse : register( t0 );
-Texture2D  texSpecular : register( t0 );
+Texture2D  texNormal : register( t1 );
+Texture2D  texDiffuse : register( t2 );
+Texture2D  texSpecular : register( t3 );
 
 struct  VS_OUTPUT
 {
