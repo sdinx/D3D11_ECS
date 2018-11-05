@@ -109,19 +109,28 @@ void  IDirect3DRenderer::Rendering()const
 						nSRViewCounts++;
 				}
 
-				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 				pd3dDeviceContext->PSSetShaderResources( 0, nSRViewCounts, srvs );
 				pd3dDeviceContext->PSSetSamplers( 0, nSRViewCounts, ss );
 				m_pPShader->UpdateShader();
 
 				pd3dDeviceContext->Draw( 4, 0 );
 
+				ID3D11ShaderResourceView*  srvsClear[RT_ARRAY_COUNTS];
+				ID3D11SamplerState*  ssClear[RT_ARRAY_COUNTS];
+				for ( int nClear = 0; nClear < nSRViewCounts; nClear++ )
+				{
+						srvsClear[nClear] = nullptr;
+						ssClear[nClear] = nullptr;
+				}
+
+				pd3dDeviceContext->PSSetShaderResources( 0, nSRViewCounts, srvsClear );
+				pd3dDeviceContext->PSSetSamplers( 0, nSRViewCounts, ssClear );
+
 		}/* Done deferred rendering */
 
 		m_pID3D->EndRender();
 
 }// end Rendering()const
-
 
 
 HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()

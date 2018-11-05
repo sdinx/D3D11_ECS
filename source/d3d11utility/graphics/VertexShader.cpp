@@ -101,6 +101,8 @@ HRESULT  VertexShader::CreateInputLayout( ID3DBlob* pVSBlob )
 
 void  VertexShader::UpdateShader()
 {
+		pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
+
 		pd3dDeviceContext->VSSetShader( m_pVertexShader, nullptr, 0 );
 
 		// 入力アセンブラに入力レイアウトを設定

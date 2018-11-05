@@ -13,13 +13,12 @@ PSInput  vsmain( VSInput  IN )
 
 		OUT.position = IN.position;
 		OUT.texcoord = IN.texcoord;
-		OUT.color = IN.color;
 
 		return  OUT;
 }
 
 
-float4  psmain( PSInput  IN ) : SV_Target
+float4  psmain( PSInput  IN ) : SV_TARGET
 {
 		float4  diff = texDiffuse.Sample( ssDiffuse, 2 * ( IN.texcoord - float2( 0,0.5 ) ) );
 		return  float4( 0.5, 0.5, 0.5, 1 );

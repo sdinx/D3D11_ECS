@@ -53,7 +53,7 @@ void GSFunc( triangle  PSInput  input[3], inout  TriangleStream<PSInput>  stream
 //------------------------------------------------------------------------------------
 //! @brief      ピクセルシェーダエントリーポイント
 //------------------------------------------------------------------------------------
-PSOutput PSFunc( PSInput IN )// : SV_TARGET
+PSOutput PSFunc( PSInput IN ) : SV_TARGET
 {
 		PSOutput  OUT = ( PSOutput ) 0;
 

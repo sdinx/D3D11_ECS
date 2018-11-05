@@ -5,7 +5,7 @@ float3  NormalizedLambert( float3  diffuse, float3  lightDir, float3  normal )
 		return diffuse * max( mul( normal, lightDir ), 0.0f ) * ( 1.0f / PI );
 }
 
-PSOutput  main( PSInput input )// : SV_Target
+PSOutput  main( PSInput input ) : SV_TARGET
 {
 		PSOutput  OUT = ( PSOutput ) 0;
 

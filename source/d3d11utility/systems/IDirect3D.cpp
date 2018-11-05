@@ -103,8 +103,8 @@ HRESULT  IDirect3D::CreateDevice()
 		DXGI_SWAP_CHAIN_DESC  sd;
 		ZeroMemory( &sd, sizeof( sd ) );
 		sd.BufferCount = m_nSwapChainCount;// ディスプレイバッファ数
-		sd.BufferDesc.Width = width;
-		sd.BufferDesc.Height = height;
+		sd.BufferDesc.Width = width+1;
+		sd.BufferDesc.Height = height+1;
 		sd.BufferDesc.Format = m_swapChainFormat;// ディスプレイバッファのフォーマット
 		sd.BufferDesc.RefreshRate.Numerator = 60;// リフレッシュレートの分子
 		sd.BufferDesc.RefreshRate.Denominator = 1; // リフレッシュレートの分母
