@@ -76,6 +76,7 @@ namespace  D3D11Utility
 						ID3D11Texture2D*  m_pDSTexture = nullptr;
 						ID3D11ShaderResourceView*  m_pRTShaderResourceView = nullptr;
 						ID3D11ShaderResourceView*  m_pDSShaderResourceView = nullptr;
+						ID3D11ShaderResourceView*  m_pSTShaderResourceView = nullptr;
 
 
 				private:
@@ -139,6 +140,8 @@ namespace  D3D11Utility
 						ID3D11DepthStencilView* GetDepthStencilView() { return  m_pDSView; }
 						ID3D11ShaderResourceView* GetRTShaderResourceView() { return  m_pRTShaderResourceView; }
 						ID3D11ShaderResourceView* GetDSShaderResourceView() { return  m_pDSShaderResourceView; }
+						ID3D11ShaderResourceView* GetSTShaderResourceView() { return  m_pSTShaderResourceView; }
+						ID3D11Texture2D*  GetDSTexture() { return  m_pDSTexture; }
 						POINT  GetScreenSize() { return{ m_nScreenWidth, m_nScreenHeight }; }
 
 				}; // class IDirect3D

@@ -38,6 +38,11 @@ void  IDirect3DRenderer::Release()
 		m_vertexShaderList.clear();
 		m_geometryShaderList.clear();
 		m_pixelShaderList.clear();
+
+		for ( auto& rt : m_renderTagets )
+		{
+				SafeRelease( rt );
+		}
 }
 
 
@@ -52,6 +57,7 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->ClearRenderTargetView( rt.m_pRTView, m_fClearColors );
 				i++;
 		}
+		pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 		pd3dDeviceContext->OMSetRenderTargets( RT_ARRAY_COUNTS, rtvs, m_pDSView );
 
@@ -92,6 +98,7 @@ void  IDirect3DRenderer::Rendering()const
 
 				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
 				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
+				//pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 				UINT stride = 36;
 				UINT offset = 0;
@@ -99,8 +106,9 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVtxBuffer, &stride, &offset );
 				pd3dDeviceContext->RSSetState( m_rasterState );
 
-				ID3D11ShaderResourceView*  srvs[RT_ARRAY_COUNTS];
-				ID3D11SamplerState*  ss[RT_ARRAY_COUNTS];
+				constexpr  unsigned  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 2;
+				ID3D11ShaderResourceView*  srvs[RT_TEXTURE_COUNTS];
+				ID3D11SamplerState*  ss[RT_TEXTURE_COUNTS];
 				int  nSRViewCounts = 0;
 				for ( auto& rt : m_renderTagets )
 				{
@@ -109,22 +117,30 @@ void  IDirect3DRenderer::Rendering()const
 						nSRViewCounts++;
 				}
 
-				pd3dDeviceContext->PSSetShaderResources( 0, nSRViewCounts, srvs );
-				pd3dDeviceContext->PSSetSamplers( 0, nSRViewCounts, ss );
+				srvs[nSRViewCounts] = m_pDSShaderResourceView;
+				ss[nSRViewCounts] = m_sampler;
+
+				nSRViewCounts++;
+				srvs[nSRViewCounts] = m_pSTShaderResourceView;
+				ss[nSRViewCounts] = m_sampler;
+
+				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvs );
+				pd3dDeviceContext->PSSetSamplers( 0, RT_TEXTURE_COUNTS, ss );
 				m_pPShader->UpdateShader();
 
+				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 				pd3dDeviceContext->Draw( 4, 0 );
 
-				ID3D11ShaderResourceView*  srvsClear[RT_ARRAY_COUNTS];
-				ID3D11SamplerState*  ssClear[RT_ARRAY_COUNTS];
-				for ( int nClear = 0; nClear < nSRViewCounts; nClear++ )
+				ID3D11ShaderResourceView*  srvsClear[RT_TEXTURE_COUNTS];
+				ID3D11SamplerState*  ssClear[RT_TEXTURE_COUNTS];
+				for ( int nClear = 0; nClear < RT_TEXTURE_COUNTS; nClear++ )
 				{
 						srvsClear[nClear] = nullptr;
 						ssClear[nClear] = nullptr;
 				}
 
-				pd3dDeviceContext->PSSetShaderResources( 0, nSRViewCounts, srvsClear );
-				pd3dDeviceContext->PSSetSamplers( 0, nSRViewCounts, ssClear );
+				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvsClear );
+				pd3dDeviceContext->PSSetSamplers( 0, RT_TEXTURE_COUNTS, ssClear );
 
 		}/* Done deferred rendering */
 
@@ -151,6 +167,11 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		if ( FAILED( hr ) )
 				return  hr;
 
+		m_pDSView = m_pID3D->GetDepthStencilView();
+		m_pDSTexture = m_pID3D->GetDSTexture();
+		m_pDSShaderResourceView = m_pID3D->GetDSShaderResourceView();
+		m_pSTShaderResourceView = m_pID3D->GetSTShaderResourceView();
+
 		POINT  screen = m_pID3D->GetScreenSize();
 
 		D3D11_TEXTURE2D_DESC  texDesc;
@@ -170,15 +191,15 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 
 		// 法線
 		texDescs[0].Format = DXGI_FORMAT_R11G11B10_FLOAT;
-		texDescs[0].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+		texDescs[0].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 		// ディフューズ
 		texDescs[1].Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		texDescs[1].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+		texDescs[1].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 		// スペキュラ
 		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;
-		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D10_BIND_SHADER_RESOURCE;
+		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 		m_renderTagets.resize( descSize );
 
@@ -218,10 +239,10 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		m_pPShader = CreatePixelShader( L"shader/Deferred.hlsl", "psmain" );
 
 		float  vertex[4 * 9] = {
-				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
-				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
-				-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
-				1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
+				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  0.0f,1.0f,1.0f,1.0f,
+				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,0.0f,1.0f,1.0f,
+				-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,0.0f,1.0f,
+				1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,0.0f,0.0f,1.0f,
 		};
 
 		D3D11_BUFFER_DESC bd;

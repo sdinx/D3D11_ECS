@@ -265,13 +265,19 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 				srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		}
 
-		// シェーダリソースビューの生成
+		// デプスシェーダリソースビューの生成
 		hr = m_pd3dDevice->CreateShaderResourceView( m_pDSTexture, &srvd, &m_pDSShaderResourceView );
 		if ( FAILED( hr ) )
 				return  E_FAIL;
 
+		srvd.Format = DXGI_FORMAT_X24_TYPELESS_G8_UINT;
+		// ステンシルシェーダリソースビューの生成
+		hr = m_pd3dDevice->CreateShaderResourceView( m_pDSTexture, &srvd, &m_pSTShaderResourceView );
+		if ( FAILED( hr ) )
+				return  E_FAIL;
+
 		// デバイスコンテキストにレンダーターゲットを設定
-		m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
+		//m_pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
 
 		return  S_OK;
 }// end CreateDefaultDepthStencil()
@@ -337,8 +343,6 @@ VOID  IDirect3D::BeginRender()
 		m_pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
 		m_pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
-
-
 }
 
 
@@ -393,6 +397,7 @@ VOID  IDirect3D::ReleaseDefaultRenderTarget()
 VOID  IDirect3D::ReleaseDefaultDepthStencil()
 {
 		SafeRelease( m_pDSShaderResourceView );
+		SafeRelease( m_pSTShaderResourceView );
 		SafeRelease( m_pDSView );
 		SafeRelease( m_pDSTexture );
 }// end ReleaseDefaultDepthStencil()
