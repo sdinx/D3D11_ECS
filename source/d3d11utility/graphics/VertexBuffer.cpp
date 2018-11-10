@@ -13,7 +13,7 @@ using  namespace  Graphics;
 VertexBuffer::VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts )
 {
 		m_pVertices = new  VERTEX[numVertexCounts];
-		for ( UINT i = 0; i < numVertexCounts; i++ )
+		for ( uint32 i = 0; i < numVertexCounts; i++ )
 				m_pVertices[i] = pVertices[i];
 		m_numVertexCounts = numVertexCounts;
 

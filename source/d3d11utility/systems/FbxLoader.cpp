@@ -50,7 +50,6 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 		// geometryConverter.Triangulate( m_pScene, true );
 
 		INT  nMeshCount = m_pScene->GetMemberCount<FbxMesh>();
-		INT  nNodeCount = m_pScene->GetNodeCount();
 		INT  nMaterialCount = m_pScene->GetMaterialCount();
 		INT  i = 0;
 		FbxNode*  pNode = nullptr;

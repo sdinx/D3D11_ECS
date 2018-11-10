@@ -39,10 +39,9 @@ void  IDirect3DRenderer::Release()
 		m_geometryShaderList.clear();
 		m_pixelShaderList.clear();
 
-		for ( auto& rt : m_renderTagets )
-		{
-				SafeRelease( rt );
-		}
+		m_renderTagets.clear();
+		m_renderTagets.shrink_to_fit();
+
 }
 
 
@@ -62,11 +61,11 @@ void  IDirect3DRenderer::Rendering()const
 		pd3dDeviceContext->OMSetRenderTargets( RT_ARRAY_COUNTS, rtvs, m_pDSView );
 
 		{/* Begin first rendering */
-				static  UINT  nCount = 1;
+				static  uint  nCount = 1;
 				static  float  fLastTime = 0.0f;
 				static  float  fAll = 0;
 				Timer  timer;
-				int  i = 0;
+				uint  i = 0;
 				Renderable*  render;
 				auto  textureManager = _Singleton<TextureManager>::GetInstance();
 
@@ -100,13 +99,13 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
 				//pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
-				UINT stride = 36;
-				UINT offset = 0;
+				uint stride = 36;
+				uint offset = 0;
 				m_pVShader->UpdateShader();
 				pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVtxBuffer, &stride, &offset );
 				pd3dDeviceContext->RSSetState( m_rasterState );
 
-				constexpr  unsigned  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 2;
+				constexpr  uint32  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 1;
 				ID3D11ShaderResourceView*  srvs[RT_TEXTURE_COUNTS];
 				ID3D11SamplerState*  ss[RT_TEXTURE_COUNTS];
 				int  nSRViewCounts = 0;
@@ -121,8 +120,8 @@ void  IDirect3DRenderer::Rendering()const
 				ss[nSRViewCounts] = m_sampler;
 
 				nSRViewCounts++;
-				srvs[nSRViewCounts] = m_pSTShaderResourceView;
-				ss[nSRViewCounts] = m_sampler;
+				//srvs[nSRViewCounts] = m_pSTShaderResourceView;
+				//ss[nSRViewCounts] = m_sampler;
 
 				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvs );
 				pd3dDeviceContext->PSSetSamplers( 0, RT_TEXTURE_COUNTS, ss );
@@ -133,7 +132,7 @@ void  IDirect3DRenderer::Rendering()const
 
 				ID3D11ShaderResourceView*  srvsClear[RT_TEXTURE_COUNTS];
 				ID3D11SamplerState*  ssClear[RT_TEXTURE_COUNTS];
-				for ( int nClear = 0; nClear < RT_TEXTURE_COUNTS; nClear++ )
+				for ( uint nClear = 0; nClear < RT_TEXTURE_COUNTS; nClear++ )
 				{
 						srvsClear[nClear] = nullptr;
 						ssClear[nClear] = nullptr;
@@ -239,10 +238,10 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		m_pPShader = CreatePixelShader( L"shader/Deferred.hlsl", "psmain" );
 
 		float  vertex[4 * 9] = {
-				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  0.0f,1.0f,1.0f,1.0f,
-				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,0.0f,1.0f,1.0f,
-				-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,0.0f,1.0f,
-				1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,0.0f,0.0f,1.0f,
+				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
+				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
+				-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
+				1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
 		};
 
 		D3D11_BUFFER_DESC bd;

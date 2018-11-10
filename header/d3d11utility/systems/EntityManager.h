@@ -73,8 +73,8 @@ namespace  D3D11Utility
 
 						const  EntityId  CreateEntity( std::string  name );
 						const  EntityId  FindName( std::string  name );
-						const  EntityId  GetEntityId( const  Entity&  entity );
-						Entity*  GetEntity( const  EntityId  entityId );
+						const  EntityId  GetEntityId( const  Entity&  entity )const;
+						Entity*  GetEntity( const  EntityId  entityId )const;
 						void  ReleaseEntity( Entity*  entity );
 						void  Release();
 

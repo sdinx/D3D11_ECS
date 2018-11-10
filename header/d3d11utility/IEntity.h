@@ -25,11 +25,13 @@ namespace  D3D11Utility
 		{
 
 				unsigned  index;
+				const  IEntity*  parent;
 
 				EntityId()
 				{}
-				EntityId( const  unsigned  id ) :
-						index( id )
+				EntityId( const  unsigned  id, const  IEntity*  entity ) :
+						index( id ),
+						parent( entity )
 				{}
 
 				inline  bool  operator==( EntityId  id )const
@@ -71,7 +73,7 @@ namespace  D3D11Utility
 				IEntity( std::string  name, unsigned  id, Systems::ComponentManager*  pComponentManagerInstance ) :
 						m_name( name ),
 						m_nameHash( std::hash<std::string>()( name ) ),
-						m_entityId( id ),
+						m_entityId( id, this ),
 						m_pComponentManager( pComponentManagerInstance )
 				{}
 				virtual  ~IEntity()

@@ -8,8 +8,8 @@ Texture2D<float>  texSpecular : register( t2 );
 SamplerState  ssSpecular : register( s2 );
 Texture2D<float>  texDepth : register( t3 );
 SamplerState  ssDepth : register( s3 );
-Texture2D<float>  texStencil : register( t4 );
-SamplerState  ssStencil : register( s4 );
+//Texture2D<uint>  texStencil : register( t4 );
+//SamplerState  ssStencil : register( s4 );
 
 PSInput  vsmain( VSInput  IN )
 {

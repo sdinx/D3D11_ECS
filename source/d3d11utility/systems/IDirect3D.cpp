@@ -244,6 +244,9 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 				dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
 		}
 
+		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		dsvd.Texture2D.MipSlice = 0;
+
 		// 深度ステンシルビューの生成
 		hr = m_pd3dDevice->CreateDepthStencilView( m_pDSTexture, &dsvd, &m_pDSView );
 		if ( FAILED( hr ) )
@@ -264,6 +267,10 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 		{
 				srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
 		}
+
+		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvd.Texture2D.MostDetailedMip = 0;
+		srvd.Texture2D.MipLevels = 1;
 
 		// デプスシェーダリソースビューの生成
 		hr = m_pd3dDevice->CreateShaderResourceView( m_pDSTexture, &srvd, &m_pDSShaderResourceView );

@@ -17,11 +17,11 @@ PSOutput  main( PSInput input ) : SV_TARGET
 		float4  color = meshColor * texel;
 
 		float3  nor = normalize( input.normal );
-		float3  diffuse = NormalizedLambert( float3( 1.0f, 1.0f, 1.0f )*meshColor.rgb, light, nor );
+		float3  diffuse = NormalizedLambert( color.rgb, light, nor );
 
 		//return  texel;
 		OUT.normal = input.normal;
-		OUT.color = float4( diffuse*texel.rgb, 1.0f );
+		OUT.color = float4( diffuse, 1.0f );
 		OUT.specular = 0.2;
 
 		return  OUT;

@@ -45,6 +45,17 @@ namespace  D3D11Utility
 										m_pTexture( nullptr ),
 										m_pSRView( nullptr )
 								{}
+								~RenderTarget()
+								{
+										Release();
+								}
+								void  Release()
+								{
+										SafeRelease( m_pRTView );
+										SafeRelease( m_pTexture );
+										SafeRelease( m_pSRView );
+								}
+
 								eViews  m_numViews;
 								ID3D11RenderTargetView* m_pRTView = nullptr;
 								ID3D11Texture2D*  m_pTexture = nullptr;

@@ -33,7 +33,9 @@ namespace  D3D11Utility
 		}// namespace Systems
 
 		class  Entity;
+		class  IEntity;
 		class  Component;
+		class  IComponent;
 		class  GameObject;
 		class  Transform;
 

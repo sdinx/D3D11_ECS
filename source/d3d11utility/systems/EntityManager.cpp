@@ -15,20 +15,15 @@ using  namespace  D3D11Utility::Systems;
 const  EntityId  EntityManager::CreateEntity( std::string  name )
 {
 		UINT  maxList = m_entityList.size();
-		m_entityList.push_back( new  Entity( name, maxList, m_pComponentManager ) );
-		m_pComponentManager->AddEntity( EntityId( maxList ) );
+		m_entityList.emplace_back( new  Entity( name, maxList, m_pComponentManager ) );
+		const  EntityId  entityId = m_entityList.back()->GetEntityId();
+		m_pComponentManager->AddEntity( entityId );
 
-		return  EntityId( maxList );
+		return  entityId;
 }// end CreateEntity(const Entity*) : const EntityId&
 
 
-const  EntityId  EntityManager::FindName( std::string  name )
-{
-		return  0;
-}
-
-
-Entity*  EntityManager::GetEntity( const  EntityId  entityId )
+Entity*  EntityManager::GetEntity( const  EntityId  entityId )const
 {
 		return  m_entityList[entityId.index];
 }// end GetEntity(const EntityId&) : Entity*
