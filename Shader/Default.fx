@@ -1,4 +1,5 @@
 #include  "Header\Structs.hlsli"
+#include  "Header\Methods.hlsli"
 
 //-----------------------------------------------------------------------------------
 //! @brief      頂点シェーダエントリーポイント
@@ -59,7 +60,7 @@ PSOutput PSFunc( PSInput IN ) : SV_TARGET
 
 		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, IN.texcoord );
 
-		OUT.normal = IN.normal;
+		OUT.normal = OctEncode( IN.normal );
 		OUT.color = meshColor * texel;
 		OUT.specular = 0.2;
 

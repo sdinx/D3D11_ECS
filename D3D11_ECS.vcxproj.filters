@@ -355,5 +355,8 @@
     <None Include="shader\header\DeferredStruct.hlsli">
       <Filter>shader\header</Filter>
     </None>
+    <None Include="shader\header\Methods.hlsli">
+      <Filter>shader\header</Filter>
+    </None>
   </ItemGroup>
 </Project>

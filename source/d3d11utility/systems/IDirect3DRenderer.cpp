@@ -68,6 +68,7 @@ void  IDirect3DRenderer::Rendering()const
 				uint  i = 0;
 				Renderable*  render;
 				auto  textureManager = _Singleton<TextureManager>::GetInstance();
+				pd3dDeviceContext->OMSetDepthStencilState( m_pDepthStencilState, 0 );
 
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 				{
@@ -95,9 +96,11 @@ void  IDirect3DRenderer::Rendering()const
 
 		{/* Begin deferred rendering */
 
-				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, m_pDSView );
+				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, nullptr );
 				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
 				//pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
+
+				pd3dDeviceContext->OMSetDepthStencilState( m_pDepthStencilState, 0 );
 
 				uint stride = 36;
 				uint offset = 0;
@@ -105,7 +108,7 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVtxBuffer, &stride, &offset );
 				pd3dDeviceContext->RSSetState( m_rasterState );
 
-				constexpr  uint32  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 1;
+				constexpr  uint  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 2;
 				ID3D11ShaderResourceView*  srvs[RT_TEXTURE_COUNTS];
 				ID3D11SamplerState*  ss[RT_TEXTURE_COUNTS];
 				int  nSRViewCounts = 0;
@@ -120,8 +123,8 @@ void  IDirect3DRenderer::Rendering()const
 				ss[nSRViewCounts] = m_sampler;
 
 				nSRViewCounts++;
-				//srvs[nSRViewCounts] = m_pSTShaderResourceView;
-				//ss[nSRViewCounts] = m_sampler;
+				srvs[nSRViewCounts] = m_pSTShaderResourceView;
+				ss[nSRViewCounts] = m_sampler;
 
 				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvs );
 				pd3dDeviceContext->PSSetSamplers( 0, RT_TEXTURE_COUNTS, ss );
@@ -189,15 +192,15 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		const  size_t  descSize = ARRAYSIZE( texDescs );
 
 		// 法線
-		texDescs[0].Format = DXGI_FORMAT_R11G11B10_FLOAT;
+		texDescs[0].Format = DXGI_FORMAT_R8G8_UNORM;// float2 にエンコード・デコードできるので2byteでいい.
 		texDescs[0].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 		// ディフューズ
-		texDescs[1].Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		texDescs[1].Format = DXGI_FORMAT_R8G8B8A8_UNORM;// 0.0~1.0 の範囲の値なので4byte.
 		texDescs[1].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 		// スペキュラ
-		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;
+		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;// ディフューズ同様でAの値は強度を表す.
 		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
 		m_renderTagets.resize( descSize );
@@ -207,7 +210,7 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				hr = pd3dDevice->CreateTexture2D( &texDescs[i], nullptr, &m_renderTagets[i].m_pTexture );
 				if ( FAILED( hr ) )
 				{
-						printf( "<IDirect3D> CreateMultiRenderTargetView() failed" );
+						printf( "<IDirect3DRenderer> CreateMultiRenderTargetView() failed : 210" );
 						return  hr;
 				}// end if
 
@@ -260,6 +263,13 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		rdc.FillMode = D3D11_FILL_SOLID;
 		rdc.FrontCounterClockwise = TRUE;
 		pd3dDevice->CreateRasterizerState( &rdc, &m_rasterState );
+
+		D3D11_DEPTH_STENCIL_DESC  dsDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT() );
+		hr = pd3dDevice->CreateDepthStencilState( &dsDesc, &m_pDepthStencilState );
+		if ( FAILED( hr ) )
+		{
+				std::cout << "<IDirect3DRenderer> CreateMultiRenderTargetView() failed : 273\n";
+		}
 
 		return  hr;
 

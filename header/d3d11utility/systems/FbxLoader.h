@@ -96,6 +96,10 @@ namespace  D3D11Utility
 								return  s_pFbxManager;
 						}
 
+						uint32  GetModelCounts()
+						{
+								return  m_modelContainer.size();
+						}
 						ModelContainer  GetModelContainer( UINT  i )
 						{
 								if ( m_modelContainer.size() > i )

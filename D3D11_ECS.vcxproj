@@ -210,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\header\DeferredStruct.hlsli" />
+    <None Include="shader\header\Methods.hlsli" />
     <None Include="shader\header\Structs.hlsli">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>

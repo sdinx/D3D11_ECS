@@ -93,6 +93,7 @@ namespace  D3D11Utility
 						ID3D11ShaderResourceView*  m_pRTShaderResourceView = nullptr;
 						ID3D11ShaderResourceView*  m_pDSShaderResourceView = nullptr;
 						ID3D11ShaderResourceView*  m_pSTShaderResourceView = nullptr;
+						ID3D11DepthStencilState*  m_pDepthStencilState;
 						std::vector<RenderTarget>  m_renderTagets;
 						ID3D11Buffer*  m_pVtxBuffer = nullptr;
 						ID3D11SamplerState*  m_sampler = nullptr;

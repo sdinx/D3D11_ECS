@@ -75,8 +75,8 @@ HRESULT  IDirect3D::CreateDevice()
 		// ウィンドウサイズを取得
 		RECT  rc;
 		GetClientRect( m_hWnd, &rc );
-		INT  width = rc.right - rc.left;
-		INT  height = rc.bottom - rc.top;
+		m_nScreenWidth = rc.right - rc.left;
+		m_nScreenHeight = rc.bottom - rc.top;
 
 		UINT  createDeviceFlags = NULL;
 #if  defined(DEBUG)||defined(_DEBUG)
@@ -103,8 +103,8 @@ HRESULT  IDirect3D::CreateDevice()
 		DXGI_SWAP_CHAIN_DESC  sd;
 		ZeroMemory( &sd, sizeof( sd ) );
 		sd.BufferCount = m_nSwapChainCount;// ディスプレイバッファ数
-		sd.BufferDesc.Width = width+1;
-		sd.BufferDesc.Height = height+1;
+		sd.BufferDesc.Width = m_nScreenWidth;
+		sd.BufferDesc.Height = m_nScreenHeight;
 		sd.BufferDesc.Format = m_swapChainFormat;// ディスプレイバッファのフォーマット
 		sd.BufferDesc.RefreshRate.Numerator = 60;// リフレッシュレートの分子
 		sd.BufferDesc.RefreshRate.Denominator = 1; // リフレッシュレートの分母
@@ -156,8 +156,8 @@ HRESULT  IDirect3D::CreateDevice()
 
 		// ピューポートの設定
 		D3D11_VIEWPORT  vp;
-		vp.Width = ( FLOAT ) width;
-		vp.Height = ( FLOAT ) height;
+		vp.Width = ( FLOAT ) m_nScreenWidth;
+		vp.Height = ( FLOAT ) m_nScreenHeight;
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 		vp.TopLeftX = 0;

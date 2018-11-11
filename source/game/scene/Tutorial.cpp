@@ -203,16 +203,15 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
-		//m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
+		m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
+		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
+		playerRender->SetVertexShader( vs );
+		playerRender->SetPixelShader( psSmooth );
 		m_playerEntity->AddComponent<Transform>();
-		//Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
-		//playerRender->SetVertexShader( vs );
-		//playerRender->SetPixelShader( psSmooth );
 		{/* Parameter */
-				//playerRender->SetTextureId( texFubukiId );
-				//playerRender->SetColor( Vector4( 0.5f, 0.5f, 0.5f, 0 ) );
-				//playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
+				playerRender->SetTextureId( texFubukiId );
+				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetScale();
 				Vector3&  pos2 = trans2->GetPosition();
 				pos2.m_floats[2] += 5.0f;

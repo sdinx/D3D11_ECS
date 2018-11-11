@@ -44,7 +44,7 @@ struct  PSInput
 
 struct  PSOutput
 {
-		float3  normal : SV_Target0;
+		float2  normal : SV_Target0;
 		float4  color : SV_Target1;
 		float  specular : SV_Target2;
 };

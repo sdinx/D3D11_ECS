@@ -1,4 +1,5 @@
-#include  "Header\Structs.hlsli"
+#include  "header/Structs.hlsli"
+#include  "header/Methods.hlsli"
 
 float3  NormalizedLambert( float3  diffuse, float3  lightDir, float3  normal )
 {
@@ -10,7 +11,7 @@ PSOutput  main( PSInput input ) : SV_TARGET
 		PSOutput  OUT = ( PSOutput ) 0;
 
 		//float  l = saturate( dot( input.normal,float3( 2, 5, -3 ) ) );
-		float3  light = ( float3 )normalize( float4( 2, 5, -3, 1.0f ) );
+		float3  light = ( float3 )normalize( float4( 2, 5, -3, 1) );
 
 		float4  texel = diffuseTexture.Sample( diffuseTextureSampler, input.texcoord );
 
@@ -20,7 +21,7 @@ PSOutput  main( PSInput input ) : SV_TARGET
 		float3  diffuse = NormalizedLambert( color.rgb, light, nor );
 
 		//return  texel;
-		OUT.normal = input.normal;
+		OUT.normal = OctEncode( input.normal );
 		OUT.color = float4( diffuse, 1.0f );
 		OUT.specular = 0.2;
 
