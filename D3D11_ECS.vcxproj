@@ -31,7 +31,8 @@
     <ClInclude Include="header\d3d11utility\Component.h" />
     <ClInclude Include="header\d3d11utility\components\Camera.h" />
     <ClInclude Include="header\d3d11utility\components\InputMove.h" />
-    <ClInclude Include="header\d3d11utility\components\Light.h" />
+    <ClInclude Include="header\d3d11utility\components\DirectionLight.h" />
+    <ClInclude Include="header\d3d11utility\components\PointLight.h" />
     <ClInclude Include="header\d3d11utility\components\Renderable.h" />
     <ClInclude Include="header\d3d11utility\components\Transform.h" />
     <ClInclude Include="header\d3d11utility\DIKeyboard.h" />
@@ -112,7 +113,9 @@
   <ItemGroup>
     <ClCompile Include="source\D3D11Utility.cpp" />
     <ClCompile Include="source\d3d11utility\components\Camera.cpp" />
+    <ClCompile Include="source\d3d11utility\components\DirectionLight.cpp" />
     <ClCompile Include="source\d3d11utility\components\InputMove.cpp" />
+    <ClCompile Include="source\d3d11utility\components\PointLight.cpp" />
     <ClCompile Include="source\d3d11utility\components\Renderable.cpp" />
     <ClCompile Include="source\d3d11utility\components\Transform.cpp" />
     <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp" />

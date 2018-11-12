@@ -1,4 +1,4 @@
-struct  VSInput
+struct  VSDeferredInput
 {
 		float3  position : POSITION;
 		float2  texcoord : TEXCOORD0;
@@ -6,7 +6,7 @@ struct  VSInput
 };
 
 
-struct  PSInput
+struct  PSDeferredInput
 {
 		float4  position : SV_POSITION;
 		float2  texcoord : TEXCOORD0;

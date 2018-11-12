@@ -3,15 +3,18 @@
 //-----------------------------------------------------------------------------------
 cbuffer  CBuffer : register( b0 )
 {
-		float4x4  view;
-		float4x4  proj;
-		float4  light;
+		float4x4  g_view;
+		float4x4  g_proj;
+		float4x4  g_invView;
 };
 
 cbuffer  CObject : register( b1 )
 {
-		float4x4  world;
-		float4  meshColor;
+		float4x4  g_world;
+		float4  g_ambient;
+		float4  g_diffuse;
+		float4  g_emissive;
+		float4  g_specular;
 };
 
 

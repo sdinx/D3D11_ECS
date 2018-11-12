@@ -34,7 +34,7 @@ namespace  D3D11Utility
 
 						VertexBuffer() = delete;
 						VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts );
-						VertexBuffer( PRIMITIVE_TYPE  primitiveType );
+						VertexBuffer( ePrimitiveType  primitiveType );
 						~VertexBuffer();
 
 

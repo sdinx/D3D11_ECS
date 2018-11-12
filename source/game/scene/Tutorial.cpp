@@ -5,6 +5,8 @@
 #include  <game/scene/Tutorial.h>
 #include  <d3d11utility/components/Renderable.h>
 #include  <d3d11utility/components/Transform.h>
+#include  <d3d11utility/components/DirectionLight.h>
+#include  <d3d11utility/components/PointLight.h>
 #include  <d3d11utility/systems/SystemInclude.h>
 #include  <d3d11utility/physical/BulletPhysics.h>
 #include  <d3d11utility/DIKeyboard.h>
@@ -121,6 +123,8 @@ void  Tutorial::Awake()
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
+		DirectionLight::SetConstantBuffer();
+		PointLight::SetConstantBuffer();
 
 
 		/* ゲームシステムクラス生成 */

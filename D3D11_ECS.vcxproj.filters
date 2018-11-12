@@ -79,9 +79,6 @@
     <ClInclude Include="header\d3d11utility\components\InputMove.h">
       <Filter>header\d3d11utility\components</Filter>
     </ClInclude>
-    <ClInclude Include="header\d3d11utility\components\Light.h">
-      <Filter>header\d3d11utility\components</Filter>
-    </ClInclude>
     <ClInclude Include="header\d3d11utility\components\Renderable.h">
       <Filter>header\d3d11utility\components</Filter>
     </ClInclude>
@@ -226,6 +223,12 @@
     <ClInclude Include="header\game\GameObject.h">
       <Filter>header\game</Filter>
     </ClInclude>
+    <ClInclude Include="header\d3d11utility\components\DirectionLight.h">
+      <Filter>header\d3d11utility\components</Filter>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\components\PointLight.h">
+      <Filter>header\d3d11utility\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp">
@@ -331,6 +334,12 @@
       <Filter>source\d3d11utility\components</Filter>
     </ClCompile>
     <ClCompile Include="source\d3d11utility\components\InputMove.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\DirectionLight.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\PointLight.cpp">
       <Filter>source\d3d11utility\components</Filter>
     </ClCompile>
   </ItemGroup>

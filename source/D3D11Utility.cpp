@@ -106,7 +106,7 @@ void  D3D11Utility::SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext* 
 }
 
 
-UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices )
+UINT  D3D11Utility::CreatePrimitive( ePrimitiveType  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices )
 {
 		FLOAT  sx = size.m_floats[0] / 2.0f;
 		FLOAT  sy = size.m_floats[1] / 2.0f;
@@ -115,21 +115,21 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 
 		switch ( primitiveType )
 		{
-		case  PRMTV_CUBE:
+		case  ePrimitiveCube:
 				{
 
-				}// end case PRMTV_CUBE
+				}// end case ePrimitiveCube
 				break;
-		case PRMTV_PLANE:
+		case ePrimitivePlane:
 				{
 
-				}// end case PRMTV_PLANE
+				}// end case ePrimitivePlane
 				break;
-		case  PRMTV_SPHERE:
+		case  ePrimitiveSphere:
 				{
 
-				}// end case PRMTV_SPHERE
-		case PRMTV_2D_TRIANGLE:
+				}// end case ePrimitiveSphere
+		case ePrimitiveTriangle2d:
 				{
 						numVertices = 3;
 						ppVertices = new  VERTEX[numVertices];
@@ -137,9 +137,9 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] );
 						ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] );
 
-				}// end case PRMTV_PLANE
+				}// end case ePrimitiveTriangle2d
 				break;
-		case  PRMTV_2D_SQUARE:
+		case  ePrimitiveSquare2d:
 				{
 						numVertices = 4;
 						ppVertices = new  VERTEX[numVertices];
@@ -154,12 +154,12 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						ppVertices[2].texcoord = DirectX::XMFLOAT2( 1, 1 );
 						ppVertices[3].texcoord = DirectX::XMFLOAT2( 0, 1 );
 
-				}// end case PRMTV_SPHERE
+				}// end case ePrimitiveSquare2d
 				break;
-		case  PRMTV_2D_CIRCLE:
+		case  ePrimitiveCircle2d:
 				{
 
-				}// end case PRMTV_CUBE
+				}// end case ePrimitiveCircle2d
 				break;
 		}// end switch
 
@@ -167,7 +167,7 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 }
 
 
-UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices )
+UINT  D3D11Utility::CreatePrimitive( ePrimitiveType  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices )
 {
 		FLOAT  sx = size.m_floats[0] / 2.0f;
 		FLOAT  sy = size.m_floats[1] / 2.0f;
@@ -176,7 +176,7 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 
 		switch ( primitiveType )
 		{
-		case  PRMTV_CUBE:
+		case  ePrimitiveCube:
 				{
 						numVertices = 24;
 						ppVertices = new  VERTEX[numVertices];
@@ -317,18 +317,18 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 								ppVertices[23].texcoord = Vector2( 0, 1 );
 						}
 
-				}// end case PRMTV_CUBE
+				}// end case ePrimitiveCube
 				break;
-		case PRMTV_PLANE:
+		case ePrimitivePlane:
 				{
 
-				}// end case PRMTV_PLANE
+				}// end case ePrimitivePlane
 				break;
-		case  PRMTV_SPHERE:
+		case  ePrimitiveSphere:
 				{
 
-				}// end case PRMTV_SPHERE
-		case PRMTV_2D_TRIANGLE:
+				}// end case ePrimitiveSphere
+		case ePrimitiveTriangle2d:
 				{
 						numVertices = 3;
 						ppVertices = new  VERTEX[numVertices];
@@ -336,9 +336,9 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						ppVertices[1].position = DirectX::XMFLOAT3( position.m_floats[0] + sx, position.m_floats[1] - sy, position.m_floats[2] );
 						ppVertices[2].position = DirectX::XMFLOAT3( position.m_floats[0] - sx, position.m_floats[1] - sy, position.m_floats[2] );
 
-				}// end case PRMTV_PLANE
+				}// end case ePrimitiveTriangle2d
 				break;
-		case  PRMTV_2D_SQUARE:
+		case  ePrimitiveSquare2d:
 				{
 						numVertices = 4;
 						ppVertices = new  VERTEX[numVertices];
@@ -360,12 +360,12 @@ UINT  D3D11Utility::CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  pos
 						pIndices[4] = 3;
 						pIndices[5] = 0;
 
-				}// end case PRMTV_SPHERE
+				}// end case ePrimitiveSquare2d
 				break;
-		case  PRMTV_2D_CIRCLE:
+		case  ePrimitiveCircle2d:
 				{
 
-				}// end case PRMTV_CUBE
+				}// end case ePrimitiveCircle2d
 				break;
 		}// end switch
 

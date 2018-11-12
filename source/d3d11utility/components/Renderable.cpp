@@ -38,7 +38,7 @@ Renderable::Renderable() :
 }
 
 
-Renderable::Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
+Renderable::Renderable( ePrimitiveType  primitiveType, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
 		m_pVertexBuffer( nullptr ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
@@ -190,16 +190,27 @@ void  Renderable::UpdateConstantBuffer( Matrix4x4  world )
 		m_cbuffer.world = world;
 }
 
-
-void  Renderable::SetDiffuse( Vector4  v4Color )
+void  Renderable::SetAmbient( Vector4  v4Color )
 {
-		m_cbuffer.meshColor = v4Color;
+		m_cbuffer.ambient = v4Color;
 }
 
 
-void  Renderable::SetAmbient( Vector4  v4Color )
+void  Renderable::SetDiffuse( Vector4  v4Color )
 {
-		//m_cbuffer.material.ambient = v4Color;
+		m_cbuffer.diffuse = v4Color;
+}
+
+
+void  Renderable::SetEmissive( Vector4  v4Color )
+{
+		m_cbuffer.emissive = v4Color;
+}
+
+
+void  Renderable::SetSpecular( Vector4  v4Color )
+{
+		m_cbuffer.specular = v4Color;
 }
 
 

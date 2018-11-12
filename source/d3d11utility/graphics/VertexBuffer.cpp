@@ -21,7 +21,7 @@ VertexBuffer::VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts )
 }
 
 
-VertexBuffer::VertexBuffer( PRIMITIVE_TYPE  primitiveType )
+VertexBuffer::VertexBuffer( ePrimitiveType  primitiveType )
 {
 		m_pVertices = nullptr;
 }

@@ -82,15 +82,25 @@ namespace  D3D11Utility
 		//----------------------------------------------------------------------------------
 		// enum
 		//----------------------------------------------------------------------------------
-		enum  PRIMITIVE_TYPE
+		enum  ePrimitiveType
 		{
-				PRMTV_CUBE = 0,
-				PRMTV_PLANE,
-				PRMTV_SPHERE,
-				PRMTV_2D_TRIANGLE,
-				PRMTV_2D_SQUARE,
-				PRMTV_2D_CIRCLE,
-		}; // enum POLYGON_TYPE
+				ePrimitiveCube = 0,
+				ePrimitivePlane,
+				ePrimitiveSphere,
+				ePrimitiveTriangle2d,
+				ePrimitiveSquare2d,
+				ePrimitiveCircle2d,
+				MAX_PRIMITIVE_TYPE,
+		};// enum ePrimitiveType
+
+		enum  eCbufferId
+		{
+				eCbufferCamera = 0,
+				eCbufferRenderable,
+				eCbufferDirectionLight,
+				eCbufferPointLight,
+				MAX_CBUFFER_ID,
+		};// enum eCbufferId
 
 		//----------------------------------------------------------------------------------
 		// const variables
@@ -109,9 +119,9 @@ namespace  D3D11Utility
 		// functions
 		//----------------------------------------------------------------------------------
 		HRESULT  CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel, ID3DBlob**  ppBlobOut );
-		HRESULT  CreateConstantBuffer(ID3D11Buffer*&  ppCB, size_t  byteWidth);
-		UINT  CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices );
-		UINT  CreatePrimitive( PRIMITIVE_TYPE  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices );
+		HRESULT  CreateConstantBuffer( ID3D11Buffer*&  ppCB, size_t  byteWidth );
+		UINT  CreatePrimitive( ePrimitiveType  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices );
+		UINT  CreatePrimitive( ePrimitiveType  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices );
 		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
 		// ID3D11Device*  GetD3DDevice();

@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
-// file : Light.h
-// desc : Light object.
+// file : DirectionLight.h
+// desc : direction light component.
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_SCENE_
-#define  _INCLUDED_D3D11_UTILITY_SCENE_
+#ifndef  _INCLUDED_D3D11_UTILITY_DIRECTION_LIGHT_
+#define  _INCLUDED_D3D11_UTILITY_DIRECTION_LIGHT_
 
 //----------------------------------------------------------------------------------
 // Includes
@@ -15,26 +15,21 @@
 namespace  D3D11Utility
 {
 
-		class  Light
+		class  DirectionLight :public  Component
 		{
 				struct  CBufferDirectionLight
 				{
 						Vector4  direction;
-						Vector4  color;
-				};
-
-				struct  CBufferPointLight
-				{
-						Vector3  position;
-						Vector4  color;
+						Vector4  ambient;
+						Vector4  diffuse;
 				};
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				Light();
-				~Light();
+				DirectionLight();
+				~DirectionLight();
 
 
 		private:
@@ -43,13 +38,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  UINT  s_nCBDirectionSlot = 2;
-				static  const  UINT  s_nCBPointSlot = 3;
-				static  ID3D11Buffer  *s_pConstantBufferDirection;
-				static  ID3D11Buffer  *s_pConstantBufferPoint;
+				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCbufferDirectionLight;
+				static  ID3D11Buffer  *s_pConstantBuffer;
 
-				CBufferDirectionLight  m_cbufferDirection;
-				CBufferPointLight  m_cbufferPoint;
+				CBufferDirectionLight  m_cbuffer;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -69,6 +61,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				/* static */
+				static  void  SetConstantBuffer();
 				static  ComponentId  GetStaticComponentId()
 				{
 						return  STATIC_COMPONENT_ID;
@@ -82,13 +75,22 @@ namespace  D3D11Utility
 						}
 				}
 
+				/* setter */
+				void  SetAmbient( Vector4  v4Color )
+				{
+						m_cbuffer.ambient = v4Color;
+				}
+				void  SetDiffuse( Vector4  v4Color )
+				{
+						m_cbuffer.diffuse = v4Color;
+				}
+
 				/* derived virtual */
-				void  HandleMessage( const  Message&  msg );
 				void  Update();
 
 
-		};// class  Light
+		};// class  DirectionLight
 
 }// namespace  D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_SCENE_
+#endif // ! _INCLUDED_D3D11_UTILITY_DIRECTION_LIGHT_

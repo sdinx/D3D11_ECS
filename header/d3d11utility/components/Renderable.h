@@ -33,7 +33,10 @@ namespace  D3D11Utility
 				struct  ConstantBufferForPerFrame
 				{
 						Matrix4x4  world;
-						Vector4  meshColor;
+						Vector4  ambient;
+						Vector4  diffuse;
+						Vector4  emissive;
+						Vector4  specular;
 				};
 
 		public:
@@ -42,7 +45,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				Renderable();
-				Renderable( PRIMITIVE_TYPE  primitiveType, D3D11_CULL_MODE  cullMode = D3D11_CULL_BACK, D3D11_FILL_MODE  fillMode = D3D11_FILL_SOLID );
+				Renderable( ePrimitiveType  primitiveType, D3D11_CULL_MODE  cullMode = D3D11_CULL_BACK, D3D11_FILL_MODE  fillMode = D3D11_FILL_SOLID );
 				Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode = D3D11_CULL_FRONT, D3D11_FILL_MODE  fillMode = D3D11_FILL_SOLID );
 				~Renderable();
 
@@ -57,7 +60,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  UINT  s_nConstantBufferSlot = 1;
+				static  const  UINT  s_nConstantBufferSlot = eCbufferId::eCbufferRenderable;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				ConstantBufferForPerFrame  m_cbuffer;
@@ -114,8 +117,10 @@ namespace  D3D11Utility
 				{
 						m_pPixelShader = pPixelShader;
 				}
-				void  SetDiffuse( Vector4  color );
 				void  SetAmbient( Vector4  color );
+				void  SetDiffuse( Vector4  color );
+				void  SetEmissive( Vector4  color );
+				void  SetSpecular( Vector4  color );
 				void  SetTextureId( Graphics::TextureId  textureId );
 				void  Release();
 		};

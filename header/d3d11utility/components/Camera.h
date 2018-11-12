@@ -49,7 +49,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  UINT  s_nConstantBufferSlot = 0;
+				static  const  UINT  s_nConstantBufferSlot = eCbufferId::eCbufferCamera;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				Transform*  m_transform;
