@@ -112,7 +112,7 @@ void  Tutorial::Awake()
 		Graphics::TextureId  texGroundId = m_pTextureManager->CreateTexture( L"res/ground.jpg" );
 		Graphics::TextureId  texRifleDiffuseId = m_pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 		Graphics::TextureId  texSkyId = m_pTextureManager->CreateTexture( L"res/skysphere.jpg" );
-		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/fubuking.png" );
+		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/Mutant_diffuse.png" );
 
 		/* シェーダ作成 */
 		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
@@ -207,7 +207,7 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
-		m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
+		m_playerEntity->AddComponent<Renderable>( "res/mutant.fbx" );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( psSmooth );

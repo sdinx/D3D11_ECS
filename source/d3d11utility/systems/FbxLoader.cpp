@@ -234,7 +234,6 @@ std::vector<Vector2>  FbxLoader::LoadTexcoords( FbxMesh*  pMesh, INT  size )
 		INT  j = 0;
 
 
-
 		FbxGeometryElementUV* element = pMesh->GetElementUV( uvNo );// UVセットを取得.
 		FbxLayerElement::EMappingMode mappingMode = element->GetMappingMode();// マッピングモードを取得.
 		FbxLayerElement::EReferenceMode referenceMode = element->GetReferenceMode();	// リファレンスモードを取得	.
@@ -347,11 +346,11 @@ Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
 				mat.specular = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
 		}
 
-		prop = material->FindProperty( FbxSurfaceMaterial::sShininess );
+		prop = material->FindProperty( FbxSurfaceMaterial::sEmissive );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.shininess = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
+				mat.emissive = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
 		}
 
 		return  mat;

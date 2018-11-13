@@ -24,14 +24,14 @@ namespace  D3D11Utility
 		// type defines
 		//----------------------------------------------------------------------------------
 		using  uint8 = unsigned char;
-		using  sint8 = char;
+		using  int8 = char;
 		using  uint16 = unsigned short;
-		using  sint16 = short;
+		using  int16 = short;
 		using  uint = unsigned int;
 		using  uint32 = unsigned int;
-		using  sint32 = int;
+		using  int32 = int;
 		using  uint64 = unsigned long long;
-		using  sint64 = long long;
+		using  int64 = long long;
 		using  float32 = float;
 		using  float64 = double;
 		
