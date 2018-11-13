@@ -96,32 +96,33 @@ namespace  D3D11Utility
 								return  s_pFbxManager;
 						}
 
+						void  LoadFbxModel( FbxScene*  pScene );
 						uint32  GetModelCounts()
 						{
 								return  m_modelContainer.size();
 						}
-						ModelContainer  GetModelContainer( UINT  i )
+						ModelContainer  GetModelContainer( uint  i )
 						{
 								if ( m_modelContainer.size() > i )
 										return  m_modelContainer[i];
 								return  ModelContainer();
 						}
-						Material  GetMaterial( UINT  i )
+						Material  GetMaterial( uint  i )
 						{
 								if ( m_materials.size() > i )
 										return  m_materials[i];
 								return  Material();
 						}
-						Matrix4x4  GetMeshMatrix( UINT  frame, UINT  meshIndex );
-						std::vector<Vector3>  LoadVertices( FbxMesh*  pMesh, INT  size );
-						std::vector<Vector3>  LoadNormals( FbxMesh*  pMesh, INT  size );
-						std::vector<Vector2>  LoadTexcoords( FbxMesh*  pMesh, INT  size );
+						Matrix4x4  GetMeshMatrix( uint  frame, uint  meshIndex );
+						std::vector<Vector3>  LoadVertices( FbxMesh*  pMesh );
+						Vector3  LoadNormal( FbxGeometryElementNormal*&  pNormals, uint  vertexIndex, uint  vertexCount );
+						Vector2  LoadTexcoord( FbxGeometryElementUV*&  pTexcoords, uint  vertexIndex, uint  texcoordIndex );
 						std::vector<INT>  LoadIndices( FbxMesh*  pMesh );
 						Material  LoadMaterial( FbxSurfaceMaterial*  material );
 						SkinMesh  LoadSkin( FbxMesh*  pMesh );
 						ModelContainer  LoadMesh( FbxScene*  pScene );
-						ModelContainer  SetAnimation( UINT  meshIndex, UINT  animationIndex, FbxTime&  fbxTime );
-						void  SetBoneMatrix(UINT  frame,UINT  meshIndex);
+						ModelContainer  SetAnimation( uint  meshIndex, uint  animationIndex, FbxTime&  fbxTime );
+						void  SetBoneMatrix( uint  frame, uint  meshIndex );
 						void  Release();
 
 				};// class FbxLoader

@@ -23,6 +23,7 @@ PSOutput  main( PSInput IN )// : SV_Target
 		//return  texel;
 		OUT.normal = OctEncode( IN.normal );
 		OUT.color = float4( diffuse, 1.0f );
+		OUT.color = color;
 		OUT.specular = g_specular.w;
 
 		return  OUT;

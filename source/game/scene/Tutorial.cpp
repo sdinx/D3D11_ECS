@@ -176,7 +176,7 @@ void  Tutorial::Awake()
 		{/* Parameter */
 				sphereTrans->SetPosition( Vector3( 0, 0, 0 ) );
 				sphereTrans->SetLocalScale( Vector3( 300.f, 300.f, 300.f ) );
-				sphereTrans->SetEuler( 180, 0, 0 );
+				sphereTrans->SetEuler( 0, 0, 0 );
 				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );

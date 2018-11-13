@@ -38,40 +38,14 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 		m_pScene = FbxScene::Create( s_pFbxManager, "scene" );
 		m_pImporter = FbxImporter::Create( s_pFbxManager, "impoter" );
 		m_pImporter->Initialize( szFileName.Buffer(), -1, s_pFbxManager->GetIOSettings() );
-		
+
 		if ( m_pImporter->Import( m_pScene ) == false )
 		{
 				Release();
 				return;
 		}
 
-		// 三角化は処理が重いため予めしておく
-		// FbxGeometryConverter  geometryConverter( s_pFbxManager );
-		// geometryConverter.Triangulate( m_pScene, true );
-
-		INT  nMeshCount = m_pScene->GetMemberCount<FbxMesh>();
-		INT  nMaterialCount = m_pScene->GetMaterialCount();
-		INT  i = 0;
-		FbxNode*  pNode = nullptr;
-		FbxMesh*  pMesh = nullptr;
-
-		// メッシュからデータを取得
-		nMeshCount = m_pScene->GetMemberCount<FbxMesh>();
-		m_modelContainer.resize( nMeshCount );
-		for ( i = 0; i < nMeshCount; i++ )
-		{
-				pMesh = m_pScene->GetMember<FbxMesh>( i );
-				m_modelContainer[i].pMesh = pMesh;
-				m_modelContainer[i].indices = LoadIndices( pMesh );
-				m_modelContainer[i].vertices = LoadVertices( pMesh, m_modelContainer[i].indices.size() );
-				m_modelContainer[i].normals = LoadNormals( pMesh, m_modelContainer[i].indices.size() );
-				m_modelContainer[i].texcoords = LoadTexcoords( pMesh, m_modelContainer[i].indices.size() );
-				m_modelContainer[i].skinMeshes = LoadSkin( pMesh );
-		}
-
-		m_materials.resize( nMaterialCount );
-		for ( i = 0; i < nMaterialCount; i++ )
-				m_materials[i] = LoadMaterial( m_pScene->GetMaterial( i ) );
+		LoadFbxModel( m_pScene );
 
 }
 
@@ -89,214 +63,185 @@ void  FbxLoader::CreateFbxManager()
 }
 
 
-std::vector<Vector3>  FbxLoader::LoadVertices( FbxMesh*  pMesh, INT  size )
+void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
+{
+
+		FbxMesh*  pMesh = nullptr;
+		uint  nMeshCount = pScene->GetMemberCount<FbxMesh>();
+		uint  nMaterialCount = pScene->GetMaterialCount();
+		uint  vertexCount = 0;
+		uint  k = 0, j = 0;
+		uint  vertexIndex = 0;
+		FbxGeometryElementNormal*  pNormals = nullptr;
+		FbxGeometryElementUV*  pUVs = nullptr;
+		std::vector<Vector3>  vertices;
+		Vector3  vertex;
+
+		// メッシュからデータを取得
+		nMeshCount = pScene->GetMemberCount<FbxMesh>();
+		m_modelContainer.resize( nMeshCount );
+		for ( uint i = 0; i < nMeshCount; i++ )
+		{
+				pMesh = pScene->GetMember<FbxMesh>( i );
+				m_modelContainer[i].pMesh = pMesh;
+				m_modelContainer[i].indices = LoadIndices( pMesh );
+				vertices = LoadVertices( pMesh );
+				pNormals = pMesh->GetElementNormal();
+				pUVs = pMesh->GetElementUV();
+
+				// 三角ポリゴンの数ループ
+				for ( j = 0; j < pMesh->GetPolygonCount(); j++ )
+				{
+						for ( k = 0; k < 3; k++ )
+						{
+								vertexIndex = pMesh->GetPolygonVertex( j, k );
+								vertex = vertices[vertexIndex];
+								// 法線とUVの取得
+								m_modelContainer[i].normals.emplace_back( LoadNormal( pNormals, vertexIndex, vertexCount ) );
+								m_modelContainer[i].texcoords.emplace_back( LoadTexcoord( pUVs, vertexIndex, pMesh->GetTextureUVIndex( j, k ) ) );
+
+								m_modelContainer[i].vertices.emplace_back( vertex );
+								vertexCount++;
+						}// end for
+
+				}// end for
+
+				m_modelContainer[i].skinMeshes = LoadSkin( pMesh );
+		}
+
+		uint  c = 0;
+		for ( uint i = 1; i < m_modelContainer.size(); i++ )
+		{
+				for ( c = 0; c < m_modelContainer[i].vertices.size(); c++ )
+				{
+						m_modelContainer[0].vertices.emplace_back( m_modelContainer[i].vertices[c] );
+						m_modelContainer[0].normals.emplace_back( m_modelContainer[i].normals[c] );
+						m_modelContainer[0].texcoords.emplace_back( m_modelContainer[i].texcoords[c] );
+				}
+		}
+
+		m_materials.resize( nMaterialCount );
+		for ( uint i = 0; i < nMaterialCount; i++ )
+				m_materials[i] = LoadMaterial( pScene->GetMaterial( i ) );
+}
+
+
+std::vector<Vector3>  FbxLoader::LoadVertices( FbxMesh*  pMesh )
 {
 		std::vector<Vector3>  vertices;
 
-		INT  index = 0;
-		INT*  indexList = pMesh->GetPolygonVertices();
-		FbxVector4  position;
-		vertices.reserve( size );
+		int  nCtrlPtCount = pMesh->GetControlPointsCount();
+		FbxVector4  pos;
+		vertices.reserve( nCtrlPtCount );
 
-		for ( INT  i = 0; i < size; i++ )
+		for ( int i = 0; i < nCtrlPtCount; i++ )
 		{
-				index = indexList[i];// i番目の頂点情報（面の構成上情報順に並んでいる）を取得
-				position = pMesh->GetControlPointAt( index );// index番目の頂点座標を取得
-				if ( position[3] != 0.0 ) 
-				{
-						if ( position[3] == 1.0 )
-						{
-								vertices.push_back( Vector3( static_cast<float>( position[0] ), static_cast<float>( position[1] ), static_cast<float>( position[2] ) ) );// 同次座標化
-						}// end if
-						else 
-						{
-								vertices.push_back( Vector3( static_cast<float>( position[0] / position[3] ), static_cast<float>( position[1] / position[3] ), static_cast<float>( position[2] / position[3] ) ) );// 同次座標化
-						}// end else
-				}// end if
-				else 
-				{
-						vertices.push_back( Vector3( static_cast<float>( position[0] ), static_cast<float>( position[1] ), static_cast<float>( position[2] ) ) );// W値を無視して格納
-				}// end else
-		}// end for
+				pos = pMesh->GetControlPointAt( i );
+				vertices.emplace_back( static_cast< float >( pos.mData[0] ), static_cast< float >( pos.mData[1] ), static_cast< float >( pos.mData[2] ) );
+		}
 
 		return  vertices;
 }// end LoadVertices(FbxMesh*) : std::vector<Vector3>
 
 
-std::vector<Vector3>  FbxLoader::LoadNormals( FbxMesh*  pMesh, INT  size )
+Vector3  FbxLoader::LoadNormal( FbxGeometryElementNormal*&  pNormals, uint  vertexIndex, uint  vertexCount )
 {
-		std::vector<Vector3>  normals;
+		Vector3  normal;
+		FbxVector4  vec;
+		int  index = 0;
 
-		INT  index = 0;
-		INT  normalIndex = 0;
-		INT  j = 0;
-		FbxVector4  normal;
-		INT*  indexList = pMesh->GetPolygonVertices();
-		INT  elementCount = pMesh->GetElementNormalCount();// 何個の法線情報がセットされているか
-		INT  polygonSize = 0;
-
-		assert( elementCount == 1 );// 1個の法線情報にしか対応しない
-
-		FbxGeometryElementNormal* element = pMesh->GetElementNormal( 0 );// 0番目の法線セットを取得
-		FbxLayerElement::EMappingMode mappingmode = element->GetMappingMode();// マッピングモード取得
-		FbxLayerElement::EReferenceMode referrenceMode = element->GetReferenceMode();// リファレンスモード取得
-		const FbxLayerElementArrayTemplate<int>& indexArray = element->GetIndexArray();// 法線情報を格納した頂点配列のインデックス配列を取得 
-		const FbxLayerElementArrayTemplate<FbxVector4>& directArray = element->GetDirectArray();// 法線情報を格納した頂点配列を取得
-
-		// eDirect または eIndexDirectのみ対応
-		assert( ( referrenceMode == FbxGeometryElement::eDirect ) || ( referrenceMode == FbxGeometryElement::eIndexToDirect ) );
-
-		normals.reserve( size );		// 頂点インデックス数分確保
-
-																							// 頂点座標でマッピングされている場合
-		if ( mappingmode == FbxGeometryElement::eByControlPoint ) 
+		switch ( pNormals->GetMappingMode() )
 		{
-				for ( INT  i = 0; i < size; i++ ) 
+		case  FbxGeometryElement::eByControlPoint:
+				switch ( pNormals->GetReferenceMode() )
 				{
-						index = indexList[i];// 面の構成情報配列のi番目の頂点インデックスを取得
-						normalIndex = 0;	// 法線情報のインデックス
-
-						// リファレンスモードを判定
-						if ( referrenceMode == FbxGeometryElement::eDirect )// eDirectの場合
-								normalIndex = index;// 頂点インデックスの位置に対応して保存されている
-						else// eIndexToDirectの場合
-								normalIndex = indexArray.GetAt( index );// 頂点座標インデックスに対応した法線情報VECTORのインデックスを取得
-
-						normal = directArray.GetAt( normalIndex );// 法線情報を取得
-						if ( normal[3] != 0.0f ) 
+				case  FbxGeometryElement::eDirect:
 						{
-								if ( normal[3] == 1.0f )
-										normals.push_back( Vector3( static_cast<float>( normal[0] ), static_cast<float>( normal[1] ), static_cast<float>( normal[2] ) ) );// 同次座標へ
-								else
-										normals.push_back( Vector3( static_cast<float>( normal[0] / normal[3] ), static_cast<float>( normal[1] / normal[3] ), static_cast<float>( normal[2] / normal[3] ) ) );// 同次座標へ
+								vec = pNormals->GetDirectArray().GetAt( vertexIndex );
+						}// case eDirect
+						break;
 
-						}// end if
-				}// end for
-		}// end if
-		else if ( mappingmode == FbxGeometryElement::eByPolygonVertex ) {
-				// 頂点インデックス(面の構成情報)でマッピングされている場合
-				int indexByPolygonVertex = 0;
-				int polygonCount = pMesh->GetPolygonCount();	// ポリゴン数を取得
+				case  FbxGeometryElement::eIndexToDirect:
+						{
+								index = pNormals->GetIndexArray().GetAt( vertexIndex );
+								vec = pNormals->GetDirectArray().GetAt( index );
+						}// case eIndexToDirect
+						break;
 
-				for ( int i = 0; i < polygonCount; ++i ) 
+				}// end switch
+
+		case  FbxGeometryElement::eByPolygonVertex:
+				switch ( pNormals->GetReferenceMode() )
 				{
-						polygonSize = pMesh->GetPolygonSize( i );	// 頂点数を取得
-						normalIndex = 0;
-
-						for ( j = 0; j < polygonSize; ++j ) 
+				case  FbxGeometryElement::eDirect:
 						{
-								// リファレンスモードを判定
-								if ( referrenceMode == FbxGeometryElement::eDirect )// eDirectの場合
-										normalIndex = indexByPolygonVertex;
-								else
-										normalIndex = indexArray.GetAt( indexByPolygonVertex );// eIndexToDirectの場合
+								vec = pNormals->GetDirectArray().GetAt( vertexCount );
+						}// case eDirect
+						break;
 
-								normal = directArray.GetAt( normalIndex );// 法線情報を取得
-								if ( normal[3] != 0.0f ) 
-								{
-										if ( normal[3] == 1.0 )
-												normals.push_back( Vector3( static_cast<float>( normal[0] ), static_cast<float>( normal[1] ), static_cast<float>( normal[2] ) ) );// 同次座標へ
-										else
-												normals.push_back( Vector3( static_cast<float>( normal[0] / normal[3] ), static_cast<float>( normal[1] / normal[3] ), static_cast<float>( normal[2] / normal[3] ) ) );// 同次座標へ
-								}// end if
-								++indexByPolygonVertex;
+				case  FbxGeometryElement::eIndexToDirect:
+						{
+								index = pNormals->GetIndexArray().GetAt( vertexCount );
+								vec = pNormals->GetDirectArray().GetAt( index );
+						}// case eIndexToDirect
+						break;
 
-						}// end for
-				}// end for
-		}// end else if
-		else 
-		{
-				assert( false );
-		}
+				}// end switch
 
-		return  normals;
+		}// end switch
+
+		normal.m_floats[0] = static_cast< float >( vec.mData[0] );
+		normal.m_floats[1] = static_cast< float >( vec.mData[1] );
+		normal.m_floats[2] = static_cast< float >( vec.mData[2] );
+
+		return  normal;
 }
 
 
-std::vector<Vector2>  FbxLoader::LoadTexcoords( FbxMesh*  pMesh, INT  size )
+Vector2  FbxLoader::LoadTexcoord( FbxGeometryElementUV*&  pTexcoords, uint  vertexIndex, uint  texcoordIndex )
 {
-		std::vector<Vector2>  texcoords;
+		Vector2  texcoord;
+		FbxVector2  vec;
+		int  index = 0;
 
-		const  INT  uvNo = 0;
-		INT  index = 0;
-		INT  uvIndex = 0;
-		FbxVector2  uv;
-		INT*  indexList = pMesh->GetPolygonVertices();
-		INT  elementCount = pMesh->GetElementUVCount();// UV情報の数.
-
-		// 一個のみに対応.
-		if ( uvNo + 1 > elementCount )
-				return  texcoords;
-
-		INT  polygonCount = 0;
-		INT  polygonSize = 0;
-		INT  indexByPolygonVertex = 0;
-		INT  j = 0;
-
-
-		FbxGeometryElementUV* element = pMesh->GetElementUV( uvNo );// UVセットを取得.
-		FbxLayerElement::EMappingMode mappingMode = element->GetMappingMode();// マッピングモードを取得.
-		FbxLayerElement::EReferenceMode referenceMode = element->GetReferenceMode();	// リファレンスモードを取得	.
-		const FbxLayerElementArrayTemplate<int>& indexArray = element->GetIndexArray();// UV情報を格納した頂点配列のインデックス配列を取得.
-		const FbxLayerElementArrayTemplate<FbxVector2>& directArray = element->GetDirectArray();	// UV値配列を取得.
-
-		// eDirectかeIndexDirectのみ対応.
-		assert( ( referenceMode == FbxGeometryElement::eDirect ) || ( referenceMode == FbxGeometryElement::eIndexToDirect ) );
-		
-		// 頂点インデックス数を領域確保.
-		texcoords.reserve( size );
-
-		// 頂点に対応して格納されている場合.
-		if ( mappingMode == FbxGeometryElement::eByControlPoint )
+		switch ( pTexcoords->GetMappingMode() )
 		{
-				// 頂点座標でマッピング.
-				for ( INT  i = 0; i < size; i++ )
+		case  FbxGeometryElement::eByControlPoint:
+				switch ( pTexcoords->GetReferenceMode() )
 				{
-						index = indexList[i];// 面の構成情報配列から頂点インデックス番号を取得.
-
-						uvIndex = 0;
-						// リファレンスモードを判定.
-						if ( referenceMode == FbxGeometryElement::eDirect )// eDirectの場合.
-								uvIndex = index;// eDirectの場合（頂点インデックスと同じインデックス値でセットされている）
-						else // eIndexToDirectの場合
-								uvIndex = indexArray.GetAt( index );// 頂点座標インデックスに対応したＵＶ情報インデックスを取得.
-
-						uv = directArray.GetAt( uvIndex );// uv値をdouble型で取得.
-						texcoords.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );		// float値として格納.
-
-				}// end for
-		}// end if
-		else if ( mappingMode == FbxGeometryElement::eByPolygonVertex )// 面の構成情報に対応して格納されている場合.
-		{
-				// 面の構成情報のインデックス でマッピング.
-				indexByPolygonVertex = 0;// 面の構成情報インデックス配列のインデックス.
-				polygonCount = pMesh->GetPolygonCount();// メッシュのポリゴン数を取得.
-
-				for ( INT  i = 0; i < polygonCount; ++i )// ポリゴン数分ループ.
-				{
-						polygonSize = pMesh->GetPolygonSize( i );// i 番目のポリゴン頂点数を取得.
-
-						// ポリゴンの頂点数分ループ
-						for ( j = 0; j < polygonSize; ++j )
+				case  FbxGeometryElement::eDirect:
 						{
-								// リファレンスモードの判定?
-								uvIndex = 0;
-								if ( referenceMode == FbxGeometryElement::eDirect )// eDirectの場合.
-										uvIndex = indexByPolygonVertex;// eDirectの場合
-								else // eIndexToDirectの場合.
-										uvIndex = indexArray.GetAt( indexByPolygonVertex );// 面の構成情報インデックスに対応したUV情報インデックスを取得.
-								uv = directArray.GetAt( uvIndex );
+								vec = pTexcoords->GetDirectArray().GetAt( vertexIndex );
+						}// case eDirect
+						break;
 
-								texcoords.push_back( Vector2( static_cast< float >( uv[0] ), static_cast< float >( uv[1] ) ) );// doubleからfloatへキャスト.
+				case  FbxGeometryElement::eIndexToDirect:
+						{
+								index = pTexcoords->GetIndexArray().GetAt( vertexIndex );
+								vec = pTexcoords->GetDirectArray().GetAt( index );
+						}// case eIndexToDirect
+						break;
 
-								++indexByPolygonVertex;// 頂点インデックスをインクリメント.
-						}
-				}
-		}// end else if
-		else// それ以外のマッピングモードには対応しない.
-				assert( false );
+				}// end switch
 
-		return  texcoords;
+		case  FbxGeometryElement::eByPolygonVertex:
+				switch ( pTexcoords->GetReferenceMode() )
+				{
+				case  FbxGeometryElement::eDirect:
+				case  FbxGeometryElement::eIndexToDirect:
+						{
+								vec = pTexcoords->GetDirectArray().GetAt( texcoordIndex );
+						}// case eIndexToDirect | eDirect
+						break;
+
+				}// end switch
+
+		}// end switch
+
+		texcoord.x = static_cast< float >( vec.mData[0] );
+		texcoord.y = 1.0f - static_cast< float >( vec.mData[1] );
+
+		return  texcoord;
 }
 
 
@@ -308,7 +253,7 @@ std::vector<INT>  FbxLoader::LoadIndices( FbxMesh*  pMesh )
 		indices.reserve( polygonCount * 3 );// 頂点インデックス数の領域確保.
 
 		// 面の構成情報を取得する
-		for ( int i = 0; i < polygonCount; i++ ) 
+		for ( int i = 0; i < polygonCount; i++ )
 		{
 				indices.push_back( pMesh->GetPolygonVertex( i, 0 ) );// i番目の三角面の 0番目の頂点インデックス.
 				indices.push_back( pMesh->GetPolygonVertex( i, 1 ) );// i番目の三角面の 1番目の頂点インデックス.
@@ -367,7 +312,7 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 
 		// 0番目のスキンデフォーマーを取得
 		FbxSkin*  fbxSkin = static_cast< FbxSkin* >( pMesh->GetDeformer( 0, FbxDeformer::eSkin ) );
-		
+
 		const  auto  clusterCount = fbxSkin->GetClusterCount();
 		if ( clusterCount == 0 )
 				return  skin;
@@ -393,7 +338,7 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 
 		for ( int i = 0; i < clusterCount; i++ )
 		{
-				cluster = fbxSkin->GetCluster(i);
+				cluster = fbxSkin->GetCluster( i );
 
 				assert( cluster->GetLinkMode() == FbxCluster::eNormalize );
 
@@ -423,7 +368,7 @@ ModelContainer  FbxLoader::LoadMesh( FbxScene*  pScene )
 }
 
 
-ModelContainer  FbxLoader::SetAnimation(  UINT  meshIndex, UINT  animationIndex, FbxTime&  fbxTime )
+ModelContainer  FbxLoader::SetAnimation( UINT  meshIndex, UINT  animationIndex, FbxTime&  fbxTime )
 {
 		FbxSkin*  fbxSkin = static_cast< FbxSkin* >( m_modelContainer[meshIndex].pMesh->GetDeformer( 0, FbxDeformer::eSkin ) );
 		const  int  clusterCount = fbxSkin->GetClusterCount();
