@@ -22,7 +22,13 @@ namespace  D3D11Utility
 		{
 				std::vector<std::vector<float>>  weights;
 				std::vector<FbxAMatrix>  base_inverse;
-		};
+		};// struct SkinMesh
+
+		struct  AnimeContainer
+		{
+				FbxString  animName;
+				int64  animLength;
+		};// struct AnimeContainer
 
 		struct  ModelContainer
 		{
@@ -72,6 +78,7 @@ namespace  D3D11Utility
 						FbxImporter*  m_pImporter;
 						std::vector<ModelContainer>  m_modelContainer;
 						std::vector<Material>  m_materials;
+						std::vector<AnimeContainer>  m_animeContainer;
 
 				public:
 						//----------------------------------------------------------------------------------

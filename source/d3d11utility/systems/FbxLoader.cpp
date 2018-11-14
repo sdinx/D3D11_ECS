@@ -341,6 +341,8 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 
 				assert( cluster->GetLinkMode() == FbxCluster::eNormalize );
 
+				//cluster->GetTransformMatrix()
+
 				indexCount = cluster->GetControlPointIndicesCount();
 				indices = cluster->GetControlPointIndices();
 				weights = cluster->GetControlPointWeights();
@@ -354,6 +356,26 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 
 				}//end for
 		}// end for
+
+		return  skin;
+		// アニメーション情報取得
+		AnimeContainer  animeContainer;
+
+		FbxAnimStack*  animStack = m_pScene->GetSrcObject < FbxAnimStack>( 0 );
+		FbxString  animStackName = animStack->GetName();
+		animeContainer.animName = animStackName;
+
+		FbxTakeInfo*  takeInfo = m_pScene->GetTakeInfo( animStackName );
+		FbxTime  start = takeInfo->mLocalTimeSpan.GetStart();
+		FbxTime  end = takeInfo->mLocalTimeSpan.GetStop();
+		animeContainer.animLength = end.GetFrameCount( FbxTime::eFrames24 ) - start.GetFrameCount( FbxTime::eFrames24 ) + 1;
+
+		for ( int64 i = start.GetFrameCount( FbxTime::eFrames24 ); i < end.GetFrameCount( FbxTime::eFrames24 ); i++ )
+		{
+				FbxTime  time;
+				time.SetFrame( i, FbxTime::eFrames24 );
+				
+		}
 
 		return  skin;
 }
