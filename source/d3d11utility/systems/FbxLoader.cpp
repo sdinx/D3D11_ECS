@@ -90,7 +90,7 @@ void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
 				pUVs = pMesh->GetElementUV();
 
 				// 三角ポリゴンの数ループ
-				for ( j = 0; j < pMesh->GetPolygonCount(); j++ )
+				for ( j = 0; j < ( uint ) pMesh->GetPolygonCount(); j++ )
 				{
 						for ( k = 0; k < 3; k++ )
 						{
@@ -253,8 +253,7 @@ std::vector<INT>  FbxLoader::LoadIndices( FbxMesh*  pMesh )
 		indices.reserve( polygonCount * 3 );// 頂点インデックス数の領域確保.
 
 		// 面の構成情報を取得する
-		for ( int i = 0; i < polygonCount; i++ )
-		{
+		for ( int i = 0; i < polygonCount; i++ ) {
 				indices.push_back( pMesh->GetPolygonVertex( i, 0 ) );// i番目の三角面の 0番目の頂点インデックス.
 				indices.push_back( pMesh->GetPolygonVertex( i, 1 ) );// i番目の三角面の 1番目の頂点インデックス.
 				indices.push_back( pMesh->GetPolygonVertex( i, 2 ) );// i番目の三角面の 2番目の頂点インデックス.

@@ -83,7 +83,14 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 						// private methods
 						//----------------------------------------------------------------------------------
-						/* NOTHING */
+
+						ModelContainer  LoadMesh( FbxScene*  pScene );
+						std::vector<Vector3>  LoadVertices( FbxMesh*  pMesh );
+						Vector3  LoadNormal( FbxGeometryElementNormal*&  pNormals, uint  vertexIndex, uint  vertexCount );
+						Vector2  LoadTexcoord( FbxGeometryElementUV*&  pTexcoords, uint  vertexIndex, uint  texcoordIndex );
+						std::vector<INT>  LoadIndices( FbxMesh*  pMesh );
+						Material  LoadMaterial( FbxSurfaceMaterial*  material );
+						SkinMesh  LoadSkin( FbxMesh*  pMesh );
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -114,13 +121,6 @@ namespace  D3D11Utility
 								return  Material();
 						}
 						Matrix4x4  GetMeshMatrix( uint  frame, uint  meshIndex );
-						std::vector<Vector3>  LoadVertices( FbxMesh*  pMesh );
-						Vector3  LoadNormal( FbxGeometryElementNormal*&  pNormals, uint  vertexIndex, uint  vertexCount );
-						Vector2  LoadTexcoord( FbxGeometryElementUV*&  pTexcoords, uint  vertexIndex, uint  texcoordIndex );
-						std::vector<INT>  LoadIndices( FbxMesh*  pMesh );
-						Material  LoadMaterial( FbxSurfaceMaterial*  material );
-						SkinMesh  LoadSkin( FbxMesh*  pMesh );
-						ModelContainer  LoadMesh( FbxScene*  pScene );
 						ModelContainer  SetAnimation( uint  meshIndex, uint  animationIndex, FbxTime&  fbxTime );
 						void  SetBoneMatrix( uint  frame, uint  meshIndex );
 						void  Release();
