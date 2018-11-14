@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
-// file : DirectionLight.h
-// desc : direction light component.
+// file : SpotLight.h
+// desc : point light component.
 //----------------------------------------------------------------------------------
 
-#ifndef  _INCLUDED_D3D11_UTILITY_DIRECTION_LIGHT_
-#define  _INCLUDED_D3D11_UTILITY_DIRECTION_LIGHT_
+#ifndef  _INCLUDED_D3D11_UTILITY_SPOT_LIGHT_
+#define  _INCLUDED_D3D11_UTILITY_SPOT_LIGHT_
 
 //----------------------------------------------------------------------------------
 // Includes
@@ -15,21 +15,22 @@
 namespace  D3D11Utility
 {
 
-		class  DirectionLight :public  Component
+		class  SpotLight :public  Component
 		{
-				struct  CBufferDirectionLight
+
+				struct  CBufferSpotLight
 				{
-						Vector4  direction;
+						Vector3  position;
 						Vector4  ambient;
 						Vector4  diffuse;
-				};
+				};// struct CBufferSpotLight
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				DirectionLight();
-				~DirectionLight();
+				SpotLight();
+				~SpotLight();
 
 
 		private:
@@ -38,10 +39,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferDirectionLight;
+				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferPointLight;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
-				CBufferDirectionLight  m_cbuffer;
+				CBufferSpotLight  m_cbuffer;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -89,8 +90,8 @@ namespace  D3D11Utility
 				void  Update();
 
 
-		};// class  DirectionLight
+		};// class  SpotLight
 
 }// namespace  D3D11Utility
 
-#endif // ! _INCLUDED_D3D11_UTILITY_DIRECTION_LIGHT_
+#endif // ! _INCLUDED_D3D11_UTILITY_SPOT_LIGHT_

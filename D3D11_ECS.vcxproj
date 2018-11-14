@@ -34,6 +34,7 @@
     <ClInclude Include="header\d3d11utility\components\DirectionLight.h" />
     <ClInclude Include="header\d3d11utility\components\PointLight.h" />
     <ClInclude Include="header\d3d11utility\components\Renderable.h" />
+    <ClInclude Include="header\d3d11utility\components\SpotLight.h" />
     <ClInclude Include="header\d3d11utility\components\Transform.h" />
     <ClInclude Include="header\d3d11utility\DIKeyboard.h" />
     <ClInclude Include="header\d3d11utility\Entity.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="source\d3d11utility\components\InputMove.cpp" />
     <ClCompile Include="source\d3d11utility\components\PointLight.cpp" />
     <ClCompile Include="source\d3d11utility\components\Renderable.cpp" />
+    <ClCompile Include="source\d3d11utility\components\SpotLight.cpp" />
     <ClCompile Include="source\d3d11utility\components\Transform.cpp" />
     <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp" />
     <ClCompile Include="source\d3d11utility\Entity.cpp" />

@@ -229,6 +229,9 @@
     <ClInclude Include="header\d3d11utility\components\PointLight.h">
       <Filter>header\d3d11utility\components</Filter>
     </ClInclude>
+    <ClInclude Include="header\d3d11utility\components\SpotLight.h">
+      <Filter>header\d3d11utility\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp">
@@ -340,6 +343,9 @@
       <Filter>source\d3d11utility\components</Filter>
     </ClCompile>
     <ClCompile Include="source\d3d11utility\components\PointLight.cpp">
+      <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\components\SpotLight.cpp">
       <Filter>source\d3d11utility\components</Filter>
     </ClCompile>
   </ItemGroup>

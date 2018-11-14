@@ -254,7 +254,7 @@ void  Tutorial::Update()
 		Input::UpdateKeyboard();
 		Input::UpdateMouse();
 
-		//InputFPSCamera();
+		InputFPSCamera();
 
 		Vector3&  trans = m_playerEntity->GetComponent<Transform>()->GetPosition();
 		static  Vector3  euler( 0, 0, 0 );

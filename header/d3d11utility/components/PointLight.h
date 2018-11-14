@@ -39,7 +39,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCbufferPointLight;
+				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferPointLight;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				CBufferPointLight  m_cbuffer;

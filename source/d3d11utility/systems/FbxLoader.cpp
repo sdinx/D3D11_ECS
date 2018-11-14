@@ -109,7 +109,7 @@ void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
 				m_modelContainer[i].skinMeshes = LoadSkin( pMesh );
 		}
 
-		uint  c = 0;
+		uint  c = 0, d = 0;
 		for ( uint i = 1; i < m_modelContainer.size(); i++ )
 		{
 				for ( c = 0; c < m_modelContainer[i].vertices.size(); c++ )
@@ -374,7 +374,7 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 		{
 				FbxTime  time;
 				time.SetFrame( i, FbxTime::eFrames24 );
-				
+
 		}
 
 		return  skin;

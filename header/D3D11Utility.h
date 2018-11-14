@@ -95,10 +95,11 @@ namespace  D3D11Utility
 
 		enum  eCbufferId
 		{
-				eCbufferCamera = 0,
-				eCbufferRenderable,
-				eCbufferDirectionLight,
-				eCbufferPointLight,
+				eCBufferCamera = 0,
+				eCBufferRenderable,
+				eCBufferDirectionLight,
+				eCBufferPointLight,
+				eCBufferSpotLight,
 				MAX_CBUFFER_ID,
 		};// enum eCbufferId
 

@@ -60,7 +60,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  UINT  s_nConstantBufferSlot = eCbufferId::eCbufferRenderable;
+				static  const  UINT  s_nConstantBufferSlot = eCbufferId::eCBufferRenderable;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				ConstantBufferForPerFrame  m_cbuffer;
