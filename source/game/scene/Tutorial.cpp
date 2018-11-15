@@ -70,26 +70,26 @@ void  Tutorial::InputFPSCamera()
 
 		if ( Input::IsKeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
-				move += Vector3( 0, 0, 0.02f );
+				move += Vector3( 0, 0, 0.002f );
 		}
 		else if ( Input::IsKeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
-				move += Vector3( 0, 0, -0.02f );
+				move += Vector3( 0, 0, -0.002f );
 		}
 
 		if ( Input::IsKeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
-				move += Vector3( -0.02f, 0, 0 );
+				move += Vector3( -0.002f, 0, 0 );
 		}
 		else if ( Input::IsKeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
-				move += Vector3( 0.02f, 0, 0 );
+				move += Vector3( 0.002f, 0, 0 );
 		}
 
 		if ( Input::IsKeyPress( DIK_Q ) )
-				move += Vector3( 0, -0.02f, 0 );
+				move += Vector3( 0, -0.002f, 0 );
 		else if ( Input::IsKeyPress( DIK_E ) )
-				move += Vector3( 0, 0.02f, 0 );
+				move += Vector3( 0, 0.002f, 0 );
 
 		if ( isMouse ) {
 				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
@@ -124,6 +124,7 @@ void  Tutorial::Awake()
 		//Graphics::ShaderId  gsId = m_pd3dRenderer->CreateGeometryShader( L"Shader/Default.fx", "GSFunc" );
 		Graphics::PixelShader*  ps = m_pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
 		Graphics::PixelShader*  psSmooth = m_pd3dRenderer->CreatePixelShader( L"Shader/Smoothing.hlsl", "main" );
+		Graphics::PixelShader*  psBump = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "main" );
 
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
@@ -137,12 +138,12 @@ void  Tutorial::Awake()
 		// 弾丸のベースとなるエンティティを作成
 		static  const  EntityId  bulletId = m_pEntityManager->CreateEntity( "Bullet" );
 		Entity*  bulletEntity = m_pEntityManager->GetEntity( bulletId );
-		bulletEntity->AddComponent<Renderable>( "res/sphere.fbx", D3D11_CULL_FRONT );
+		bulletEntity->AddComponent<Renderable>( "res/cube.fbx", D3D11_CULL_FRONT );
 		bulletEntity->AddComponent<Transform>();
 		Renderable*  bulletRender = bulletEntity->GetComponent<Renderable>();
 		Transform*  bulletTrans = bulletEntity->GetComponent<Transform>();
 		bulletRender->SetVertexShader( vs );
-		bulletRender->SetPixelShader( psSmooth );
+		bulletRender->SetPixelShader( psBump );
 		{/* Parameter */
 				bulletRender->SetTextureId( texId );
 				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );
@@ -199,7 +200,7 @@ void  Tutorial::Awake()
 		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
 		{
 				rifleRender->SetVertexShader( vs );
-				rifleRender->SetPixelShader( psSmooth );
+				rifleRender->SetPixelShader( ps );
 				rifleRender->SetTextureId( texRifleDiffuseId );
 
 				rifleTrans->SetLocalPosition( 0, 2, 0 );
@@ -216,7 +217,7 @@ void  Tutorial::Awake()
 		m_playerEntity->AddComponent<Renderable>( "res/mutant.fbx" );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		playerRender->SetVertexShader( vs );
-		playerRender->SetPixelShader( psSmooth );
+		playerRender->SetPixelShader( ps );
 		m_playerEntity->AddComponent<Transform>();
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		{/* Parameter */
