@@ -22,6 +22,6 @@ void  SpotLight::SetConstantBuffer()
 {
 		if ( s_pConstantBuffer == nullptr )
 		{
-				CreateConstantBuffer( s_pConstantBuffer, sizeof( CBufferPointLight ) );
+				CreateConstantBuffer( s_pConstantBuffer, sizeof( CBufferSpotLight ) );
 		}
 }

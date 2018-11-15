@@ -104,6 +104,7 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 				i++;
 		}
 
+		int ad = ( int ) vertices[4].normal.x;
 		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
 
 		SetDiffuse( loader.GetMaterial( 0 ).diffuse );
@@ -112,6 +113,8 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
 
 		m_pVertexBuffer->CreateRasterizer( cullMode, fillMode );
+		//m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, fillMode );
+
 
 		delete[ ]  vertices;
 }

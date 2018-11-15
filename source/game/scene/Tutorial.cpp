@@ -56,7 +56,7 @@ void  Tutorial::InputFPSCamera()
 
 		if ( isMouse )
 				if ( mx != 0.0f || my != 0.0f )
-				{ 
+				{
 						angle_x += dy;
 						angle_y += dx;
 						camTransform->SetEuler( angle_x, angle_y, 0.0f );
@@ -86,6 +86,11 @@ void  Tutorial::InputFPSCamera()
 				move += Vector3( 0.02f, 0, 0 );
 		}
 
+		if ( Input::IsKeyPress( DIK_Q ) )
+				move += Vector3( 0, -0.02f, 0 );
+		else if ( Input::IsKeyPress( DIK_E ) )
+				move += Vector3( 0, 0.02f, 0 );
+
 		if ( isMouse ) {
 				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
 				ShowCursor( false );
@@ -108,11 +113,11 @@ void  Tutorial::Awake()
 
 
 		/* テクスチャ作成 */
-		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/0.png" );
+		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/blick_diffuse.png" );
 		Graphics::TextureId  texGroundId = m_pTextureManager->CreateTexture( L"res/ground.jpg" );
 		Graphics::TextureId  texRifleDiffuseId = m_pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 		Graphics::TextureId  texSkyId = m_pTextureManager->CreateTexture( L"res/skysphere.jpg" );
-		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/fubuking.png" );
+		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/Mutant_diffuse.png" );
 
 		/* シェーダ作成 */
 		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
@@ -139,11 +144,11 @@ void  Tutorial::Awake()
 		bulletRender->SetVertexShader( vs );
 		bulletRender->SetPixelShader( psSmooth );
 		{/* Parameter */
-				//bulletRender->SetTextureId( texRifleDiffuseId, m_pTextureManager.get() );
+				bulletRender->SetTextureId( texId );
 				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );
 				bulletTrans->SetPosition( Vector3( 0, 5, 0 ) );
 		}
-		
+
 
 		/* Init Cube */
 		static  const  EntityId  cubeId = m_pEntityManager->CreateEntity( "Cube" );
@@ -194,9 +199,10 @@ void  Tutorial::Awake()
 		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
 		{
 				rifleRender->SetVertexShader( vs );
-				rifleRender->SetPixelShader( ps );
+				rifleRender->SetPixelShader( psSmooth );
 				rifleRender->SetTextureId( texRifleDiffuseId );
 
+				rifleTrans->SetLocalPosition( 0, 2, 0 );
 				rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
 				rifleTrans->SetLocalEuler( 270, 180, 0 );
 		}
@@ -207,7 +213,7 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
-		m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
+		m_playerEntity->AddComponent<Renderable>( "res/mutant.fbx" );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( psSmooth );
@@ -259,20 +265,20 @@ void  Tutorial::Update()
 		Vector3&  trans = m_playerEntity->GetComponent<Transform>()->GetPosition();
 		static  Vector3  euler( 0, 0, 0 );
 
-		if ( Input::IsKeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
+		if ( Input::IsKeyPress( DIK_UP ) || GetControllerButtonPress( XIP_D_UP ) )
 		{
 				trans.m_floats[2] += 0.01f;
 		}
-		else if ( Input::IsKeyPress( DIK_S ) || GetControllerButtonPress( XIP_D_DOWN ) )
+		else if ( Input::IsKeyPress( DIK_DOWN ) || GetControllerButtonPress( XIP_D_DOWN ) )
 		{
 				trans.m_floats[2] += -0.01f;
 		}
 
-		if ( Input::IsKeyPress( DIK_A ) || GetControllerButtonPress( XIP_D_LEFT ) )
+		if ( Input::IsKeyPress( DIK_LEFT ) || GetControllerButtonPress( XIP_D_LEFT ) )
 		{
 				euler.m_floats[1] += 0.1f;
 		}
-		else if ( Input::IsKeyPress( DIK_D ) || GetControllerButtonPress( XIP_D_RIGHT ) )
+		else if ( Input::IsKeyPress( DIK_RIGHT ) || GetControllerButtonPress( XIP_D_RIGHT ) )
 		{
 				euler.m_floats[1] += -0.1f;
 		}

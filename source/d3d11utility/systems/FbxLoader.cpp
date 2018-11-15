@@ -83,11 +83,12 @@ void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
 		for ( uint i = 0; i < nMeshCount; i++ )
 		{
 				pMesh = pScene->GetMember<FbxMesh>( i );
+				pNormals = pMesh->GetElementNormal();
+				pUVs = pMesh->GetElementUV();
 				m_modelContainer[i].pMesh = pMesh;
 				m_modelContainer[i].indices = LoadIndices( pMesh );
 				vertices = LoadVertices( pMesh );
-				pNormals = pMesh->GetElementNormal();
-				pUVs = pMesh->GetElementUV();
+				vertexCount = 0;
 
 				// 三角ポリゴンの数ループ
 				for ( j = 0; j < ( uint ) pMesh->GetPolygonCount(); j++ )
@@ -97,10 +98,10 @@ void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
 								vertexIndex = pMesh->GetPolygonVertex( j, k );
 								vertex = vertices[vertexIndex];
 								// 法線とUVの取得
-								m_modelContainer[i].normals.emplace_back( LoadNormal( pNormals, vertexIndex, vertexCount ) );
-								m_modelContainer[i].texcoords.emplace_back( LoadTexcoord( pUVs, vertexIndex, pMesh->GetTextureUVIndex( j, k ) ) );
+								m_modelContainer[i].normals.push_back( LoadNormal( pNormals, vertexIndex, vertexCount ) );
+								m_modelContainer[i].texcoords.push_back( LoadTexcoord( pUVs, vertexIndex, pMesh->GetTextureUVIndex( j, k ) ) );
 
-								m_modelContainer[i].vertices.emplace_back( vertex );
+								m_modelContainer[i].vertices.push_back( vertex );
 								vertexCount++;
 						}// end for
 
@@ -189,6 +190,21 @@ Vector3  FbxLoader::LoadNormal( FbxGeometryElementNormal*&  pNormals, uint  vert
 				}// end switch
 
 		}// end switch
+
+
+		//if ( vec.mData[3] != 0.0f || vec.mData[3] == 1.0f )
+		//{
+		//		normal.m_floats[0] = static_cast< float >( vec.mData[0] );
+		//		normal.m_floats[1] = static_cast< float >( vec.mData[1] );
+		//		normal.m_floats[2] = static_cast< float >( vec.mData[2] );
+		//}// end if
+		//else
+		//{
+		//		normal.m_floats[0] = static_cast< float >( vec.mData[0] / vec.mData[3] );
+		//		normal.m_floats[1] = static_cast< float >( vec.mData[1] / vec.mData[3] );
+		//		normal.m_floats[2] = static_cast< float >( vec.mData[2] / vec.mData[3] );
+		//}// end else
+
 
 		normal.m_floats[0] = static_cast< float >( vec.mData[0] );
 		normal.m_floats[1] = static_cast< float >( vec.mData[1] );
