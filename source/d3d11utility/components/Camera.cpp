@@ -26,6 +26,7 @@ struct  ConstantBufferForPerFrame
 		Matrix4x4  view;
 		Matrix4x4  projection;
 		Matrix4x4  invView;
+		DirectX::XMVECTOR  cameraPos;
 };
 
 
@@ -155,6 +156,7 @@ void  Camera::UpdateConstantBuffer()
 		ConstantBufferForPerFrame  cbuffer;
 		cbuffer.view = GetMatrix4x4View();
 		cbuffer.projection = GetMatrix4x4Projection();
+		cbuffer.cameraPos = m_transform->GetPosition().get128();
 		XMVECTOR  vec;
 		XMStoreFloat4x4( &cbuffer.invView, XMMatrixInverse( &vec, XMLoadFloat4x4( &cbuffer.view ) ) );
 

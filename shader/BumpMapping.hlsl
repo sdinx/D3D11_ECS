@@ -1,13 +1,14 @@
 #include  "header/Structs.hlsli"
 #include  "header/Methods.hlsli"
 
-PSOutput main( PSInput IN )
+PSOutput dsad( PSInput IN )
 {
     PSOutput OUT = (PSOutput) 0;
+
     float3 lDiffuse = float3( 1, 1, 1 );
-    float4 lSpecular = float4( 10, 10, 10, 10 );
+    float4 lSpecular = float4( 5, 5, 5, 5 );
     float3 lAmbient = float3( 1, 1, 1 );
-    float3 lPos = float3( 2, 1, 0 );
+    float3 lPos = float3( 0, 0, 0.5 );
 	
     float4 texel = diffuseTexture.Sample( diffuseTextureSampler, IN.texcoord );
 	
@@ -20,16 +21,24 @@ PSOutput main( PSInput IN )
     float3 diffuse = lDiffuse * diff * texel.rgb;
 
 	// specular
-    float3 viewDir = normalize( g_view._14_24_34 - IN.position.rgb );
+    float3 viewDir = normalize( g_cameraPos - IN.position.rgb );
     float3 reflectDir = reflect( -lightDir, nor );
     float spec = pow( max( dot( viewDir, reflectDir ), 0.0 ), 1.0 );
-    float3 specular = lSpecular.rgb * ( spec * g_specular.rgb );
+    float3 specular = lSpecular.rgb * ( spec * float3( 1, 1, 1 ) );
 
     float3 result = ambient * diffuse * specular;
 	
     OUT.normal = OctEncode( IN.normal );
     OUT.color = float4( result, 1.0f );
     OUT.specular = g_specular.w;
+
+    return OUT;
+}
+
+
+PSOutput main( PSInput IN )
+{
+    PSOutput OUT = (PSOutput) 0;
 
     return OUT;
 }

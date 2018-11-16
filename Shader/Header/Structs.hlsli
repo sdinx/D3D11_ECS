@@ -6,6 +6,7 @@ cbuffer CBuffer : register( b0 )
     float4x4 g_view;
     float4x4 g_proj;
     float4x4 g_invView;
+    float3 g_cameraPos;
 };
 
 cbuffer CObject : register( b1 )
