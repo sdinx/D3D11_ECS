@@ -16,7 +16,7 @@
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Interface.h>
 #include  <d3d11.h>
-
+#include  <string>
 
 namespace  D3D11Utility
 {
@@ -44,7 +44,8 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						ShaderId  m_shaderId;
-						size_t  entryPointHash = 0;
+						uint  entryPointHash = 0;
+						std::string  m_name;
 
 				public:
 						//----------------------------------------------------------------------------------

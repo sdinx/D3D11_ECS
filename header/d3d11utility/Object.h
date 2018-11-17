@@ -28,6 +28,12 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				Object() = delete;
+				Object( Object&  object ) :
+						m_objectId( object.m_objectId ),
+						m_ptr( &object )
+				{
+						m_isAlive = true;
+				}
 				Object( std::string  name ) :
 						m_isAlive( true ),
 						m_objectId( s_objectList.size() ),
@@ -36,7 +42,7 @@ namespace  D3D11Utility
 				{
 						m_className = typeid( *this ).name();
 
-						s_objectList.emplace_back( *this );
+						//s_objectList.push_back( *this );
 
 				}
 				~Object()
@@ -52,7 +58,6 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
-
 				static  std::vector<Object>  s_objectList;
 
 				bool  m_isAlive;

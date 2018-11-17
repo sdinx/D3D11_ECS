@@ -67,6 +67,12 @@
     <Filter Include="shader\header">
       <UniqueIdentifier>{ceeb6503-fd79-4745-8af9-9a4b73ee4065}</UniqueIdentifier>
     </Filter>
+    <Filter Include="header\imgui">
+      <UniqueIdentifier>{527cb14d-57bb-4d8f-b0c9-1d48dfaa0a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\imgui">
+      <UniqueIdentifier>{5bd74095-c770-4fb5-89b5-25b31a235493}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ChangeLog.txt" />
@@ -235,6 +241,30 @@
     <ClInclude Include="header\d3d11utility\Object.h">
       <Filter>header\d3d11utility</Filter>
     </ClInclude>
+    <ClInclude Include="header\imgui\imconfig.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imgui.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imgui_impl_dx11.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imgui_internal.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imstb_rectpack.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imstb_textedit.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imstb_truetype.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="header\imgui\imgui_impl_win32.h">
+      <Filter>header\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp">
@@ -350,6 +380,21 @@
     </ClCompile>
     <ClCompile Include="source\d3d11utility\components\SpotLight.cpp">
       <Filter>source\d3d11utility\components</Filter>
+    </ClCompile>
+    <ClCompile Include="source\imgui\imgui.cpp">
+      <Filter>source\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\imgui\imgui_draw.cpp">
+      <Filter>source\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\imgui\imgui_impl_dx11.cpp">
+      <Filter>source\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\imgui\imgui_widgets.cpp">
+      <Filter>source\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\imgui\imgui_impl_win32.cpp">
+      <Filter>source\imgui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

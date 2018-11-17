@@ -5,6 +5,9 @@
 #include  <D3D11Utility.h>
 #include  <d3d11utility\components/Renderable.h>
 #include  <game/GameUtility.h>
+#include  <imgui/imgui.h>
+#include  <imgui/imgui_impl_dx11.h>
+#include  <imgui/imgui_impl_win32.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
@@ -24,8 +27,12 @@ IDirect3D::~IDirect3D()
 }// end destructor
 
 
+extern  LRESULT  ImGui_ImplWin32_WndProcHandler( HWND  hwnd, UINT  msg, WPARAM  wParam, LPARAM  lparam );
 LRESULT  CALLBACK  IDirect3D::WndProc( HWND  hWnd, UINT  message, WPARAM  wParam, LPARAM  lParam )
 {
+		if ( ImGui_ImplWin32_WndProcHandler( hWnd, message, wParam, lParam ) )
+				return  true;
+
 		switch ( message ) {
 		case  WM_CLOSE:
 				PostMessage( hWnd, WM_DESTROY, NULL, NULL );

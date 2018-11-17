@@ -10,6 +10,7 @@
 #include  <d3d11utility\Systems\TextureManager.h>
 #include  <d3d11utility\Timer.h>
 #include  <game/GameUtility.h>
+#include  <comdef.h>
 
 
 //----------------------------------------------------------------------------------
@@ -146,7 +147,10 @@ void  IDirect3DRenderer::Rendering()const
 
 		}/* Done deferred rendering */
 
+		// デバッグ時は ImGUI を描画するため, あとで描画コマンドを実行する.
+#ifndef  _DEBUG
 		m_pID3D->EndRender();
+#endif // ! _DEBUG
 
 }// end Rendering()const
 
@@ -278,14 +282,17 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 
 Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel, UINT  numLayouts, D3D11_INPUT_ELEMENT_DESC*  layouts )
 {
-		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
+		_bstr_t  bstr( szFileName );
+		std::string  strShader = bstr;
+		strShader += "-";
+		strShader += szEntryPoint;
+		const  size_t  shaderHash = std::hash<std::string>()( strShader );
 		const  Graphics::ShaderId  shaderId = m_vertexShaderList.size();
-		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
 		// 重複で生成を防止
 		for ( auto vs : m_vertexShaderList )
 		{
-				if ( vs->entryPointHash == hash )
+				if ( vs->entryPointHash == shaderHash )
 						return  vs;
 		}
 
@@ -343,7 +350,7 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 		// シェーダ生成
 		m_vertexShaderList.push_back( new  Graphics::VertexShader( pVertexShader, pInputLayout ) );
 		// ハッシュ値と固有IDの設定
-		m_vertexShaderList.back()->entryPointHash = hash;
+		m_vertexShaderList.back()->entryPointHash = shaderHash;
 		m_vertexShaderList.back()->m_shaderId = shaderId;
 
 		return  m_vertexShaderList.back();
@@ -352,14 +359,17 @@ Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileN
 
 Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel )
 {
-		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
+		_bstr_t  bstr( szFileName );
+		std::string  strShader = bstr;
+		strShader += "-";
+		strShader += szEntryPoint;
+		const  size_t  shaderHash = std::hash<std::string>()( strShader );
 		const  Graphics::ShaderId  shaderId = m_geometryShaderList.size();
-		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
 		// 重複で生成を防止
 		for ( auto gs : m_geometryShaderList )
 		{
-				if ( gs->entryPointHash == hash )
+				if ( gs->entryPointHash == shaderHash )
 						return  gs;
 		}
 
@@ -387,7 +397,7 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 		// シェーダ生成
 		m_geometryShaderList.push_back( new  Graphics::GeometryShader( pGeometryShader ) );
 		// ハッシュ値と固有IDの設定
-		m_geometryShaderList.back()->entryPointHash = hash;
+		m_geometryShaderList.back()->entryPointHash = shaderHash;
 		m_geometryShaderList.back()->m_shaderId = shaderId;
 
 		return  m_geometryShaderList.back();
@@ -396,16 +406,17 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 
 Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel )
 {
-		std::string  s;
-
-		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
+		_bstr_t  bstr( szFileName );
+		std::string  strShader = bstr;
+		strShader += "-";
+		strShader += szEntryPoint;
+		const  size_t  shaderHash = std::hash<std::string>()( strShader );
 		const  Graphics::ShaderId  shaderId = m_pixelShaderList.size();
-		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );
 
 		// 重複で生成を防止
 		for ( auto ps : m_pixelShaderList )
 		{
-				if ( ps->entryPointHash == hash )
+				if ( ps->entryPointHash == shaderHash )
 						return  ps;
 		}
 
@@ -433,8 +444,9 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 		// シェーダ生成
 		m_pixelShaderList.push_back( new  Graphics::PixelShader( pPixelShader ) );
 		// ハッシュ値と固有IDの設定
-		m_pixelShaderList.back()->entryPointHash = hash;
+		m_pixelShaderList.back()->entryPointHash = shaderHash;
 		m_pixelShaderList.back()->m_shaderId = shaderId;
+		m_pixelShaderList.back()->m_name = strShader;
 
 		return  m_pixelShaderList.back();
 }

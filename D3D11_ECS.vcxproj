@@ -108,6 +108,14 @@
     <ClInclude Include="header\game\scene\BaseScene.h" />
     <ClInclude Include="header\game\scene\Tutorial.h" />
     <ClInclude Include="header\IGraphicsRenderer.h" />
+    <ClInclude Include="header\imgui\imconfig.h" />
+    <ClInclude Include="header\imgui\imgui.h" />
+    <ClInclude Include="header\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="header\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="header\imgui\imgui_internal.h" />
+    <ClInclude Include="header\imgui\imstb_rectpack.h" />
+    <ClInclude Include="header\imgui\imstb_textedit.h" />
+    <ClInclude Include="header\imgui\imstb_truetype.h" />
     <ClInclude Include="header\IRenderable.h" />
     <ClInclude Include="header\Singleton.h" />
     <ClInclude Include="header\StateTransition.h" />
@@ -169,6 +177,11 @@
     <ClCompile Include="source\game\GameObject.cpp" />
     <ClCompile Include="source\game\GameUtility.cpp" />
     <ClCompile Include="source\game\scene\Tutorial.cpp" />
+    <ClCompile Include="source\imgui\imgui.cpp" />
+    <ClCompile Include="source\imgui\imgui_draw.cpp" />
+    <ClCompile Include="source\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="source\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="source\imgui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\BumpMapping.hlsl">

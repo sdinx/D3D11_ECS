@@ -24,7 +24,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility/Systems/ISystem.h>
-
+#include  <memory>
 
 namespace  D3D11Utility
 {
@@ -47,6 +47,8 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						static  SystemId  STATIC_SYSTEM_ID;
+
+						std::shared_ptr<IDirect3D>  m_pd3dInterface;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -81,6 +83,7 @@ namespace  D3D11Utility
 								return  STATIC_SYSTEM_ID;
 						}
 						void  Update( FLOAT  ms );
+						void  RenderImGui();
 						void  Release();
 
 				};// class DebugSystem
