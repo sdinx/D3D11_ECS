@@ -8,7 +8,6 @@
 // using
 //----------------------------------------------------------------------------------
 using  namespace  D3D11Utility;
-using  namespace  D3D11Utility::Systems;
 
 
 Timer::Timer() :

@@ -396,6 +396,8 @@ Graphics::GeometryShader*  IDirect3DRenderer::CreateGeometryShader( LPCWSTR  szF
 
 Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel )
 {
+		std::string  s;
+
 		const  size_t  shaderHash = std::hash<LPCWSTR>()( szFileName );
 		const  Graphics::ShaderId  shaderId = m_pixelShaderList.size();
 		const  size_t  hash = std::hash<LPCSTR>()( szEntryPoint );

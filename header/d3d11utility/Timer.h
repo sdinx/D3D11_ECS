@@ -14,8 +14,6 @@
 
 namespace  D3D11Utility
 {
-		namespace  Systems
-		{
 
 				class  Timer
 				{
@@ -72,7 +70,6 @@ namespace  D3D11Utility
 
 				};// class Timer
 
-		}// namespace Systems
 }// namespace D3D11Utility
 
 #endif // ! _INCLUDED_D3D11_UTILITY_TIMER_

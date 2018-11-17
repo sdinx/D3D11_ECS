@@ -24,6 +24,7 @@ namespace  D3D11Utility
 				class  IDirect3D;
 				class  IDirect3DRenderer;
 				class  ComponentManager;
+				class  DebugSystem;
 				class  EntityManager;
 				class  SystemManager;
 				class  TextureManager;

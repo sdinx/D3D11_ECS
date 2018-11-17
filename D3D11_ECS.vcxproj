@@ -47,6 +47,7 @@
     <ClInclude Include="header\d3d11utility\IComponent.h" />
     <ClInclude Include="header\d3d11utility\IEntity.h" />
     <ClInclude Include="header\d3d11utility\Interface.h" />
+    <ClInclude Include="header\d3d11utility\Object.h" />
     <ClInclude Include="header\d3d11utility\physical\BoxCollider.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
