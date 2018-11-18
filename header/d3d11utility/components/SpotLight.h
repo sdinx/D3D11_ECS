@@ -21,15 +21,18 @@ namespace  D3D11Utility
 				struct  CBufferSpotLight
 				{
 						Vector3  position;
-						Vector4  ambient;
-						Vector4  diffuse;
+						Vector3  ambient;
+						Vector3  diffuse;
+						Vector4  specular;
+						Vector3  attenuate;
 				};// struct CBufferSpotLight
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				SpotLight();
+				SpotLight() {}
+				SpotLight( Vector3  position, Vector3  ambient, Vector3  diffuse, Vector4  specular, Vector3  attenuate );
 				~SpotLight();
 
 
@@ -39,7 +42,7 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				static  ComponentId  STATIC_COMPONENT_ID;
-				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferPointLight;
+				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferSpotLight;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				CBufferSpotLight  m_cbuffer;
@@ -77,18 +80,21 @@ namespace  D3D11Utility
 				}
 
 				/* setter */
-				void  SetAmbient( Vector4  v4Color )
+				void  SetAmbient( Vector3  color )
 				{
-						m_cbuffer.ambient = v4Color;
+						m_cbuffer.ambient = color;
 				}
-				void  SetDiffuse( Vector4  v4Color )
+				void  SetDiffuse( Vector3  color )
 				{
-						m_cbuffer.diffuse = v4Color;
+						m_cbuffer.diffuse = color;
 				}
 
 				/* derived virtual */
+				void  HandleMessage( const  Message&  msg ) {}
 				void  Update();
 
+				/* original */
+				void  UpdateConstantBuffer();
 
 		};// class  SpotLight
 

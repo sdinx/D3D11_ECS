@@ -18,6 +18,31 @@ cbuffer CObject : register( b1 )
     float4 g_specular;
 };
 
+cbuffer CDirectionLight : register( b2 )
+{
+    float3 g_dirLightDirection;
+    float3 g_dirLightAmbient;
+    float3 g_dirLightDiffuse;
+    float4 g_dirLightSpecular;
+}
+
+cbuffer CPointLight : register( b3 )
+{
+    float3 g_pointLightPos;
+    float3 g_pointLightAmbient;
+    float3 g_pointLightDiffuse;
+    float4 g_pointLightSpecular;
+    float3 g_pointLightAttenuate;
+}
+
+cbuffer CSpotLight : register( b4 )
+{
+    float3 g_spotLightPos;
+    float3 g_spotLightAmbient;
+    float3 g_spotLightDiffuse;
+    float4 g_spotLightSpecular;
+    float3 g_spotLightAttenuate;
+}
 
 //-----------------------------------------------------------------------------------
 // Texture variables
@@ -43,6 +68,7 @@ struct PSInput
     float4 position : SV_POSITION;
     float3 normal : NORMAL;
     float2 texcoord : TEXCOORD0;
+    float3 worldPos : TEXCOORD1;
 };
 
 

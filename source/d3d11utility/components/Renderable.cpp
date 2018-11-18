@@ -112,7 +112,7 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 		// note: インデックスが正しく設定されていない?
 		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
 
-		m_pVertexBuffer->CreateRasterizer( cullMode, fillMode );
+		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, fillMode );
 		//m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, fillMode );
 
 

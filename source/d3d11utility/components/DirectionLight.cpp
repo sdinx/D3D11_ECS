@@ -18,10 +18,40 @@ const  UINT  DirectionLight::s_nConstantBufferSlot;
 ID3D11Buffer*  DirectionLight::s_pConstantBuffer = nullptr;
 
 
+DirectionLight::DirectionLight( Vector3  direction, Vector3  ambient, Vector3  diffuse, Vector4  specular )
+{
+		m_cbuffer.direction = direction;
+		m_cbuffer.ambient = ambient;
+		m_cbuffer.diffuse = diffuse;
+		m_cbuffer.specular = specular;
+}
+
+
+DirectionLight::~DirectionLight()
+{
+
+}
+
+
 void  DirectionLight::SetConstantBuffer()
 {
 		if ( s_pConstantBuffer == nullptr )
 		{
 				CreateConstantBuffer( s_pConstantBuffer, sizeof( CBufferDirectionLight ) );
 		}
+}
+
+
+void  DirectionLight::Update()
+{
+		UpdateConstantBuffer();
+}
+
+
+void  DirectionLight::UpdateConstantBuffer()
+{
+		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &m_cbuffer, 0, 0 );
+		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 }

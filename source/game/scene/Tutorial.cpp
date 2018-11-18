@@ -7,6 +7,7 @@
 #include  <d3d11utility/components/Transform.h>
 #include  <d3d11utility/components/DirectionLight.h>
 #include  <d3d11utility/components/PointLight.h>
+#include  <d3d11utility/components/SpotLight.h>
 #include  <d3d11utility/systems/SystemInclude.h>
 #include  <d3d11utility/physical/BulletPhysics.h>
 #include  <d3d11utility/DIKeyboard.h>
@@ -42,25 +43,31 @@ void  Tutorial::InputFPSCamera()
 		static  bool  isMouse = false;
 		static  bool  isShowMouse = false;
 		static  Quaternion&  rotate = camTransform->GetRotation();
-		float  dx = 0.0f;
-		float  dy = 0.0f;
-		static  float  angle_x = 0.0f;
-		static  float  angle_y = 0.0f;
+		Quaternion  q;
+		static  float  dx = 0.0f;
+		static  float  dy = 0.0f;
+		float  angle_x = 0.0f;
+		float  angle_y = 0.0f;
 
-		auto  mx = Input::MouseAxisX();
-		auto  my = Input::MouseAxisY();
+		auto  mx = -Input::MouseAxisX();
+		auto  my = -Input::MouseAxisY();
 
-		dx = ( float ) mx / 10.0f;
-		dy = ( float ) my / 10.0f;
+		dx += ( float ) mx / 10.0f;
+		dy += ( float ) my / 10.0f;
 
 
 		if ( isMouse )
+		{
 				if ( mx != 0.0f || my != 0.0f )
 				{
 						angle_x += dy;
 						angle_y += dx;
-						camTransform->SetEuler( angle_x, angle_y, 0.0f );
+						//camTransform->SetEuler( angle_x, angle_y, 0.0f );
 				}
+
+				q.setEuler( ToRadian( dx ), ToRadian( dy ), ToRadian( 0 ) );
+				rotate = rotate.slerp( q, 1 );
+		}
 
 		if ( Input::IsKeyTrigger( DIK_RETURN ) )
 		{
@@ -131,6 +138,7 @@ void  Tutorial::Awake()
 		Renderable::SetConstantBuffer();
 		DirectionLight::SetConstantBuffer();
 		PointLight::SetConstantBuffer();
+		SpotLight::SetConstantBuffer();
 
 
 		/* ゲームシステムクラス生成 */
@@ -147,6 +155,7 @@ void  Tutorial::Awake()
 		{/* Parameter */
 				bulletRender->SetTextureId( texId );
 				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );
+				bulletRender->SetAmbient( Vector4( 1, 1, 1, 1.0f ) );
 				bulletTrans->SetPosition( Vector3( 0, 5, 0 ) );
 		}
 
@@ -239,6 +248,20 @@ void  Tutorial::Awake()
 		{/* Parameter */
 				camTrans->SetPosition( 0.0f, 2.0f, 0.0f );
 				cam->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
+		}
+
+		/* Init light */
+		const  EntityId  ptLightId = m_pEntityManager->CreateEntity( "Direction Light" );
+		Entity*  ptLightEntity = m_pEntityManager->GetEntity( ptLightId );
+		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector4( 1, 1, 1, 1 ), Vector3( 0.5f, 0.1f, 0.1f ) );
+		Transform*  ptLightTrans = ptLightEntity->AddComponent<Transform>();
+		Renderable*  ptLightRender = ptLightEntity->AddComponent<Renderable>( "res/sphere.fbx" );
+		{
+				ptLightTrans->SetPosition( 0.5f, 6, -0.2f );
+				ptLightTrans->SetScale( 0.2f );
+				ptLightRender->SetVertexShader( vs );
+				ptLightRender->SetPixelShader( ps );
+				ptLight->UpdateConstantBuffer();
 		}
 
 		m_FPSCamera = cam;

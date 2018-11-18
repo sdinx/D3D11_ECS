@@ -54,5 +54,5 @@ float4 psmain( PSDeferredInput IN ) : SV_Target
     //return saturate( diff * lightIntensity );
 
     return diff * IN.color;
-    return float4( nor, 1 );
+    //return float4( nor, 1 );
 }

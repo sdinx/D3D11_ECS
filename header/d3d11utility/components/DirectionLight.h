@@ -19,16 +19,18 @@ namespace  D3D11Utility
 		{
 				struct  CBufferDirectionLight
 				{
-						Vector4  direction;
-						Vector4  ambient;
-						Vector4  diffuse;
+						Vector3  direction;
+						Vector3  ambient;
+						Vector3  diffuse;
+						Vector4  specular;
 				};
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				DirectionLight();
+				DirectionLight() {}
+				DirectionLight( Vector3  direction, Vector3  ambient, Vector3  diffuse, Vector4  specular );
 				~DirectionLight();
 
 
@@ -76,18 +78,21 @@ namespace  D3D11Utility
 				}
 
 				/* setter */
-				void  SetAmbient( Vector4  v4Color )
+				void  SetAmbient( Vector3  color )
 				{
-						m_cbuffer.ambient = v4Color;
+						m_cbuffer.ambient = color;
 				}
-				void  SetDiffuse( Vector4  v4Color )
+				void  SetDiffuse( Vector3  color )
 				{
-						m_cbuffer.diffuse = v4Color;
+						m_cbuffer.diffuse = color;
 				}
 
 				/* derived virtual */
+				void  HandleMessage( const  Message&  msg ) {}
 				void  Update();
 
+				/* original */
+				void  UpdateConstantBuffer();
 
 		};// class  DirectionLight
 
