@@ -413,6 +413,9 @@
     <FxCompile Include="shader\BumpMapping.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="shader\ClusteredLighting.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\header\Structs.hlsli">
