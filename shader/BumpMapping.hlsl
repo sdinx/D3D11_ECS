@@ -46,10 +46,10 @@ PSOutput main( PSInput IN )
     float3 l = g_pointLightPos - IN.worldPos;
     float d = length( l );
     float3 r = 2.0 * IN.normal * dot( IN.normal, l ) - l;
-    float a = saturate( 1.0f / ( 1.0f + 0.1f * d + 0.1f * d * d ) );
+    float a = saturate( 1.0f / ( g_pointLightAttenuate.x + g_pointLightAttenuate.y * d + g_pointLightAttenuate.z * d * d ) );
     float3 iA = texel.rgb;
     float3 iD = saturate( dot( l, IN.normal ) ) * texel.rgb * a;
-    float3 iS = pow( saturate( dot( r, viewDir ) ), 1.0f ) * a;
+    float3 iS = pow( saturate( dot( r, viewDir ) ), g_pointLightSpecular.w ) * a;
     float3 spec = float3( saturate( iA + iD + iS ) );
 
     OUT.normal = OctEncode( IN.normal );
