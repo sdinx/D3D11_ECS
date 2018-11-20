@@ -86,7 +86,8 @@ namespace  D3D11Utility
 
 						Graphics::TextureId  CreateTexture( const  std::wstring  &filename );
 
-						void  SetTexture( Graphics::TextureId  textureId );
+						void  SetDiffuse( Graphics::TextureId  textureId );
+						void  SetNormal( Graphics::TextureId  textureId );
 						void  Release();
 
 				};// class TextureManager

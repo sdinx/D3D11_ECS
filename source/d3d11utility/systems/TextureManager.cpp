@@ -173,13 +173,23 @@ Graphics::TextureId  TextureManager::CreateTexture( const  std::wstring  &filena
 }
 
 
-void  TextureManager::SetTexture( Graphics::TextureId  textureId )
+void  TextureManager::SetDiffuse( Graphics::TextureId  textureId )
 {
 		// note: ‚‘¬‰»Žž‚ÌÈ—ª‘ÎÛ
 		if ( textureId >= ( int ) m_textures.size() )
 				return;
 
-		m_textures[textureId]->SetTexture();
+		m_textures[textureId]->SetTexture( 0 );
+}
+
+
+void  TextureManager::SetNormal( Graphics::TextureId  textureId )
+{
+		// note: ‚‘¬‰»Žž‚ÌÈ—ª‘ÎÛ
+		if ( textureId >= ( int ) m_textures.size() )
+				return;
+
+		m_textures[textureId]->SetTexture( 1 );
 }
 
 

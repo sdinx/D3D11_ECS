@@ -41,18 +41,22 @@ PSOutput main( PSInput IN )
     PSOutput OUT = (PSOutput) 0;
 
     float4 texel = diffuseTexture.Sample( diffuseTextureSampler, IN.texcoord );
+    float4 n = normalTexture.Load( int3( IN.texcoord, 0 ) );
+    n = normalize( mul( g_world, n ) );
+    n = normalize( n );
+    float3 nor = IN.normal;// * nor.xyz;
 
     float3 viewDir = normalize( g_cameraPos.xyz - IN.worldPos );
     float3 l = g_pointLightPos - IN.worldPos;
     float d = length( l );
-    float3 r = 2.0 * IN.normal * dot( IN.normal, l ) - l;
+    float3 r = 2.0 * nor * dot( nor, l ) - l;
     float a = saturate( 1.0f / ( g_pointLightAttenuate.x + g_pointLightAttenuate.y * d + g_pointLightAttenuate.z * d * d ) );
     float3 iA = texel.rgb;
-    float3 iD = saturate( dot( l, IN.normal ) ) * texel.rgb * a;
+    float3 iD = saturate( dot( l, nor ) ) * texel.rgb * a;
     float3 iS = pow( saturate( dot( r, viewDir ) ), g_pointLightSpecular.w ) * a;
     float3 spec = float3( saturate( iA + iD + iS ) );
 
-    OUT.normal = OctEncode( IN.normal );
+    OUT.normal = OctEncode( nor );
     OUT.color = float4( spec, 1.0f );
     OUT.specular = g_specular.w;
 

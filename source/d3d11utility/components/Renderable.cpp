@@ -32,7 +32,8 @@ Renderable::Renderable() :
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
-		m_textureId( TEXTURE_ID_INVALID )
+		m_diffuseId( TEXTURE_ID_INVALID ),
+		m_normalId( TEXTURE_ID_INVALID )
 {
 
 }
@@ -43,7 +44,8 @@ Renderable::Renderable( ePrimitiveType  primitiveType, D3D11_CULL_MODE  cullMode
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
-		m_textureId( TEXTURE_ID_INVALID )
+		m_diffuseId( TEXTURE_ID_INVALID ),
+		m_normalId( TEXTURE_ID_INVALID )
 {
 		m_isRendering = true;
 
@@ -71,7 +73,8 @@ Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
-		m_textureId( TEXTURE_ID_INVALID )
+		m_diffuseId( TEXTURE_ID_INVALID ),
+		m_normalId( TEXTURE_ID_INVALID )
 {
 		m_isRendering = true;
 
@@ -217,9 +220,15 @@ void  Renderable::SetSpecular( Vector4  v4Color )
 }
 
 
-void  Renderable::SetTextureId( Graphics::TextureId  textureId )
+void  Renderable::SetDiffuseTexId( Graphics::TextureId  textureId )
 {
-		m_textureId = textureId;
+		m_diffuseId = textureId;
+}
+
+
+void  Renderable::SetNormalTexId( Graphics::TextureId  textureId )
+{
+		m_normalId = textureId;
 }
 
 

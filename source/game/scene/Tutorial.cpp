@@ -121,10 +121,12 @@ void  Tutorial::Awake()
 
 		/* テクスチャ作成 */
 		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/blick_diffuse.png" );
+		Graphics::TextureId  texNormalId = m_pTextureManager->CreateTexture( L"res/blick_normal.png" );
 		Graphics::TextureId  texGroundId = m_pTextureManager->CreateTexture( L"res/ground.jpg" );
 		Graphics::TextureId  texRifleDiffuseId = m_pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 		Graphics::TextureId  texSkyId = m_pTextureManager->CreateTexture( L"res/skysphere.jpg" );
 		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/Mutant_diffuse.png" );
+		Graphics::TextureId  texMutantNorId = m_pTextureManager->CreateTexture( L"res/Mutant_Normal.png" );
 
 		/* シェーダ作成 */
 		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
@@ -152,7 +154,8 @@ void  Tutorial::Awake()
 		bulletRender->SetVertexShader( vs );
 		bulletRender->SetPixelShader( psBump );
 		{/* Parameter */
-				bulletRender->SetTextureId( texId );
+				bulletRender->SetDiffuseTexId( texId );
+				bulletRender->SetNormalTexId( texNormalId );
 				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );
 				bulletRender->SetAmbient( Vector4( 1, 1, 1, 1.0f ) );
 				bulletTrans->SetPosition( Vector3( 0, 5, 0 ) );
@@ -168,7 +171,7 @@ void  Tutorial::Awake()
 		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
 		cubeRender->SetVertexShader( vs );
 		cubeRender->SetPixelShader( ps );
-		cubeRender->SetTextureId( texGroundId );
+		cubeRender->SetDiffuseTexId( texGroundId );
 		{/* Parameter */
 				cubeTrans->SetPosition( 0, -10.0f, 0 );
 				cubeTrans->SetLocalScale( Vector3( 250, 0.2f, 250 ) );
@@ -194,7 +197,7 @@ void  Tutorial::Awake()
 				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
-				sphereRender->SetTextureId( texSkyId );
+				sphereRender->SetDiffuseTexId( texSkyId );
 		}
 
 
@@ -209,7 +212,7 @@ void  Tutorial::Awake()
 		{
 				rifleRender->SetVertexShader( vs );
 				rifleRender->SetPixelShader( ps );
-				rifleRender->SetTextureId( texRifleDiffuseId );
+				rifleRender->SetDiffuseTexId( texRifleDiffuseId );
 
 				rifleTrans->SetLocalPosition( 0, 2, 0 );
 				rifleTrans->SetScale( Vector3( 0.01f, 0.01f, 0.01f ) );
@@ -229,7 +232,8 @@ void  Tutorial::Awake()
 		m_playerEntity->AddComponent<Transform>();
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		{/* Parameter */
-				playerRender->SetTextureId( texFubukiId );
+				playerRender->SetDiffuseTexId( texFubukiId );
+				playerRender->SetNormalTexId( texMutantNorId );
 				playerRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
 				Vector3&  scale2 = trans2->GetScale();
 				Vector3&  pos2 = trans2->GetPosition();

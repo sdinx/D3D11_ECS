@@ -75,7 +75,8 @@ void  IDirect3DRenderer::Rendering()const
 				{
 						renderable->HandleMessage( Renderable::MSG_UPDATE_CBUFFER );
 						render = renderable->GetComponent<Renderable>();
-						textureManager->SetTexture( render->m_textureId );
+						textureManager->SetDiffuse( render->m_diffuseId );
+						textureManager->SetNormal( render->m_normalId );
 						render->Rendering();
 				}
 

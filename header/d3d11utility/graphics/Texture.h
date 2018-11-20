@@ -66,7 +66,7 @@ namespace  D3D11Utility
 						// public methods
 						//----------------------------------------------------------------------------------
 
-						void  SetTexture();
+						void  SetTexture( uint  slot = 0 );
 						void  Release();
 
 				};// class Texture

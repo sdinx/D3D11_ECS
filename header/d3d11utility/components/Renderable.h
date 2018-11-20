@@ -64,7 +64,8 @@ namespace  D3D11Utility
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
 				ConstantBufferForPerFrame  m_cbuffer;
-				Graphics::TextureId  m_textureId;
+				Graphics::TextureId  m_diffuseId;
+				Graphics::TextureId  m_normalId;
 				Graphics::VertexBuffer*  m_pVertexBuffer;
 				Graphics::VertexShader*  m_pVertexShader;
 				Graphics::PixelShader*  m_pPixelShader ;
@@ -121,7 +122,8 @@ namespace  D3D11Utility
 				void  SetDiffuse( Vector4  color );
 				void  SetEmissive( Vector4  color );
 				void  SetSpecular( Vector4  color );
-				void  SetTextureId( Graphics::TextureId  textureId );
+				void  SetDiffuseTexId( Graphics::TextureId  textureId );
+				void  SetNormalTexId( Graphics::TextureId  textureId );
 				void  Release();
 		};
 

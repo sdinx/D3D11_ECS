@@ -28,13 +28,15 @@ Texture1D<uint> texLightIndex : register( t6 );
 float4 main( PSDeferredInput IN ) : SV_Target
 {
 	// スクリーン上の位置からデプス値を取得.
-    int3 texCoord = int3( IN.position.xy, 0 );
-    float depth = texDepth.Load( texCoord );
+    int3 texcoord = int3( IN.position.xy, 0 );
+    float depth = texDepth.Load( texcoord );
+	
+    float2 fov = 2.0 * atan( 1.0 / g_proj._11_11 ) * 180.0 / PI;
 
-	// 深さからクラスタ位置を取得？
+	// 深さからクラスタ位置を取得.
     int slice = int( max( log2( depth * zParam.x, zParam.y ) * scale + bias, 0 ) );
-    int4 clusterCoord = int4( texCoord >> 6, slice, 0 ); // tile size 64
-
+    int4 clusterCoord = int4( texcoord >> 6, slice, 0 ); // tile size 64
+	
 	// クラスタを取得してライトリストのインデックスを取り出す.
     uint2 cluster = texCluster.Load( clusterCoord );
     uint lightIndex = cluster.x;

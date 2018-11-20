@@ -49,6 +49,8 @@ cbuffer CSpotLight : register( b4 )
 //-----------------------------------------------------------------------------------
 Texture2D diffuseTexture : register( t0 );
 SamplerState diffuseTextureSampler : register( s0 );
+Texture2D normalTexture : register( t1 );
+SamplerState normalTextureSampler : register( s1 );
 
 //-----------------------------------------------------------------------------------
 // VSInput structure
