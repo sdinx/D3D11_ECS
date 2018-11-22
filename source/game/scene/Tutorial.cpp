@@ -125,7 +125,7 @@ void  Tutorial::Awake()
 		Graphics::TextureId  texGroundId = m_pTextureManager->CreateTexture( L"res/ground.jpg" );
 		Graphics::TextureId  texRifleDiffuseId = m_pTextureManager->CreateTexture( L"res/rifle_diff.png" );
 		Graphics::TextureId  texSkyId = m_pTextureManager->CreateTexture( L"res/skysphere.jpg" );
-		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/Mutant_diffuse.png" );
+		Graphics::TextureId  texFubukiId = m_pTextureManager->CreateTexture( L"res/fubuking.png" );
 		Graphics::TextureId  texMutantNorId = m_pTextureManager->CreateTexture( L"res/Mutant_Normal.png" );
 
 		/* シェーダ作成 */
@@ -133,6 +133,8 @@ void  Tutorial::Awake()
 		Graphics::PixelShader*  ps = m_pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
 		Graphics::PixelShader*  psSmooth = m_pd3dRenderer->CreatePixelShader( L"Shader/Smoothing.hlsl", "main" );
 		Graphics::PixelShader*  psBump = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "main" );
+		Graphics::PixelShader*  psToon = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "CelShading" );
+		Graphics::VertexShader*  vsToon = m_pd3dRenderer->CreateVertexShader( L"Shader/BumpMapping.fx", "OutlineVS" );
 
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
@@ -225,10 +227,10 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
-		m_playerEntity->AddComponent<Renderable>( "res/mutant.fbx" );
+		m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
-		playerRender->SetVertexShader( vs );
-		playerRender->SetPixelShader( ps );
+		playerRender->SetVertexShader( vsToon );
+		playerRender->SetPixelShader( psToon );
 		m_playerEntity->AddComponent<Transform>();
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		{/* Parameter */
