@@ -133,8 +133,8 @@ void  Tutorial::Awake()
 		Graphics::PixelShader*  ps = m_pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
 		Graphics::PixelShader*  psSmooth = m_pd3dRenderer->CreatePixelShader( L"Shader/Smoothing.hlsl", "main" );
 		Graphics::PixelShader*  psBump = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "main" );
-		Graphics::PixelShader*  psToon = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "CelShading" );
-		Graphics::VertexShader*  vsToon = m_pd3dRenderer->CreateVertexShader( L"Shader/BumpMapping.fx", "OutlineVS" );
+		//Graphics::PixelShader*  psToon = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "CelShading" );
+		//Graphics::VertexShader*  vsToon = m_pd3dRenderer->CreateVertexShader( L"Shader/BumpMapping.fx", "OutlineVS" );
 
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
@@ -229,8 +229,8 @@ void  Tutorial::Awake()
 		m_playerEntity->SetTag( "Player" );
 		m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
-		playerRender->SetVertexShader( vsToon );
-		playerRender->SetPixelShader( psToon );
+		playerRender->SetVertexShader( vs );
+		playerRender->SetPixelShader( psBump );
 		m_playerEntity->AddComponent<Transform>();
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		{/* Parameter */

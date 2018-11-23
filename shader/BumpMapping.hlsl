@@ -84,8 +84,6 @@ PSInput OutlineVS( VSInput IN, out float4 out_line : TEXCOORD1 )
 
     float4 original = mul( mul( mul( IN.position, g_world ), g_view ), g_proj );
 
-    out_line =
-
     return OUT;
 }
 
