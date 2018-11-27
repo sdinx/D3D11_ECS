@@ -26,6 +26,7 @@ struct  ConstantBufferForPerFrame
 		Matrix4x4  view;
 		Matrix4x4  projection;
 		Matrix4x4  invView;
+		Matrix4x4  invProjection;
 		DirectX::XMVECTOR  cameraPos;
 };
 
@@ -159,6 +160,7 @@ void  Camera::UpdateConstantBuffer()
 		cbuffer.cameraPos = m_transform->GetPosition().get128();
 		XMVECTOR  vec;
 		XMStoreFloat4x4( &cbuffer.invView, XMMatrixInverse( &vec, XMLoadFloat4x4( &cbuffer.view ) ) );
+		XMStoreFloat4x4( &cbuffer.invProjection, XMMatrixInverse( &vec, XMLoadFloat4x4( &cbuffer.projection ) ) );
 
 		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &cbuffer, 0, 0 );
 		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
