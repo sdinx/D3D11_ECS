@@ -13,6 +13,8 @@ Texture2D<float> texDepth : register( t3 );
 SamplerState ssDepth : register( s3 );
 Texture2D<uint> texStencil : register( t4 );
 SamplerState ssStencil : register( s4 );
+Texture2D<uint2> texCluster : register( t5 );
+//RWStructuredBuffer<uint> lightIndices : register( t6 );
 
 
 PSDeferredInput vsmain( VSDeferredInput IN )

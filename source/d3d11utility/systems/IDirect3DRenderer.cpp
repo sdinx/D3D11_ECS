@@ -96,13 +96,28 @@ void  IDirect3DRenderer::Rendering()const
 
 		}/* Done first rendering */
 
+		{/* Begin light rendering */
+
+				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pClusterRTView, nullptr );
+				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
+
+				m_pClusterVShader->UpdateShader();
+				m_pClusterPShader->UpdateShader();
+
+				pd3dDeviceContext->PSSetShaderResources( 0, 1, &m_pClusterRTShaderResourceView );
+				pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
+
+
+
+				// todo: ライトをインスタンス描画する.
+
+		}/* Done light rendering */
+
 		{/* Begin deferred rendering */
 
 				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, nullptr );
 				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
 				//pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
-
-				pd3dDeviceContext->OMSetDepthStencilState( m_pDepthStencilState, 0 );
 
 				uint stride = 36;
 				uint offset = 0;
@@ -208,6 +223,10 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;// ディフューズ同様でAの値は強度を表す.
 		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
+		// クラスタ
+		texDesc.Format = DXGI_FORMAT_R32G32_UINT;// R32 : offset, G32 : [PointLightCount, SpotLightCount]
+		texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
 		m_renderTagets.resize( descSize );
 
 		for ( int i = 0; i < descSize; i++ )
@@ -224,6 +243,29 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 
 		}// end for
 
+
+		// クラスタ用 SRV 作成.
+		hr = pd3dDevice->CreateTexture2D( &texDesc, nullptr, &m_pClusterRTTexture );
+		if ( FAILED( hr ) )
+		{
+				printf( "<IDirect3DRenderer> CreateMultiRenderTargetView() failed : 232" );
+				return  hr;
+		}// end if
+
+		hr = pd3dDevice->CreateRenderTargetView( m_pClusterRTTexture, nullptr, &m_pClusterRTView );
+		hr = pd3dDevice->CreateShaderResourceView( m_pClusterRTTexture, nullptr, &m_pClusterRTShaderResourceView );
+
+
+		// クラスタ用 インプットレイアウト.
+		D3D11_INPUT_ELEMENT_DESC  clLayout[ ] = {
+				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		};
+		UINT  numClusterLayouts = ARRAYSIZE( clLayout );
+		m_pClusterVShader = CreateVertexShader( L"shader/Light.hlsl", "vsmain", "vs_5_0", numClusterLayouts, clLayout );
+		m_pClusterPShader = CreatePixelShader( L"shader/Light.hlsl", "psmain" );
+
+
+		// サンプラーステート.
 		D3D11_SAMPLER_DESC sampDesc;
 		ZeroMemory( &sampDesc, sizeof( sampDesc ) );
 		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -245,6 +287,7 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		m_pVShader = CreateVertexShader( L"shader/Deferred.hlsl", "vsmain", "vs_5_0", numLayouts, layout );
 		m_pPShader = CreatePixelShader( L"shader/Deferred.hlsl", "psmain" );
 
+		// ディファードレンダリング用.
 		float  vertex[4 * 9] = {
 				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
 				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
@@ -263,12 +306,14 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		InitData.pSysMem = vertex;
 		pd3dDevice->CreateBuffer( &bd, &InitData, &m_pVtxBuffer );
 
+		// カリング.
 		D3D11_RASTERIZER_DESC  rdc = { };
 		rdc.CullMode = D3D11_CULL_NONE;
 		rdc.FillMode = D3D11_FILL_SOLID;
 		rdc.FrontCounterClockwise = TRUE;
 		pd3dDevice->CreateRasterizerState( &rdc, &m_rasterState );
 
+		// デプスステンシルステート作成.
 		D3D11_DEPTH_STENCIL_DESC  dsDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT() );
 		hr = pd3dDevice->CreateDepthStencilState( &dsDesc, &m_pDepthStencilState );
 		if ( FAILED( hr ) )

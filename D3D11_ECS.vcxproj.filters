@@ -419,6 +419,9 @@
     <FxCompile Include="shader\ComputeClusteredLight.hlsl">
       <Filter>shader</Filter>
     </FxCompile>
+    <FxCompile Include="shader\Light.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\header\Structs.hlsli">

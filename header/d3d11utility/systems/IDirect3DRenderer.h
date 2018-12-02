@@ -14,6 +14,7 @@
 #include  <D3D11Utility\Systems\IDirect3D.h>
 #include  <IGraphicsRenderer.h>
 #include  <IRenderable.h>
+#include  <D3D11Utility\Graphics\VertexBuffer.h>
 #include  <D3D11Utility\Graphics\VertexShader.h>
 #include  <D3D11Utility\Graphics\GeometryShader.h>
 #include  <D3D11Utility\Graphics\PixelShader.h>
@@ -81,16 +82,20 @@ namespace  D3D11Utility
 
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManager;
+						std::vector<Graphics::VertexBuffer*>  m_vertexBufferList;
 						std::vector<Graphics::VertexShader*>  m_vertexShaderList;
 						std::vector<Graphics::GeometryShader*>  m_geometryShaderList;
 						std::vector<Graphics::PixelShader*>  m_pixelShaderList;
 
 						/* rendering variables */
 						ID3D11RenderTargetView* m_pRTView = nullptr;
+						ID3D11RenderTargetView* m_pClusterRTView = nullptr;
 						ID3D11DepthStencilView*  m_pDSView = nullptr;
 						ID3D11Texture2D*  m_pRTTexture = nullptr;
+						ID3D11Texture2D*  m_pClusterRTTexture = nullptr;
 						ID3D11Texture2D*  m_pDSTexture = nullptr;
 						ID3D11ShaderResourceView*  m_pRTShaderResourceView = nullptr;
+						ID3D11ShaderResourceView*  m_pClusterRTShaderResourceView = nullptr;
 						ID3D11ShaderResourceView*  m_pDSShaderResourceView = nullptr;
 						ID3D11ShaderResourceView*  m_pSTShaderResourceView = nullptr;
 						ID3D11DepthStencilState*  m_pDepthStencilState;
@@ -100,6 +105,8 @@ namespace  D3D11Utility
 						ID3D11RasterizerState*  m_rasterState = nullptr;
 						Graphics::VertexShader*  m_pVShader;
 						Graphics::PixelShader*  m_pPShader;
+						Graphics::VertexShader*  m_pClusterVShader;
+						Graphics::PixelShader*  m_pClusterPShader;
 						FLOAT  m_fClearColors[4] = { 0.0f,0.125f,0.3f,1.0f };
 
 				public:

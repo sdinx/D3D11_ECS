@@ -1,12 +1,13 @@
 #include "header/Structs.hlsli"
 
-const uint MAX_LIGHT_COUNT = 1000;
-const uint MAX_X_PLANE = 16;
-const uint MAX_Y_PLANE = 16;
-const uint MAX_Z_PLANE = 16;
+const int NUM_LIGHT_COUNT = 1000;
+const int NUM_TILE_PER_PIXELS = 32;
+const int NUM_X_TILES = 40;
+const int NUM_Y_TILES = 30;
+const int NUM_DEPTH_SLICES = 16;
 
 [numthreads( MAX_LIGHT_COUNT, 1, 1 )]
-void main( uint3 DTid : SV_DispatchThreadID )
+void test( uint3 DTid : SV_DispatchThreadID )
 {
 
 
@@ -16,9 +17,9 @@ void main( uint3 DTid : SV_DispatchThreadID )
         do // ライトの左側の影響範囲内の x plane を特定
         {
             ++x; // 次の x plane に移動.
-        } while ( x < MAX_X_PLANE && abs( x_planes[x] - light.pos ) >= light.radius );
+        } while ( x < NUM_X_TILES && abs( x_planes[x] - light.pos ) >= light.radius );
 
-        int x_max = MAX_X_PLANE; // 一番右から
+        int x_max = NUM_X_TILES; // 一番右から
         do // ライトの右側の影響範囲内の x plane を特定
         {
             --x_max;
@@ -30,30 +31,35 @@ void main( uint3 DTid : SV_DispatchThreadID )
 
 }
 
-const uint NUM_SLICE_COUNT = 16;
 
 [numthreads( MAX_LIGHT_COUNT, 1, 1 )]
 void LightCulling( uint3 DTid : SV_DispatchThreadID )
 {
-    float2 fov = 2.0f * atan( 1.0f / g_proj._11_11 ) * 180.0f / PI;
+    float2 fov = 2.0f * atan( 1.0f / g_proj._22 ) * 180.0f / PI;
     float tanFov = tan( fov.y * 0.5f );
 
-    float h0 = ( 2 * near * tanFov ) / NUM_SLICE_COUNT;
+    float h0 = ( 2 * near * tanFov ) / NUM_DEPTH_SLICES;
 
-    uint k = log( -z / near ) / log( 1 + ( 2 * tanFov / NUM_SLICE_COUNT ) );
+    uint k = log( -z / near ) / log( 1 + ( 2 * tanFov / NUM_DEPTH_SLICES ) );
 
 }
 
 
 void FrustumCulling()
 {
-    const uint a = NUM_SLICE_COUNT;
-    uint sliceCount = NUM_SLICE_COUNT;
+    const uint a = NUM_DEPTH_SLICES;
     float z = 0;
 
 	// 指数関数的にフラスタムを分割
-    for ( uint sliceIndex = 1; sliceIndex <= sliceCount; sliceIndex++ )
+    for ( uint sliceIndex = 1; sliceIndex <= NUM_DEPTH_SLICES; sliceIndex++ )
     {
-        z = lerp( 0.0f, 1.0f, log( sliceIndex / sliceCount * ( a - 1 ) + 1 ) / log( a ) );
+        z = lerp( 0.0f, 1.0f, log( sliceIndex / NUM_DEPTH_SLICES * ( a - 1 ) + 1 ) / log( a ) );
     } // end for
+}
+
+
+[numthreads( NUM_X_TILES, NUM_Y_TILES, 1 )]
+void main( uint3 thread_id : SV_DispatchThreadID )
+{
+
 }

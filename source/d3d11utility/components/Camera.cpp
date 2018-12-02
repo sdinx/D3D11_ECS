@@ -47,7 +47,7 @@ Camera::Camera( Transform*  transform, Transform*  targetTransform ) :
 		m_transform = transform;
 
 		UpdateView();
-		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
+		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.1f, 1000.0f );
 		UpdateConstantBuffer();
 }
 
