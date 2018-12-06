@@ -45,6 +45,8 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 				return;
 		}
 
+		m_pImporter->Destroy();
+		m_pImporter = nullptr;
 		LoadFbxModel( m_pScene );
 
 }
@@ -429,7 +431,15 @@ ModelContainer  FbxLoader::SetAnimation( UINT  meshIndex, UINT  animationIndex, 
 
 void  FbxLoader::Release()
 {
+		for ( auto& container : m_modelContainer )
+		{
+				container.pMesh = nullptr;
+				container.vertices.clear();
+				container.indices.clear();
+				container.texcoords.clear();
+				container.normals.clear();
+		}
 		m_modelContainer.clear();
-		SafeDestroy( m_pImporter );
-		SafeDestroy( m_pScene );
+
+		m_pScene->Destroy();
 }

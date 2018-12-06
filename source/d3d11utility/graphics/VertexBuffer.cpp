@@ -10,20 +10,27 @@ using  namespace  D3D11Utility;
 using  namespace  Graphics;
 
 
-VertexBuffer::VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts )
+VertexBuffer::VertexBuffer( VERTEX*  pVertices, uint  nVertexCounts, const  MeshId  meshId, const  Systems::FbxLoader&  fbxLoader ) :
+		m_nStride( sizeof( VERTEX ) ),
+		m_meshId( meshId ),
+		m_fbxLoader( &fbxLoader )
 {
-		m_pVertices = new  VERTEX[numVertexCounts];
-		for ( uint32 i = 0; i < numVertexCounts; i++ )
+		m_pVertices = new  VERTEX[nVertexCounts];
+		for ( uint i = 0; i < nVertexCounts; i++ )
 				m_pVertices[i] = pVertices[i];
-		m_numVertexCounts = numVertexCounts;
 
-		CreateVertexBuffer();
+		CreateVertexBuffer( pVertices, nVertexCounts, sizeof( VERTEX ) );
 }
 
 
-VertexBuffer::VertexBuffer( ePrimitiveType  primitiveType )
+VertexBuffer::VertexBuffer( void*  pData, uint  nVertexCounts, uint  nStride, const  MeshId  meshId, const  Systems::FbxLoader&  fbxLoader ) :
+		m_nStride( nStride ),
+		m_meshId( meshId ),
+		m_fbxLoader( &fbxLoader )
 {
-		m_pVertices = nullptr;
+
+
+		CreateVertexBuffer( pData, nVertexCounts, nStride );
 }
 
 
@@ -33,7 +40,7 @@ VertexBuffer::~VertexBuffer()
 }
 
 
-HRESULT  VertexBuffer::CreateVertexBuffer()
+HRESULT  VertexBuffer::CreateVertexBuffer( void*  pData, uint  nVertexCounts, uint  nStride, uint  nOffset )
 {
 		HRESULT  hr = S_OK;
 
@@ -41,14 +48,14 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 		D3D11_BUFFER_DESC  bd;
 		ZeroMemory( &bd, sizeof( D3D11_BUFFER_DESC ) );
 		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof( VERTEX ) * m_numVertexCounts;
+		bd.ByteWidth = nStride * nVertexCounts;
 		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		bd.CPUAccessFlags = 0;
 
 		// サブリソースの設定
 		D3D11_SUBRESOURCE_DATA  initData;
 		ZeroMemory( &initData, sizeof( D3D11_SUBRESOURCE_DATA ) );
-		initData.pSysMem = m_pVertices;
+		initData.pSysMem = pData;
 
 		// 頂点バッファの生成
 		hr = pd3dDevice->CreateBuffer( &bd, &initData, &m_pVertexBuffer );
@@ -58,17 +65,17 @@ HRESULT  VertexBuffer::CreateVertexBuffer()
 				return  hr;
 		}
 
-		m_nStride = sizeof( VERTEX );
-		m_nOffset = 0;
+		m_nVertexCounts = nVertexCounts;
+		m_nOffset = nOffset;
 
 		return  hr;
 }
 
 
-HRESULT  VertexBuffer::CreateIndexBuffer( const  INT*  nPrimitiveVertices, const  UINT  nIndexCounts )
+HRESULT  VertexBuffer::CreateIndexBuffer( const  int*  nPrimitiveVertices, const  uint  nIndexCounts )
 {
 		HRESULT  hr = S_OK;
-		m_numIndexCounts = nIndexCounts;
+		m_nIndexCounts = nIndexCounts;
 
 		// インデックスバッファに頂点データを設定
 		D3D11_BUFFER_DESC  bd;
@@ -95,29 +102,17 @@ HRESULT  VertexBuffer::CreateIndexBuffer( const  INT*  nPrimitiveVertices, const
 }
 
 
-void  VertexBuffer::CreateRasterizer( D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode )
-{
-		D3D11_RASTERIZER_DESC  rdc = {};
-		rdc.CullMode = cullMode;
-		rdc.FillMode = fillMode;
-		rdc.FrontCounterClockwise = TRUE;
-		pd3dDevice->CreateRasterizerState( &rdc, &m_pRasterState );
-}
-
-
 void  VertexBuffer::BindBuffer()
 {
 		// 入力アセンブラに頂点バッファを設定
 		pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVertexBuffer, &m_nStride, &m_nOffset );
 		pd3dDeviceContext->IASetIndexBuffer( m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 
-		// ラスタライズ
-		pd3dDeviceContext->RSSetState( m_pRasterState );
 		// プリミティブの種類を設定
 		pd3dDeviceContext->IASetPrimitiveTopology( primitiveType );
 
 		//if ( m_pIndexBuffer == nullptr )
-		pd3dDeviceContext->Draw( m_numVertexCounts, 0 );
+		pd3dDeviceContext->Draw( m_nVertexCounts, 0 );
 		//else
 		//		pd3dDeviceContext->DrawIndexed( m_numIndexCounts, 0, 0 );
 }

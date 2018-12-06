@@ -10,20 +10,24 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <D3D11Utility\Interface.h>
-#include  <D3D11Utility\Systems\IDirect3D.h>
+#include  <d3d11utility/Interface.h>
+#include  <d3d11utility/Systems\IDirect3D.h>
 #include  <IGraphicsRenderer.h>
-#include  <IRenderable.h>
-#include  <D3D11Utility\Graphics\VertexBuffer.h>
-#include  <D3D11Utility\Graphics\VertexShader.h>
-#include  <D3D11Utility\Graphics\GeometryShader.h>
-#include  <D3D11Utility\Graphics\PixelShader.h>
+#include  <d3d11utility/components/Renderable.h>
+#include  <d3d11utility/systems/FbxLoader.h>
+#include  <unordered_map>
 #include  <vector>
 #include  <Singleton.h>
 
 
 namespace  D3D11Utility
 {
+		enum  eMeshId
+		{
+				eCube,
+				eSphere,
+		};// enum eMeshId
+
 		namespace  Systems
 		{
 
@@ -86,6 +90,7 @@ namespace  D3D11Utility
 						std::vector<Graphics::VertexShader*>  m_vertexShaderList;
 						std::vector<Graphics::GeometryShader*>  m_geometryShaderList;
 						std::vector<Graphics::PixelShader*>  m_pixelShaderList;
+						std::unordered_map<size_t, FbxLoader>  m_fbxLoaderMap;
 
 						/* rendering variables */
 						ID3D11RenderTargetView* m_pRTView = nullptr;
@@ -102,7 +107,8 @@ namespace  D3D11Utility
 						std::vector<RenderTarget>  m_renderTagets;
 						ID3D11Buffer*  m_pVtxBuffer = nullptr;
 						ID3D11SamplerState*  m_sampler = nullptr;
-						ID3D11RasterizerState*  m_rasterState = nullptr;
+						ID3D11RasterizerState*  m_rasterStates[Graphics::MaxRasterMode];
+						Graphics::VertexBuffer*  m_pVertexPtLight;
 						Graphics::VertexShader*  m_pVShader;
 						Graphics::PixelShader*  m_pPShader;
 						Graphics::VertexShader*  m_pClusterVShader;
@@ -128,14 +134,18 @@ namespace  D3D11Utility
 
 						// レンダーターゲットビューの生成 ( MRT用 )
 						HRESULT  CreateMultipleRenderTargetView();
+						Graphics::VertexBuffer*  CreateVertexBuffer( const  FbxLoader&  fbxLoader );
 						Graphics::VertexShader*  CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel = "vs_5_0", UINT  numLayouts = 0, D3D11_INPUT_ELEMENT_DESC*  layouts = nullptr );
 						Graphics::GeometryShader*  CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel = "gs_5_0" );
 						Graphics::PixelShader*  CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel = "ps_5_0" );
+						Graphics::VertexBuffer*  LoadFbxModel( FbxString  fileName );
 
 						/* Getter */
-						Graphics::VertexShader*  GetVertexShader( size_t  index );
-						Graphics::GeometryShader*  GetGeometryShader( size_t  index );
-						Graphics::PixelShader*  GetPixelShader( size_t  index );
+						Graphics::VertexBuffer*  GetVertexBuffer( Graphics::MeshId  index );
+						Graphics::VertexShader*  GetVertexShader( size_t  index )const;
+						Graphics::GeometryShader*  GetGeometryShader( size_t  index )const;
+						Graphics::PixelShader*  GetPixelShader( size_t  index )const;
+						FbxLoader  GetFbxLoader( std::string  fileName )const;
 
 						void  Release();
 						void  Rendering()const;

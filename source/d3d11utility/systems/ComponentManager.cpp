@@ -56,7 +56,9 @@ void  ComponentManager::Release()
 		for ( auto componentTable : m_componentTable )
 		{
 				for ( auto component : componentTable )
-						component->Release();
+				{
+						SafeDelete( component );
+				}
 				componentTable.clear();
 		}
 

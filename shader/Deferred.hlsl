@@ -4,16 +4,13 @@
 
 
 Texture2D<float2> texNormal : register( t0 );
-SamplerState ssNormal : register( s0 );
 Texture2D<float4> texDiffuse : register( t1 );
-SamplerState ssDiffuse : register( s1 );
 Texture2D<float> texSpecular : register( t2 );
-SamplerState ssSpecular : register( s2 );
 Texture2D<float> texDepth : register( t3 );
-SamplerState ssDepth : register( s3 );
 Texture2D<uint> texStencil : register( t4 );
-SamplerState ssStencil : register( s4 );
 Texture2D<uint2> texCluster : register( t5 );
+
+SamplerState samState : register( s0 );
 //RWStructuredBuffer<uint> lightIndices : register( t6 );
 
 
@@ -32,10 +29,10 @@ PSDeferredInput vsmain( VSDeferredInput IN )
 float4 psmain( PSDeferredInput IN ) : SV_Target
 {
     static uint test = 0;
-    float4 diff = texDiffuse.Sample( ssDiffuse, IN.texcoord );
+    float4 diff = texDiffuse.Sample( samState, IN.texcoord );
 
 	// ñ@ê¸ÇÃïúå≥
-    float2 encN = texNormal.Sample( ssNormal, IN.texcoord ).xy;
+    float2 encN = texNormal.Sample( samState, IN.texcoord ).xy;
     float3 nor = OctDecode( encN );
 
     //float depth = texDepth.Sample( ssDepth, IN.texcoord );

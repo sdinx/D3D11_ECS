@@ -111,6 +111,7 @@ namespace  D3D11Utility
 
 		//----------------------------------------------------------------------------------
 		// extern variables
+		// todo: àÍéûìIÇ»Ç‡ÇÃÇ»ÇÃÇ≈îÒêÑèß
 		//----------------------------------------------------------------------------------
 		extern  ID3D11Device*  pd3dDevice;
 		extern  ID3D11DeviceContext*  pd3dDeviceContext;

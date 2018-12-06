@@ -5,6 +5,7 @@
 //----------------------------------------------------------------------------------
 #include  <d3d11utility\components/Camera.h>
 #include  <d3d11utility\components/Renderable.h>
+#include  <d3d11utility\components/PointLight.h>
 #include  <d3d11utility\Systems\ComponentManager.h>
 #include  <d3d11utility\Systems\IDirect3DRenderer.h>
 #include  <d3d11utility\Systems\TextureManager.h>
@@ -36,13 +37,37 @@ IDirect3DRenderer::~IDirect3DRenderer()
 
 void  IDirect3DRenderer::Release()
 {
+		for ( auto& buffer : m_vertexBufferList )
+		{
+				SafeDelete( buffer );
+		}
+		m_vertexBufferList.clear();
+
+		for ( auto& shader : m_vertexShaderList )
+		{
+				SafeDelete( shader );
+		}
 		m_vertexShaderList.clear();
+
+		for ( auto& shader : m_geometryShaderList )
+		{
+				SafeDelete( shader );
+		}
 		m_geometryShaderList.clear();
+
+		for ( auto& shader : m_pixelShaderList )
+		{
+				SafeDelete( shader );
+		}
 		m_pixelShaderList.clear();
 
 		m_renderTagets.clear();
 		m_renderTagets.shrink_to_fit();
 
+		m_fbxLoaderMap.clear();
+		FbxLoader::StaticRelease();
+
+		m_pID3D.~shared_ptr();
 }
 
 
@@ -61,7 +86,8 @@ void  IDirect3DRenderer::Rendering()const
 
 		pd3dDeviceContext->OMSetRenderTargets( RT_ARRAY_COUNTS, rtvs, m_pDSView );
 
-		{/* Begin first rendering */
+		/* Begin first rendering */
+		{
 				static  uint  nCount = 1;
 				static  float  fLastTime = 0.0f;
 				static  float  fAll = 0;
@@ -77,6 +103,7 @@ void  IDirect3DRenderer::Rendering()const
 						render = renderable->GetComponent<Renderable>();
 						textureManager->SetDiffuse( render->m_diffuseId );
 						textureManager->SetNormal( render->m_normalId );
+						pd3dDeviceContext->RSSetState( m_rasterStates[render->m_nRasterMode] );
 						render->Rendering();
 				}
 
@@ -96,24 +123,37 @@ void  IDirect3DRenderer::Rendering()const
 
 		}/* Done first rendering */
 
-		{/* Begin light rendering */
+		/* Begin light rendering */
+		{
 
 				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pClusterRTView, nullptr );
-				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
+				pd3dDeviceContext->ClearRenderTargetView( m_pClusterRTView, m_fClearColors );
 
 				m_pClusterVShader->UpdateShader();
 				m_pClusterPShader->UpdateShader();
 
+				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
+
+				pd3dDeviceContext->RSSetState( m_rasterStates[Graphics::eNoneSolid] );
 				pd3dDeviceContext->PSSetShaderResources( 0, 1, &m_pClusterRTShaderResourceView );
 				pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
 
+				Renderable*  ptRender = nullptr;
+				for ( auto ptLight : m_componentManager->GetComponents<PointLight>() )
+				{
+						ptRender = ptLight->GetComponent<Renderable>();
+						pd3dDeviceContext->UpdateSubresource( ptRender->s_pConstantBuffer, 0, nullptr, &ptRender->m_cbuffer, 0, 0 );
+
+						m_pVertexPtLight->BindBuffer();
+				}
 
 
 				// todo: ライトをインスタンス描画する.
 
 		}/* Done light rendering */
 
-		{/* Begin deferred rendering */
+		 /* Begin deferred rendering */
+		{
 
 				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, nullptr );
 				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
@@ -123,43 +163,41 @@ void  IDirect3DRenderer::Rendering()const
 				uint offset = 0;
 				m_pVShader->UpdateShader();
 				pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVtxBuffer, &stride, &offset );
-				pd3dDeviceContext->RSSetState( m_rasterState );
+				pd3dDeviceContext->RSSetState( m_rasterStates[Graphics::eNoneSolid] );
 
-				constexpr  uint  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 2;
+				constexpr  uint  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 3;
 				ID3D11ShaderResourceView*  srvs[RT_TEXTURE_COUNTS];
-				ID3D11SamplerState*  ss[RT_TEXTURE_COUNTS];
 				int  nSRViewCounts = 0;
 				for ( auto& rt : m_renderTagets )
 				{
 						srvs[nSRViewCounts] = rt.m_pSRView;
-						ss[nSRViewCounts] = m_sampler;
 						nSRViewCounts++;
 				}
 
 				srvs[nSRViewCounts] = m_pDSShaderResourceView;
-				ss[nSRViewCounts] = m_sampler;
 
 				nSRViewCounts++;
 				srvs[nSRViewCounts] = m_pSTShaderResourceView;
-				ss[nSRViewCounts] = m_sampler;
+
+				nSRViewCounts++;
+				srvs[nSRViewCounts] = m_pClusterRTShaderResourceView;
 
 				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvs );
-				pd3dDeviceContext->PSSetSamplers( 0, RT_TEXTURE_COUNTS, ss );
+				pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
 				m_pPShader->UpdateShader();
 
 				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 				pd3dDeviceContext->Draw( 4, 0 );
 
 				ID3D11ShaderResourceView*  srvsClear[RT_TEXTURE_COUNTS];
-				ID3D11SamplerState*  ssClear[RT_TEXTURE_COUNTS];
+				ID3D11SamplerState*  ssClear = nullptr;
 				for ( uint nClear = 0; nClear < RT_TEXTURE_COUNTS; nClear++ )
 				{
 						srvsClear[nClear] = nullptr;
-						ssClear[nClear] = nullptr;
 				}
 
 				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvsClear );
-				pd3dDeviceContext->PSSetSamplers( 0, RT_TEXTURE_COUNTS, ssClear );
+				pd3dDeviceContext->PSSetSamplers( 0, 1, &ssClear );
 
 		}/* Done deferred rendering */
 
@@ -174,6 +212,9 @@ void  IDirect3DRenderer::Rendering()const
 HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 {
 		HRESULT  hr;
+
+		LoadFbxModel( "res/cube.fbx" );
+		LoadFbxModel( "res/sphere.fbx" );
 
 		hr = m_pID3D->GetSwapChain()->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* ) &m_pRTTexture );
 		if ( FAILED( hr ) )
@@ -257,12 +298,26 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 
 
 		// クラスタ用 インプットレイアウト.
-		D3D11_INPUT_ELEMENT_DESC  clLayout[ ] = {
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-		UINT  numClusterLayouts = ARRAYSIZE( clLayout );
-		m_pClusterVShader = CreateVertexShader( L"shader/Light.hlsl", "vsmain", "vs_5_0", numClusterLayouts, clLayout );
-		m_pClusterPShader = CreatePixelShader( L"shader/Light.hlsl", "psmain" );
+		{
+				auto  loader = m_fbxLoaderMap.at( std::hash<std::string>()( "res/sphere.fbx" ) );
+				auto  vertices = loader.GetModelContainer( 0 ).vertices;
+
+				const  uint  size = vertices.size();
+				DirectX::XMFLOAT3*  vertex = new  DirectX::XMFLOAT3[size];
+				for ( uint i = 0; i < size; i++ )
+						vertex[i] = DirectX::XMFLOAT3( vertices[i].m_floats[0], vertices[i].m_floats[1], vertices[i].m_floats[2] );
+
+				Graphics::VertexBuffer*  vtxBuffer = new  Graphics::VertexBuffer( vertex, size, sizeof( DirectX::XMFLOAT3 ), m_vertexBufferList.size(), loader );
+				m_vertexBufferList.emplace_back( vtxBuffer );
+				m_pVertexPtLight = m_vertexBufferList.back();
+
+				D3D11_INPUT_ELEMENT_DESC  clLayout[ ] = {
+						{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				};
+				UINT  numClusterLayouts = ARRAYSIZE( clLayout );
+				m_pClusterVShader = CreateVertexShader( L"shader/Light.hlsl", "vsmain", "vs_5_0", numClusterLayouts, clLayout );
+				m_pClusterPShader = CreatePixelShader( L"shader/Light.hlsl", "psmain" );
+		}
 
 
 		// サンプラーステート.
@@ -287,31 +342,48 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		m_pVShader = CreateVertexShader( L"shader/Deferred.hlsl", "vsmain", "vs_5_0", numLayouts, layout );
 		m_pPShader = CreatePixelShader( L"shader/Deferred.hlsl", "psmain" );
 
-		// ディファードレンダリング用.
-		float  vertex[4 * 9] = {
-				-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
-				1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
-				-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
-				1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
-		};
 
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory( &bd, sizeof( bd ) );
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof( vertex );
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-		D3D11_SUBRESOURCE_DATA InitData;
-		ZeroMemory( &InitData, sizeof( InitData ) );
-		InitData.pSysMem = vertex;
-		pd3dDevice->CreateBuffer( &bd, &InitData, &m_pVtxBuffer );
+		// ディファードレンダリング用頂点バッファ
+		{
+				float  vertex[4 * 9] = {
+						-1.0f, 1.0f, 0.0f,  0.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
+						1.0f, 1.0f, 0.0f,  1.0f,0.0f,  1.0f,1.0f,1.0f,1.0f,
+						-1.0f, -1.0f, 0.0f,  0.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
+						1.0f, -1.0f, 0.0f,  1.0f,1.0f,  1.0f,1.0f,1.0f,1.0f,
+				};
 
-		// カリング.
-		D3D11_RASTERIZER_DESC  rdc = { };
-		rdc.CullMode = D3D11_CULL_NONE;
-		rdc.FillMode = D3D11_FILL_SOLID;
-		rdc.FrontCounterClockwise = TRUE;
-		pd3dDevice->CreateRasterizerState( &rdc, &m_rasterState );
+				D3D11_BUFFER_DESC bd;
+				ZeroMemory( &bd, sizeof( bd ) );
+				bd.Usage = D3D11_USAGE_DEFAULT;
+				bd.ByteWidth = sizeof( vertex );
+				bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+				bd.CPUAccessFlags = 0;
+				D3D11_SUBRESOURCE_DATA InitData;
+				ZeroMemory( &InitData, sizeof( InitData ) );
+				InitData.pSysMem = vertex;
+				pd3dDevice->CreateBuffer( &bd, &InitData, &m_pVtxBuffer );
+		}
+
+
+		// カリング
+		{
+				D3D11_RASTERIZER_DESC  rdc = { };
+				rdc.CullMode = D3D11_CULL_NONE;
+				rdc.FillMode = D3D11_FILL_SOLID;
+				rdc.FrontCounterClockwise = TRUE;
+				pd3dDevice->CreateRasterizerState( &rdc, &m_rasterStates[Graphics::eRasterMode::eNoneSolid] );
+
+				rdc.CullMode = D3D11_CULL_BACK;
+				pd3dDevice->CreateRasterizerState( &rdc, &m_rasterStates[Graphics::eRasterMode::eBackSolid] );
+
+				rdc.CullMode = D3D11_CULL_FRONT;
+				pd3dDevice->CreateRasterizerState( &rdc, &m_rasterStates[Graphics::eRasterMode::eFrontSolid] );
+
+				rdc.CullMode = D3D11_CULL_NONE;
+				rdc.FillMode = D3D11_FILL_WIREFRAME;
+				pd3dDevice->CreateRasterizerState( &rdc, &m_rasterStates[Graphics::eRasterMode::eNoneWireframe] );
+		}
+
 
 		// デプスステンシルステート作成.
 		D3D11_DEPTH_STENCIL_DESC  dsDesc = CD3D11_DEPTH_STENCIL_DESC( CD3D11_DEFAULT() );
@@ -324,6 +396,42 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		return  hr;
 
 }// end CreateMultiRenderTargetView() : HRESULT
+
+
+Graphics::VertexBuffer*  IDirect3DRenderer::CreateVertexBuffer( const  FbxLoader&  fbxLoader )
+{
+		// モデルの情報を取得 ( 0番目のメッシュ情報 )
+		ModelContainer  container = fbxLoader.GetModelContainer( 0 );
+
+		int  i = 0;
+
+		size_t  vertexCount = container.vertices.size();
+		VERTEX*  vertices = new  VERTEX[vertexCount];
+		for ( auto vertex : container.vertices )
+		{
+				vertices[i].position = DirectX::XMFLOAT3( vertex.m_floats[0], vertex.m_floats[1], vertex.m_floats[2] );;
+				i++;
+		}
+
+		i = 0;
+		for ( auto texcoord : container.texcoords )
+		{
+				vertices[i].texcoord = texcoord;
+				i++;
+		}
+
+		i = 0;
+		for ( auto normal : container.normals )
+		{
+				vertices[i].normal = DirectX::XMFLOAT3( normal.m_floats[0], normal.m_floats[1], normal.m_floats[2] );
+				i++;
+		}
+
+		Graphics::VertexBuffer*  vtxBuffer = new  Graphics::VertexBuffer( vertices, vertexCount, m_vertexBufferList.size(), fbxLoader );
+		m_vertexBufferList.emplace_back( vtxBuffer );
+
+		return  m_vertexBufferList.back();
+}
 
 
 Graphics::VertexShader*  IDirect3DRenderer::CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel, UINT  numLayouts, D3D11_INPUT_ELEMENT_DESC*  layouts )
@@ -498,7 +606,17 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 }
 
 
-Graphics::VertexShader*  IDirect3DRenderer::GetVertexShader( size_t  index )
+Graphics::VertexBuffer*  IDirect3DRenderer::GetVertexBuffer( Graphics::MeshId  index )
+{
+		if ( ( size_t ) index < m_vertexBufferList.size() )
+				return  m_vertexBufferList[index];
+
+		printf( "<IDirect3DRenderer> GetVertexBuffer( %d ) invalid value.\n", index );
+		return  nullptr;
+}
+
+
+Graphics::VertexShader*  IDirect3DRenderer::GetVertexShader( size_t  index )const
 {
 		if ( index < m_vertexShaderList.size() )
 				return  m_vertexShaderList[index];
@@ -508,7 +626,7 @@ Graphics::VertexShader*  IDirect3DRenderer::GetVertexShader( size_t  index )
 }
 
 
-Graphics::GeometryShader*  IDirect3DRenderer::GetGeometryShader( size_t  index )
+Graphics::GeometryShader*  IDirect3DRenderer::GetGeometryShader( size_t  index )const
 {
 		if ( index < m_geometryShaderList.size() )
 				return  m_geometryShaderList[index];
@@ -518,11 +636,34 @@ Graphics::GeometryShader*  IDirect3DRenderer::GetGeometryShader( size_t  index )
 }
 
 
-Graphics::PixelShader*  IDirect3DRenderer::GetPixelShader( size_t  index )
+Graphics::PixelShader*  IDirect3DRenderer::GetPixelShader( size_t  index )const
 {
 		if ( index < m_pixelShaderList.size() )
 				return  m_pixelShaderList[index];
 
 		printf( "<IDirect3DRenderer> GetPixelShader( %d ) invalid value.\n", index );
 		return  nullptr;
+}
+
+
+FbxLoader  IDirect3DRenderer::GetFbxLoader( std::string  fileName )const
+{
+		size_t  meshHash = std::hash<std::string>()( fileName );
+
+#if  defined  (DEBUG) || (_DEBUG)
+		return  m_fbxLoaderMap.at( meshHash );// 範囲外指定時に例外を投げる.
+#else// RELEASE
+		return  m_fbxLoaderMap[meshHash];// 範囲外指定時に例外を投げないで要素数拡張.
+#endif
+}
+
+
+Graphics::VertexBuffer*  IDirect3DRenderer::LoadFbxModel( FbxString  fileName )
+{
+		std::string  strName = fileName;
+		size_t  meshHash = std::hash<std::string>()( strName );
+
+		m_fbxLoaderMap.emplace( meshHash, fileName );
+
+		return  CreateVertexBuffer( m_fbxLoaderMap.at( meshHash ) );
 }

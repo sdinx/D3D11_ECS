@@ -26,12 +26,27 @@ namespace  D3D11Utility
 				class  ComponentManager;
 				class  DebugSystem;
 				class  EntityManager;
+				class  FbxLoader;
 				class  SystemManager;
 				class  TextureManager;
 				class  PhysicalSystem;
 				class  BulletEngine;
 
 		}// namespace Systems
+
+		namespace  Graphics
+		{
+
+				enum eRasterMode
+				{
+						eNoneSolid,
+						eBackSolid,
+						eFrontSolid,
+						eNoneWireframe,
+						MaxRasterMode
+				};// enum eRasterMode
+
+		}// namespace Graphics
 
 		class  Entity;
 		class  IEntity;

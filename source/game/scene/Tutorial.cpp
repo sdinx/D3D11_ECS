@@ -119,6 +119,12 @@ void  Tutorial::Awake()
 		auto  btEngine = m_pSystemManager->AddSystem<BulletEngine>();
 
 
+		/* FBXモデル読み込み */
+		//Graphics::VertexBuffer*  vtxMutant = m_pd3dRenderer->LoadFbxModel( "res/mutant.fbx" );
+		Graphics::VertexBuffer*  vtxRifle = m_pd3dRenderer->LoadFbxModel( "res/rifle.fbx" );
+		Graphics::VertexBuffer*  vtxFubuking = m_pd3dRenderer->LoadFbxModel( "res/fubuking.fbx" );
+
+
 		/* テクスチャ作成 */
 		Graphics::TextureId  texId = m_pTextureManager->CreateTexture( L"res/blick_diffuse.png" );
 		Graphics::TextureId  texNormalId = m_pTextureManager->CreateTexture( L"res/blick_normal.png" );
@@ -149,7 +155,7 @@ void  Tutorial::Awake()
 		// 弾丸のベースとなるエンティティを作成
 		static  const  EntityId  bulletId = m_pEntityManager->CreateEntity( "Bullet" );
 		Entity*  bulletEntity = m_pEntityManager->GetEntity( bulletId );
-		bulletEntity->AddComponent<Renderable>( "res/cube.fbx", D3D11_CULL_FRONT );
+		bulletEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eFrontSolid );
 		bulletEntity->AddComponent<Transform>();
 		Renderable*  bulletRender = bulletEntity->GetComponent<Renderable>();
 		Transform*  bulletTrans = bulletEntity->GetComponent<Transform>();
@@ -167,7 +173,7 @@ void  Tutorial::Awake()
 		/* Init Cube */
 		static  const  EntityId  cubeId = m_pEntityManager->CreateEntity( "Cube" );
 		Entity*  cubeEntity = m_pEntityManager->GetEntity( cubeId );
-		cubeEntity->AddComponent<Renderable>( "res/cube.fbx", D3D11_CULL_NONE );
+		cubeEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eNoneSolid );
 		cubeEntity->AddComponent<Transform>();
 		Renderable*  cubeRender = cubeEntity->GetComponent<Renderable>();
 		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
@@ -186,7 +192,7 @@ void  Tutorial::Awake()
 		/* Init SkySphere */
 		static  const  EntityId  sphereId = m_pEntityManager->CreateEntity( "SkySphere" );
 		Entity*  sphereEntity = m_pEntityManager->GetEntity( sphereId );
-		sphereEntity->AddComponent<Renderable>( "res/sphere.fbx", D3D11_CULL_BACK );
+		sphereEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eBackSolid );
 		sphereEntity->AddComponent<Transform>();
 		Renderable*  sphereRender = sphereEntity->GetComponent<Renderable>();
 		Transform*  sphereTrans = sphereEntity->GetComponent<Transform>();
@@ -207,7 +213,7 @@ void  Tutorial::Awake()
 		static  const  EntityId  rifleId = m_pEntityManager->CreateEntity( "Rifle" );
 		Entity*  rifleEntity = m_pEntityManager->GetEntity( rifleId );
 		rifleEntity->SetTag( "Player" );
-		rifleEntity->AddComponent<Renderable>( "res/rifle.fbx" );
+		rifleEntity->AddComponent<Renderable>( vtxRifle );
 		rifleEntity->AddComponent<Transform>();
 		Renderable*  rifleRender = rifleEntity->GetComponent<Renderable>();
 		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
@@ -227,7 +233,7 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
-		m_playerEntity->AddComponent<Renderable>( "res/fubuking.fbx" );
+		m_playerEntity->AddComponent<Renderable>( vtxFubuking );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( psBump );
@@ -260,7 +266,7 @@ void  Tutorial::Awake()
 		Entity*  ptLightEntity = m_pEntityManager->GetEntity( ptLightId );
 		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector4( 1, 1, 1, 1 ), Vector3( 0.5f, 0.1f, 0.1f ) );
 		Transform*  ptLightTrans = ptLightEntity->AddComponent<Transform>();
-		Renderable*  ptLightRender = ptLightEntity->AddComponent<Renderable>( "res/sphere.fbx" );
+		Renderable*  ptLightRender = ptLightEntity->AddComponent<Renderable>( eMeshId::eSphere );
 		{
 				ptLightTrans->SetPosition( 0.5f, 6, -0.2f );
 				ptLightTrans->SetScale( 0.2f );
@@ -335,5 +341,7 @@ void  Tutorial::Update()
 
 void  Tutorial::Release()
 {
+		m_pTextureManager.~shared_ptr();
+		m_pd3dRenderer.~shared_ptr();
 		exit( 0 );
 }

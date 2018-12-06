@@ -4,8 +4,8 @@
 #include  <d3d11utility\components/Renderable.h>
 #include  <d3d11utility\components/Transform.h>
 #include  <d3d11utility\Systems\ComponentManager.h>
+#include  <d3d11utility\Systems\IDirect3DRenderer.h>
 #include  <d3d11utility\Systems\TextureManager.h>
-#include  <d3d11utility\Systems\FbxLoader.h>
 #include  <DirectXMath.h>
 #include  <omp.h>
 
@@ -32,94 +32,70 @@ Renderable::Renderable() :
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
+		m_meshId( 0 ),
 		m_diffuseId( TEXTURE_ID_INVALID ),
 		m_normalId( TEXTURE_ID_INVALID )
 {
 
 }
 
+/*
+Renderable::Renderable( LPCSTR  fileName, Graphics::eRasterMode  rasterMode ) :
+		m_pVertexShader( nullptr ),
+		m_pGeometryShader( nullptr ),
+		m_pPixelShader( nullptr ),
+		m_meshId( 0 ),
+		m_diffuseId( TEXTURE_ID_INVALID ),
+		m_normalId( TEXTURE_ID_INVALID ),
+		m_nRasterMode( rasterMode )
+{
+		m_isRendering = true;
+}
+*/
 
-Renderable::Renderable( ePrimitiveType  primitiveType, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
+Renderable::Renderable( Graphics::MeshId  meshId, Graphics::eRasterMode  rasterMode ) :
 		m_pVertexBuffer( nullptr ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
+		m_meshId( meshId ),
 		m_diffuseId( TEXTURE_ID_INVALID ),
-		m_normalId( TEXTURE_ID_INVALID )
+		m_normalId( TEXTURE_ID_INVALID ),
+		m_nRasterMode( rasterMode )
 {
 		m_isRendering = true;
+		m_pRenderer = _Singleton<Systems::IDirect3DRenderer>::GetInstance();
 
-		/* 頂点の設定 */
-		VERTEX*  vertices;
-		INT* indices;
-		// 定数指定でプリミティブの頂点を生成
-		UINT  numVertices = CreatePrimitive( primitiveType, Vector3( 0, 0, 0 ), Vector3( 1.0f, 1.0f, 1.0f ), vertices, indices );
-		m_pVertexBuffer = new  VertexBuffer( vertices, numVertices );
+		m_pVertexBuffer = m_pRenderer->GetVertexBuffer( meshId );
 
-		/* インデックス頂点の設定 */
-		UINT  numIndex = numVertices * 6;
-		m_pVertexBuffer->CreateIndexBuffer( indices, numIndex );
-
-		XMStoreFloat4x4( &m_cbuffer.world, XMMatrixTranslation( 0, 0, 0 ) );
-		// カリング設定
-		m_pVertexBuffer->CreateRasterizer( cullMode, fillMode );
-
-		delete[ ]  vertices;
+		auto  fbxLoader = m_pVertexBuffer->GetFbxLoader();
+		Material  material = fbxLoader->GetMaterial( 0 );
+		this->SetDiffuse( material.diffuse );
+		this->SetAmbient( material.ambient );
+		this->SetSpecular( material.specular );
 }
 
 
-Renderable::Renderable( LPCSTR  fbxString, D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode ) :
-		m_pVertexBuffer( nullptr ),
+Renderable::Renderable( Graphics::VertexBuffer*  pVertexBuffer, Graphics::eRasterMode  rasterMode ) :
+		m_pVertexBuffer( pVertexBuffer ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
+		m_meshId( 0 ),
 		m_diffuseId( TEXTURE_ID_INVALID ),
-		m_normalId( TEXTURE_ID_INVALID )
+		m_normalId( TEXTURE_ID_INVALID ),
+		m_nRasterMode( rasterMode )
 {
 		m_isRendering = true;
+		m_pRenderer = _Singleton<Systems::IDirect3DRenderer>::GetInstance();
 
-		// 指定ディレクトリのFBXモデルをロード
-		Systems::FbxLoader  loader( fbxString );
-		// モデルの情報を取得 ( 0番目のメッシュ情報 )
-		ModelContainer  container = loader.GetModelContainer( 0 );
+		m_pVertexBuffer = m_pRenderer->GetVertexBuffer( pVertexBuffer->GetMeshId() );
 
-		INT  i = 0;
-
-		INT  vertexCount = container.vertices.size();
-		VERTEX*  vertices = new  VERTEX[vertexCount];
-		for ( auto vertex : container.vertices )
-		{
-				vertices[i].position = DirectX::XMFLOAT3( vertex.m_floats[0], vertex.m_floats[1], vertex.m_floats[2] );;
-				i++;
-		}
-
-		i = 0;
-		for ( auto texcoord : container.texcoords )
-		{
-				vertices[i].texcoord = texcoord;
-				i++;
-		}
-
-		i = 0;
-		for ( auto normal : container.normals )
-		{
-				vertices[i].normal = DirectX::XMFLOAT3( normal.m_floats[0], normal.m_floats[1], normal.m_floats[2] );
-				i++;
-		}
-
-		int ad = ( int ) vertices[4].normal.x;
-		m_pVertexBuffer = new  VertexBuffer( vertices, ( UINT ) vertexCount );
-
-		SetDiffuse( loader.GetMaterial( 0 ).diffuse );
-
-		// note: インデックスが正しく設定されていない?
-		//m_pVertexBuffer->CreateIndexBuffer( container.indices.data(), container.indices.size() );
-
-		m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, fillMode );
-		//m_pVertexBuffer->CreateRasterizer( D3D11_CULL_NONE, fillMode );
-
-
-		delete[ ]  vertices;
+		auto  fbxLoader = m_pVertexBuffer->GetFbxLoader();
+		Material  material = fbxLoader->GetMaterial( 0 );
+		this->SetDiffuse( material.diffuse );
+		this->SetAmbient( material.ambient );
+		this->SetSpecular( material.specular );
 }
 
 
@@ -175,6 +151,7 @@ void  Renderable::Rendering()const
 		*/
 
 		m_pVertexBuffer->BindBuffer();
+
 }
 
 
@@ -234,5 +211,5 @@ void  Renderable::SetNormalTexId( Graphics::TextureId  textureId )
 
 void  Renderable::Release()
 {
-		SafeRelease( m_pVertexBuffer );
+		//m_pRenderer.~shared_ptr();
 }

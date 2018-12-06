@@ -15,6 +15,7 @@
 // Includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility.h>
+#include  <d3d11utility/Interface.h>
 #include  <d3d11.h>
 #include  <DirectXMath.h>
 
@@ -24,6 +25,8 @@ namespace  D3D11Utility
 
 		namespace  Graphics
 		{
+				using  MeshId = int;
+
 				class  VertexBuffer
 				{
 
@@ -33,8 +36,8 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						VertexBuffer() = delete;
-						VertexBuffer( VERTEX*  pVertices, UINT  numVertexCounts );
-						VertexBuffer( ePrimitiveType  primitiveType );
+						VertexBuffer( VERTEX*  pVertices, uint  nVertexCounts, const  MeshId  meshId, const  Systems::FbxLoader&  fbxLoader );
+						VertexBuffer( void*  pData, uint  nVertexCounts, uint  nStride, const  MeshId  meshId, const  Systems::FbxLoader&  fbxLoader );
 						~VertexBuffer();
 
 
@@ -46,18 +49,19 @@ namespace  D3D11Utility
 						// プリミティブの種類
 						D3D_PRIMITIVE_TOPOLOGY  primitiveType = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 						// 頂点数
-						UINT  m_numVertexCounts;
+						uint  m_nVertexCounts;
 						// インデックスデータ数
-						UINT  m_numIndexCounts;
+						uint  m_nIndexCounts;
 						// 頂点データ
 						VERTEX*  m_pVertices = nullptr;
 						// 頂点バッファ
 						ID3D11Buffer*  m_pVertexBuffer = nullptr;
 						ID3D11Buffer*  m_pIndexBuffer = nullptr;
 
-						ID3D11RasterizerState*  m_pRasterState = nullptr;
-						UINT  m_nStride;
-						UINT  m_nOffset = 0;
+						const  Systems::FbxLoader*  m_fbxLoader;
+						const  MeshId  m_meshId;
+						const  uint  m_nStride;
+						uint  m_nOffset = 0;
 
 
 				public:
@@ -78,9 +82,17 @@ namespace  D3D11Utility
 						//----------------------------------------------------------------------------------
 
 						// 頂点バッファの生成と設定
-						HRESULT  CreateVertexBuffer();
-						HRESULT  CreateIndexBuffer( const  INT*  nPrimitiveVertices, const  UINT  nIndexCounts );
-						void  CreateRasterizer( D3D11_CULL_MODE  cullMode, D3D11_FILL_MODE  fillMode );
+						HRESULT  CreateVertexBuffer( void*  pData, uint  nVertexCounts, uint  nStride, uint  nOffset = 0 );
+						HRESULT  CreateIndexBuffer( const  int*  nPrimitiveVertices, const  uint  nIndexCounts );
+						// Getter
+						MeshId  GetMeshId()
+						{
+								return  m_meshId;
+						}
+						const  Systems::FbxLoader*  GetFbxLoader()
+						{
+								return  m_fbxLoader;
+						}
 						// 描画を行うときに呼び出す
 						void  BindBuffer();
 						void  Release();

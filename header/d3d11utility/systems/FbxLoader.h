@@ -109,19 +109,23 @@ namespace  D3D11Utility
 						{
 								return  s_pFbxManager;
 						}
+						static  void  StaticRelease()
+						{
+								s_pFbxManager->Destroy();
+						}
 
 						void  LoadFbxModel( FbxScene*  pScene );
-						uint32  GetModelCounts()
+						uint32  GetModelCounts()const
 						{
 								return  m_modelContainer.size();
 						}
-						ModelContainer  GetModelContainer( uint  i )
+						ModelContainer  GetModelContainer( uint  i )const
 						{
 								if ( m_modelContainer.size() > i )
 										return  m_modelContainer[i];
 								return  ModelContainer();
 						}
-						Material  GetMaterial( uint  i )
+						Material  GetMaterial( uint  i )const
 						{
 								if ( m_materials.size() > i )
 										return  m_materials[i];
