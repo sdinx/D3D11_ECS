@@ -16,7 +16,7 @@ HRESULT  D3D11Utility::CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEnt
 
 		// コンパイルフラグ
 		DWORD  dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
-		
+
 
 #if  defined(DEBUG)  ||  defined(_DEBUG)
 		dwShaderFlags |= D3DCOMPILE_DEBUG;
