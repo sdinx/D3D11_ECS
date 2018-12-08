@@ -24,7 +24,7 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-		m_textures.clear();
+		Release();
 }
 
 
@@ -195,5 +195,6 @@ void  TextureManager::SetNormal( Graphics::TextureId  textureId )
 
 void  TextureManager::Release()
 {
-
+		for ( auto& texture : m_textures )
+				SafeDelete( texture );
 }

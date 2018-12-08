@@ -12,6 +12,7 @@ struct LightVSInput
 struct LightPSInput
 {
     float4 position : SV_POSITION;
+    uint index : SV_RenderTargetArrayIndex;
 };
 
 
@@ -33,8 +34,25 @@ LightPSInput vsmain( LightVSInput IN )
 
 	// ŽË‰e‹óŠÔ‚É•ÏŠ·
     OUT.position = mul( g_proj, OUT.position );
+    OUT.index = 5;
 
     return OUT;
+}
+
+
+[maxvertexcount( 3 )]
+void gsmain( triangle LightVSInput IN[3], inout TriangleStream<LightPSInput> triOutputStream )
+{
+    LightPSInput OUT = (LightPSInput) 0;
+	
+    for ( int i = 0; i < 3; ++i )
+    {
+        OUT.position = IN[i].position;
+        OUT.index = 5;
+
+        triOutputStream.Append( OUT );
+    }
+
 }
 
 

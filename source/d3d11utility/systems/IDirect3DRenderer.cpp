@@ -64,6 +64,12 @@ void  IDirect3DRenderer::Release()
 		m_renderTagets.clear();
 		m_renderTagets.shrink_to_fit();
 
+		SafeRelease( m_pVtxBuffer );
+		SafeRelease( m_sampler );
+
+		for ( auto& rs : m_rasterStates )
+				SafeRelease( rs );
+
 		m_fbxLoaderMap.clear();
 		FbxLoader::StaticRelease();
 
@@ -82,9 +88,9 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->ClearRenderTargetView( rt.m_pRTView, m_fClearColors );
 				i++;
 		}
-		pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
+		pd3dDeviceContext->ClearDepthStencilView( m_pDSView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
-		pd3dDeviceContext->OMSetRenderTargets( RT_ARRAY_COUNTS, rtvs, m_pDSView );
+		pd3dDeviceContext->OMSetRenderTargets( RT_ARRAY_COUNTS, rtvs, m_pDSView.Get() );
 
 		/* Begin first rendering */
 		{
@@ -95,7 +101,7 @@ void  IDirect3DRenderer::Rendering()const
 				uint  i = 0;
 				Renderable*  render;
 				auto  textureManager = _Singleton<TextureManager>::GetInstance();
-				pd3dDeviceContext->OMSetDepthStencilState( m_pDepthStencilState, 0 );
+				pd3dDeviceContext->OMSetDepthStencilState( m_pDepthStencilState.Get(), 0 );
 
 				for ( auto renderable : m_componentManager->GetComponents<Renderable>() )
 				{
@@ -125,18 +131,19 @@ void  IDirect3DRenderer::Rendering()const
 
 		/* Begin light rendering */
 		{
-
-				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pClusterRTView, nullptr );
-				pd3dDeviceContext->ClearRenderTargetView( m_pClusterRTView, m_fClearColors );
+				ID3D11RenderTargetView*  srv = m_pClusterRTView.Get();
+				pd3dDeviceContext->ClearRenderTargetView( m_pClusterRTView.Get(), m_fClearColors );
+				pd3dDeviceContext->OMSetRenderTargets( 1, &srv, nullptr );
 
 				m_pClusterVShader->UpdateShader();
+				//m_pClusterGShader->UpdateShader();
 				m_pClusterPShader->UpdateShader();
 
 				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 
 				pd3dDeviceContext->RSSetState( m_rasterStates[Graphics::eNoneSolid] );
-				pd3dDeviceContext->PSSetShaderResources( 0, 1, &m_pClusterRTShaderResourceView );
-				pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
+				pd3dDeviceContext->PSSetShaderResources( 0, 0, nullptr );
+				pd3dDeviceContext->PSSetSamplers( 0, 0, nullptr );
 
 				Renderable*  ptRender = nullptr;
 				for ( auto ptLight : m_componentManager->GetComponents<PointLight>() )
@@ -147,6 +154,7 @@ void  IDirect3DRenderer::Rendering()const
 						m_pVertexPtLight->BindBuffer();
 				}
 
+				pd3dDeviceContext->GSSetShader( nullptr, nullptr, 0 );
 
 				// todo: ライトをインスタンス描画する.
 
@@ -155,8 +163,9 @@ void  IDirect3DRenderer::Rendering()const
 		 /* Begin deferred rendering */
 		{
 
-				pd3dDeviceContext->OMSetRenderTargets( 1, &m_pRTView, nullptr );
-				pd3dDeviceContext->ClearRenderTargetView( m_pRTView, m_fClearColors );
+				ID3D11RenderTargetView*  defRtv = m_pRTView.Get();
+				pd3dDeviceContext->ClearRenderTargetView( m_pRTView.Get(), m_fClearColors );
+				pd3dDeviceContext->OMSetRenderTargets( 1, &defRtv, nullptr );
 				//pd3dDeviceContext->ClearDepthStencilView( m_pDSView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 				uint stride = 36;
@@ -174,13 +183,13 @@ void  IDirect3DRenderer::Rendering()const
 						nSRViewCounts++;
 				}
 
-				srvs[nSRViewCounts] = m_pDSShaderResourceView;
+				srvs[nSRViewCounts] = m_pDSShaderResourceView.Get();
 
 				nSRViewCounts++;
-				srvs[nSRViewCounts] = m_pSTShaderResourceView;
+				srvs[nSRViewCounts] = m_pSTShaderResourceView.Get();
 
 				nSRViewCounts++;
-				srvs[nSRViewCounts] = m_pClusterRTShaderResourceView;
+				srvs[nSRViewCounts] = m_pClusterRTShaderResourceView.Get();
 
 				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvs );
 				pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
@@ -221,12 +230,12 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				return hr;
 
 		// レンダーターゲットビューを生成
-		hr = pd3dDevice->CreateRenderTargetView( m_pRTTexture, NULL, &m_pRTView );
+		hr = pd3dDevice->CreateRenderTargetView( m_pRTTexture.Get(), NULL, &m_pRTView );
 		if ( FAILED( hr ) )
 				return hr;
 
 		// レンダーターゲットのシェーダリソースビューを生成
-		hr = pd3dDevice->CreateShaderResourceView( m_pRTTexture, NULL, &m_pRTShaderResourceView );
+		hr = pd3dDevice->CreateShaderResourceView( m_pRTTexture.Get(), NULL, &m_pRTShaderResourceView );
 		if ( FAILED( hr ) )
 				return  hr;
 
@@ -264,10 +273,6 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 		texDescs[2].Format = DXGI_FORMAT_R8_UNORM;// ディフューズ同様でAの値は強度を表す.
 		texDescs[2].BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-		// クラスタ
-		texDesc.Format = DXGI_FORMAT_R32G32_UINT;// R32 : offset, G32 : [PointLightCount, SpotLightCount]
-		texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-
 		m_renderTagets.resize( descSize );
 
 		for ( int i = 0; i < descSize; i++ )
@@ -286,20 +291,60 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 
 
 		// クラスタ用 SRV 作成.
-		hr = pd3dDevice->CreateTexture2D( &texDesc, nullptr, &m_pClusterRTTexture );
-		if ( FAILED( hr ) )
 		{
-				printf( "<IDirect3DRenderer> CreateMultiRenderTargetView() failed : 232" );
-				return  hr;
-		}// end if
+				D3D11_TEXTURE3D_DESC  tex3dDesc;
+				ZeroMemory( &tex3dDesc, sizeof( tex3dDesc ) );
+				tex3dDesc.Width = screen.x;
+				tex3dDesc.Height = screen.y;
+				tex3dDesc.Depth = 16;
+				tex3dDesc.MipLevels = 1;
+				tex3dDesc.Format = DXGI_FORMAT_R32G32_UINT;// R32 : offset, G32 : [PointLightCount, SpotLightCount]
+				tex3dDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+				tex3dDesc.Usage = D3D11_USAGE_DEFAULT;
+				tex3dDesc.CPUAccessFlags = 0;
+				tex3dDesc.MiscFlags = 0;
 
-		hr = pd3dDevice->CreateRenderTargetView( m_pClusterRTTexture, nullptr, &m_pClusterRTView );
-		hr = pd3dDevice->CreateShaderResourceView( m_pClusterRTTexture, nullptr, &m_pClusterRTShaderResourceView );
+				hr = pd3dDevice->CreateTexture3D( &tex3dDesc, nullptr, &m_pClusterRTTexture );
+				if ( FAILED( hr ) )
+				{
+						printf( "<IDirect3DRenderer> CreateMultiRenderTargetView() failed : 232" );
+						return  hr;
+				}// end if
 
+				D3D11_RENDER_TARGET_VIEW_DESC  rtDesc;
+				rtDesc.Format = tex3dDesc.Format;
+				rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+				rtDesc.Texture3D.WSize = 16;
+				rtDesc.Texture3D.FirstWSlice = 0;
+				rtDesc.Texture3D.MipSlice = 0;
+
+				hr = pd3dDevice->CreateRenderTargetView( m_pClusterRTTexture.Get(), nullptr, &m_pClusterRTView );
+
+				D3D11_SHADER_RESOURCE_VIEW_DESC  srvDesc;
+				ZeroMemory( &srvDesc, sizeof( srvDesc ) );
+				srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+				srvDesc.Texture3D.MipLevels = tex3dDesc.MipLevels;
+				srvDesc.Texture3D.MostDetailedMip = 0;
+				srvDesc.Format = tex3dDesc.Format;
+
+				hr = pd3dDevice->CreateShaderResourceView( m_pClusterRTTexture.Get(), nullptr, &m_pClusterRTShaderResourceView );
+
+				// UAV作成
+				D3D11_UNORDERED_ACCESS_VIEW_DESC  uavDesc;
+				ZeroMemory( &uavDesc, sizeof( uavDesc ) );
+				uavDesc.Format = tex3dDesc.Format;
+				uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE3D;
+				uavDesc.Texture3D.WSize = 16;
+				uavDesc.Texture3D.FirstWSlice = 0;
+				uavDesc.Texture3D.MipSlice = 0;
+
+				//pd3dDevice->CreateUnorderedAccessView( m_pClusterRTTexture.Get(), &uavDesc, &m_pClusterUAV );
+
+		}
 
 		// クラスタ用 インプットレイアウト.
 		{
-				auto  loader = m_fbxLoaderMap.at( std::hash<std::string>()( "res/sphere.fbx" ) );
+				auto&  loader = m_fbxLoaderMap.at( std::hash<std::string>()( "res/sphere.fbx" ) );
 				auto  vertices = loader.GetModelContainer( 0 ).vertices;
 
 				const  uint  size = vertices.size();
@@ -316,6 +361,7 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				};
 				UINT  numClusterLayouts = ARRAYSIZE( clLayout );
 				m_pClusterVShader = CreateVertexShader( L"shader/Light.hlsl", "vsmain", "vs_5_0", numClusterLayouts, clLayout );
+				m_pClusterGShader = CreateGeometryShader( L"shader/Light.hlsl", "gsmain" );
 				m_pClusterPShader = CreatePixelShader( L"shader/Light.hlsl", "psmain" );
 		}
 

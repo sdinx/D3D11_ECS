@@ -18,6 +18,7 @@
 #include  <unordered_map>
 #include  <vector>
 #include  <Singleton.h>
+#include  <wrl/client.h>
 
 
 namespace  D3D11Utility
@@ -30,6 +31,7 @@ namespace  D3D11Utility
 
 		namespace  Systems
 		{
+				using  namespace  Microsoft;
 
 				class  IDirect3DRenderer :public  IGraphicsRenderer, public  _Singleton<IDirect3DRenderer>
 				{
@@ -60,7 +62,7 @@ namespace  D3D11Utility
 										SafeRelease( m_pTexture );
 										SafeRelease( m_pSRView );
 								}
-
+								
 								eViews  m_numViews;
 								ID3D11RenderTargetView* m_pRTView = nullptr;
 								ID3D11Texture2D*  m_pTexture = nullptr;
@@ -93,17 +95,18 @@ namespace  D3D11Utility
 						std::unordered_map<size_t, FbxLoader>  m_fbxLoaderMap;
 
 						/* rendering variables */
-						ID3D11RenderTargetView* m_pRTView = nullptr;
-						ID3D11RenderTargetView* m_pClusterRTView = nullptr;
-						ID3D11DepthStencilView*  m_pDSView = nullptr;
-						ID3D11Texture2D*  m_pRTTexture = nullptr;
-						ID3D11Texture2D*  m_pClusterRTTexture = nullptr;
-						ID3D11Texture2D*  m_pDSTexture = nullptr;
-						ID3D11ShaderResourceView*  m_pRTShaderResourceView = nullptr;
-						ID3D11ShaderResourceView*  m_pClusterRTShaderResourceView = nullptr;
-						ID3D11ShaderResourceView*  m_pDSShaderResourceView = nullptr;
-						ID3D11ShaderResourceView*  m_pSTShaderResourceView = nullptr;
-						ID3D11DepthStencilState*  m_pDepthStencilState;
+						WRL::ComPtr<ID3D11RenderTargetView>  m_pRTView = nullptr;
+						WRL::ComPtr<ID3D11RenderTargetView>  m_pClusterRTView = nullptr;
+						WRL::ComPtr<ID3D11DepthStencilView>  m_pDSView = nullptr;
+						WRL::ComPtr<ID3D11Texture2D>  m_pRTTexture = nullptr;
+						WRL::ComPtr<ID3D11Texture2D>  m_pDSTexture = nullptr;
+						WRL::ComPtr<ID3D11Texture3D>  m_pClusterRTTexture = nullptr;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pRTShaderResourceView = nullptr;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pClusterRTShaderResourceView = nullptr;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pDSShaderResourceView = nullptr;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pSTShaderResourceView = nullptr;
+						WRL::ComPtr<ID3D11UnorderedAccessView>  m_pClusterUAV = nullptr;
+						WRL::ComPtr<ID3D11DepthStencilState>  m_pDepthStencilState;
 						std::vector<RenderTarget>  m_renderTagets;
 						ID3D11Buffer*  m_pVtxBuffer = nullptr;
 						ID3D11SamplerState*  m_sampler = nullptr;
@@ -112,6 +115,7 @@ namespace  D3D11Utility
 						Graphics::VertexShader*  m_pVShader;
 						Graphics::PixelShader*  m_pPShader;
 						Graphics::VertexShader*  m_pClusterVShader;
+						Graphics::GeometryShader*  m_pClusterGShader;
 						Graphics::PixelShader*  m_pClusterPShader;
 						FLOAT  m_fClearColors[4] = { 0.0f,0.125f,0.3f,1.0f };
 

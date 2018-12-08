@@ -8,7 +8,7 @@ Texture2D<float4> texDiffuse : register( t1 );
 Texture2D<float> texSpecular : register( t2 );
 Texture2D<float> texDepth : register( t3 );
 Texture2D<uint> texStencil : register( t4 );
-Texture2D<uint2> texCluster : register( t5 );
+Texture3D<uint2> texCluster : register( t5 );
 
 SamplerState samState : register( s0 );
 //RWStructuredBuffer<uint> lightIndices : register( t6 );

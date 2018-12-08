@@ -23,7 +23,7 @@ Texture::Texture( ID3D11Texture2D*  texture, ID3D11ShaderResourceView*  shaderRe
 
 Texture::~Texture()
 {
-
+		Release();
 }
 
 
@@ -36,5 +36,7 @@ void  Texture::SetTexture( uint  slot )
 
 void  Texture::Release()
 {
-
+		SafeRelease( m_sampler );
+		SafeRelease( m_texture );
+		SafeRelease( m_shaderResourceView );
 }// end Release() : void

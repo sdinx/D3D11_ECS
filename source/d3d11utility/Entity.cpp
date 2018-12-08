@@ -22,7 +22,7 @@ Entity::Entity( std::string  name, UINT  id, Systems::ComponentManager*  pCompon
 
 Entity::~Entity()
 {
-
+		Release();
 }// end destractor
 
 

@@ -155,7 +155,7 @@ void  Tutorial::Awake()
 		// 弾丸のベースとなるエンティティを作成
 		static  const  EntityId  bulletId = m_pEntityManager->CreateEntity( "Bullet" );
 		Entity*  bulletEntity = m_pEntityManager->GetEntity( bulletId );
-		bulletEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eFrontSolid );
+		bulletEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eFrontSolid );
 		bulletEntity->AddComponent<Transform>();
 		Renderable*  bulletRender = bulletEntity->GetComponent<Renderable>();
 		Transform*  bulletTrans = bulletEntity->GetComponent<Transform>();

@@ -37,6 +37,8 @@ void  EntityManager::ReleaseEntity( Entity*  entity )
 
 void  EntityManager::Release()
 {
+		for ( auto& entity : m_entityList )
+				SafeDelete( entity );
 		m_entityList.clear();
 		m_entityList.shrink_to_fit();
 }// end Release()

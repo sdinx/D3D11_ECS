@@ -93,6 +93,11 @@ namespace  D3D11Utility
 						{
 								return  m_fbxLoader;
 						}
+						void  GetVertex( VERTEX*&  pData, uint&  nVertexCounts )
+						{
+								pData = m_pVertices;
+								nVertexCounts = m_nVertexCounts;
+						}
 						// •`‰æ‚ğs‚¤‚Æ‚«‚ÉŒÄ‚Ño‚·
 						void  BindBuffer();
 						void  Release();

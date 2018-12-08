@@ -74,6 +74,7 @@ namespace  D3D11Utility
 
 						static  FbxManager*  s_pFbxManager;
 
+						FbxString  m_fileName;
 						FbxScene*  m_pScene;
 						FbxImporter*  m_pImporter;
 						std::vector<ModelContainer>  m_modelContainer;

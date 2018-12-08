@@ -29,7 +29,7 @@ FbxLoader::FbxLoader() :
 }
 
 
-FbxLoader::FbxLoader( FbxString  szFileName ) :
+FbxLoader::FbxLoader( FbxString  fileName ) :
 		m_pScene( nullptr ),
 		m_pImporter( nullptr )
 {
@@ -37,10 +37,12 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 		CreateFbxManager();
 		m_pScene = FbxScene::Create( s_pFbxManager, "scene" );
 		m_pImporter = FbxImporter::Create( s_pFbxManager, "impoter" );
-		m_pImporter->Initialize( szFileName.Buffer(), -1, s_pFbxManager->GetIOSettings() );
+		m_pImporter->Initialize( fileName.Buffer(), -1, s_pFbxManager->GetIOSettings() );
 
 		if ( m_pImporter->Import( m_pScene ) == false )
 		{
+				m_pImporter->Destroy();
+				m_pImporter = nullptr;
 				Release();
 				return;
 		}
@@ -49,6 +51,7 @@ FbxLoader::FbxLoader( FbxString  szFileName ) :
 		m_pImporter = nullptr;
 		LoadFbxModel( m_pScene );
 
+		m_fileName = fileName;
 }
 
 
@@ -441,5 +444,5 @@ void  FbxLoader::Release()
 		}
 		m_modelContainer.clear();
 
-		m_pScene->Destroy();
+		SafeDestroy( m_pScene );
 }
