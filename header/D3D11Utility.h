@@ -97,6 +97,7 @@ namespace  D3D11Utility
 		{
 				eCBufferCamera = 0,
 				eCBufferRenderable,
+				eCBufferMaterial,
 				eCBufferDirectionLight,
 				eCBufferPointLight,
 				eCBufferSpotLight,

@@ -8,6 +8,7 @@
 #include  <d3d11utility/components/DirectionLight.h>
 #include  <d3d11utility/components/PointLight.h>
 #include  <d3d11utility/components/SpotLight.h>
+#include  <d3d11utility/graphics/Material.h>
 #include  <d3d11utility/systems/SystemInclude.h>
 #include  <d3d11utility/physical/BulletPhysics.h>
 #include  <d3d11utility/DIKeyboard.h>
@@ -138,13 +139,18 @@ void  Tutorial::Awake()
 		Graphics::VertexShader*  vs = m_pd3dRenderer->CreateVertexShader( L"Shader/Default.fx", "VSFunc" );
 		Graphics::PixelShader*  ps = m_pd3dRenderer->CreatePixelShader( L"Shader/Default.fx", "PSFunc" );
 		Graphics::PixelShader*  psSmooth = m_pd3dRenderer->CreatePixelShader( L"Shader/Smoothing.hlsl", "main" );
-		Graphics::PixelShader*  psBump = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "main" );
+		//Graphics::PixelShader*  psBump = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "main" );
 		//Graphics::PixelShader*  psToon = m_pd3dRenderer->CreatePixelShader( L"Shader/BumpMapping.hlsl", "CelShading" );
 		//Graphics::VertexShader*  vsToon = m_pd3dRenderer->CreateVertexShader( L"Shader/BumpMapping.fx", "OutlineVS" );
+
+		/* マテリアル作成 */
+		Graphics::Material*  matDefault = m_pd3dRenderer->CreateMaterial();
+		Graphics::Material*  matPtLight = m_pd3dRenderer->CreateMaterial( Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector4( 1, 1, 1, 1 ), Vector4( 1, 1, 1, 1 ) );
 
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
+		Graphics::Material::SetConstantBuffer();
 		DirectionLight::SetConstantBuffer();
 		PointLight::SetConstantBuffer();
 		SpotLight::SetConstantBuffer();
@@ -155,17 +161,16 @@ void  Tutorial::Awake()
 		// 弾丸のベースとなるエンティティを作成
 		static  const  EntityId  bulletId = m_pEntityManager->CreateEntity( "Bullet" );
 		Entity*  bulletEntity = m_pEntityManager->GetEntity( bulletId );
-		bulletEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eFrontSolid );
 		bulletEntity->AddComponent<Transform>();
+		bulletEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eFrontSolid );
 		Renderable*  bulletRender = bulletEntity->GetComponent<Renderable>();
 		Transform*  bulletTrans = bulletEntity->GetComponent<Transform>();
 		bulletRender->SetVertexShader( vs );
-		bulletRender->SetPixelShader( psBump );
+		bulletRender->SetPixelShader( psSmooth );
 		{/* Parameter */
 				bulletRender->SetDiffuseTexId( texId );
 				bulletRender->SetNormalTexId( texNormalId );
-				bulletRender->SetDiffuse( Vector4( 1, 1, 1, 1.0f ) );
-				bulletRender->SetAmbient( Vector4( 1, 1, 1, 1.0f ) );
+				bulletRender->SetMaterial( matDefault );
 				bulletTrans->SetPosition( Vector3( 0, 5, 0 ) );
 		}
 
@@ -173,8 +178,8 @@ void  Tutorial::Awake()
 		/* Init Cube */
 		static  const  EntityId  cubeId = m_pEntityManager->CreateEntity( "Cube" );
 		Entity*  cubeEntity = m_pEntityManager->GetEntity( cubeId );
-		cubeEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eNoneSolid );
 		cubeEntity->AddComponent<Transform>();
+		cubeEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eNoneSolid );
 		Renderable*  cubeRender = cubeEntity->GetComponent<Renderable>();
 		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
 		cubeRender->SetVertexShader( vs );
@@ -184,7 +189,7 @@ void  Tutorial::Awake()
 				cubeTrans->SetPosition( 0, -10.0f, 0 );
 				cubeTrans->SetLocalScale( Vector3( 250, 0.2f, 250 ) );
 				cubeRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				cubeRender->SetDiffuse( Vector4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+				cubeRender->SetMaterial( matDefault );
 				btRigidBody*  rb = btEngine->CreateRigidBody<btBoxShape>( cubeTrans, 0.0f, 0.5f, btVector3( 0, 0, 0 ), btVector3( 125.0f, 0.1f, 125.0f ) );
 				cubeEntity->AddComponent<Physical::BulletPhysics>( rb, btEngine );
 		}
@@ -192,8 +197,8 @@ void  Tutorial::Awake()
 		/* Init SkySphere */
 		static  const  EntityId  sphereId = m_pEntityManager->CreateEntity( "SkySphere" );
 		Entity*  sphereEntity = m_pEntityManager->GetEntity( sphereId );
-		sphereEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eBackSolid );
 		sphereEntity->AddComponent<Transform>();
+		sphereEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eBackSolid );
 		Renderable*  sphereRender = sphereEntity->GetComponent<Renderable>();
 		Transform*  sphereTrans = sphereEntity->GetComponent<Transform>();
 		sphereRender->SetVertexShader( vs );
@@ -202,9 +207,8 @@ void  Tutorial::Awake()
 				sphereTrans->SetPosition( Vector3( 0, 0, 0 ) );
 				sphereTrans->SetLocalScale( Vector3( 300.f, 300.f, 300.f ) );
 				sphereTrans->SetEuler( 0, 0, 0 );
-				sphereRender->SetDiffuse( Vector4( 1, 1, 0, 0 ) );
+				sphereRender->SetMaterial( matDefault );
 				sphereRender->HandleMessage( Message( Renderable::MSG_UPDATE_CBUFFER ) );
-				sphereRender->SetDiffuse( Vector4( 0.7f, 0.7f, 0.7f, 1 ) );
 				sphereRender->SetDiffuseTexId( texSkyId );
 		}
 
@@ -213,8 +217,8 @@ void  Tutorial::Awake()
 		static  const  EntityId  rifleId = m_pEntityManager->CreateEntity( "Rifle" );
 		Entity*  rifleEntity = m_pEntityManager->GetEntity( rifleId );
 		rifleEntity->SetTag( "Player" );
-		rifleEntity->AddComponent<Renderable>( vtxRifle );
 		rifleEntity->AddComponent<Transform>();
+		rifleEntity->AddComponent<Renderable>( vtxRifle );
 		Renderable*  rifleRender = rifleEntity->GetComponent<Renderable>();
 		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
 		{
@@ -233,11 +237,11 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
+		m_playerEntity->AddComponent<Transform>();
 		m_playerEntity->AddComponent<Renderable>( vtxFubuking );
 		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
 		playerRender->SetVertexShader( vs );
-		playerRender->SetPixelShader( psBump );
-		m_playerEntity->AddComponent<Transform>();
+		playerRender->SetPixelShader( psSmooth );
 		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		{/* Parameter */
 				playerRender->SetDiffuseTexId( texFubukiId );
@@ -264,8 +268,8 @@ void  Tutorial::Awake()
 		/* Init light */
 		const  EntityId  ptLightId = m_pEntityManager->CreateEntity( "Direction Light" );
 		Entity*  ptLightEntity = m_pEntityManager->GetEntity( ptLightId );
-		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector4( 1, 1, 1, 1 ), Vector3( 0.5f, 0.1f, 0.1f ) );
 		Transform*  ptLightTrans = ptLightEntity->AddComponent<Transform>();
+		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), Vector3( 0.5f, 0.1f, 0.1f ) );
 		Renderable*  ptLightRender = ptLightEntity->AddComponent<Renderable>( eMeshId::eSphere );
 		{
 				ptLightTrans->SetPosition( 0.5f, 6, -0.2f );

@@ -15,7 +15,7 @@ PSOutput main( PSInput IN )// : SV_Target
 
     float4 texel = diffuseTexture.Sample( diffuseTextureSampler, IN.texcoord );
 
-    float4 color = g_diffuse * texel;
+    float3 color = g_diffuse * texel.rgb;
 
     float3 nor = normalize( IN.normal );
     float3 diffuse = NormalizedLambert( color.rgb, light, nor );

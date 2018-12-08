@@ -31,10 +31,6 @@ namespace  D3D11Utility
 				struct  ConstantBufferForPerFrame
 				{
 						Matrix4x4  world;
-						Vector4  ambient;
-						Vector4  diffuse;
-						Vector4  emissive;
-						Vector4  specular;
 				};
 
 		public:
@@ -44,8 +40,8 @@ namespace  D3D11Utility
 
 				Renderable();
 				//Renderable( LPCSTR  fileName, Graphics::eRasterMode  rasterMode = Graphics::eFrontSolid );
-				Renderable( Graphics::MeshId  meshId, Graphics::eRasterMode  rasterMode = Graphics::eFrontSolid );
-				Renderable( Graphics::VertexBuffer*  pVertexBuffer, Graphics::eRasterMode  rasterMode = Graphics::eFrontSolid );
+				Renderable( Graphics::MeshId  meshId, Graphics::eRasterMode  rasterMode = Graphics::eFrontSolid, Graphics::MaterialId  id = 0 );
+				Renderable( Graphics::VertexBuffer*  pVertexBuffer, Graphics::eRasterMode  rasterMode = Graphics::eFrontSolid, Graphics::MaterialId  id = 0 );
 				~Renderable();
 
 				enum  MSG_RENDERABLE
@@ -64,9 +60,13 @@ namespace  D3D11Utility
 
 				std::shared_ptr<Systems::IDirect3DRenderer>  m_pRenderer;
 				ConstantBufferForPerFrame  m_cbuffer;
+				Transform*  m_transform;
+
 				Graphics::MeshId  m_meshId;
+				Graphics::MaterialId  m_materialId;
 				Graphics::TextureId  m_diffuseId;
 				Graphics::TextureId  m_normalId;
+
 				Graphics::VertexBuffer*  m_pVertexBuffer;
 				Graphics::VertexShader*  m_pVertexShader;
 				Graphics::PixelShader*  m_pPixelShader;
@@ -109,6 +109,12 @@ namespace  D3D11Utility
 				void  Update();
 				void  UpdateConstantBuffer( Matrix4x4  world );
 
+				/* Getter */
+				Graphics::Material*  GetMaterial();
+
+				/* Setter */
+				void  SetMaterial( Graphics::Material*  material );
+				void  SetMaterial( Graphics::MaterialId  materialId );
 				void  SetVertexBuffer( Graphics::VertexBuffer*  pVertexBuffer )
 				{
 						m_pVertexBuffer = pVertexBuffer;
@@ -129,10 +135,6 @@ namespace  D3D11Utility
 				{
 						m_nRasterMode = rasterMode;
 				}
-				void  SetAmbient( Vector4  color );
-				void  SetDiffuse( Vector4  color );
-				void  SetEmissive( Vector4  color );
-				void  SetSpecular( Vector4  color );
 				void  SetDiffuseTexId( Graphics::TextureId  textureId );
 				void  SetNormalTexId( Graphics::TextureId  textureId );
 

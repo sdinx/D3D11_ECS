@@ -61,7 +61,7 @@ PSOutput PSFunc( PSInput IN )// : SV_Target
     float4 texel = diffuseTexture.Sample( diffuseTextureSampler, IN.texcoord );
 
     OUT.normal = OctEncode( IN.normal );
-    OUT.color = g_diffuse * texel;
+    OUT.color = float4( g_diffuse * texel.rgb, 1 );
     OUT.specular = g_specular.w;
 
     return OUT;

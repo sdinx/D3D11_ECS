@@ -126,9 +126,10 @@ void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
 				}
 		}
 
-		m_materials.resize( nMaterialCount );
 		for ( uint i = 0; i < nMaterialCount; i++ )
-				m_materials[i] = LoadMaterial( pScene->GetMaterial( i ) );
+		{
+				m_materials.emplace_back( LoadMaterial( pScene->GetMaterial( i ) ) );
+		}
 }
 
 
@@ -284,9 +285,9 @@ std::vector<INT>  FbxLoader::LoadIndices( FbxMesh*  pMesh )
 }
 
 
-Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
+Graphics::Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
 {
-		Material  mat;
+		Graphics::Material  mat;
 		FbxVector4  color;
 		FbxProperty  prop;
 
@@ -294,28 +295,28 @@ Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.diffuse = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
+				mat.SetDiffuse( Vector3( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ) ) );
 		}
 
 		prop = material->FindProperty( FbxSurfaceMaterial::sAmbient );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.ambient = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
+				mat.SetAmbient( Vector3( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ) ) );
 		}
 
 		prop = material->FindProperty( FbxSurfaceMaterial::sSpecular );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.specular = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
+				mat.SetSpecular( Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) ) );
 		}
 
 		prop = material->FindProperty( FbxSurfaceMaterial::sEmissive );
 		if ( prop.IsValid() )
 		{
 				color = prop.Get<FbxVector4>();
-				mat.emissive = Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) );
+				mat.SetEmissive( Vector4( static_cast< float >( color[0] ), static_cast< float >( color[1] ), static_cast< float >( color[2] ), static_cast< float >( color[3] ) ) );
 		}
 
 		return  mat;

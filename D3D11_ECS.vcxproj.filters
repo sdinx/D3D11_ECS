@@ -265,6 +265,9 @@
     <ClInclude Include="header\imgui\imgui_impl_win32.h">
       <Filter>header\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="header\d3d11utility\graphics\Material.h">
+      <Filter>header\d3d11utility\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp">
@@ -395,6 +398,9 @@
     </ClCompile>
     <ClCompile Include="source\imgui\imgui_impl_win32.cpp">
       <Filter>source\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="source\d3d11utility\graphics\Material.cpp">
+      <Filter>source\d3d11utility\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

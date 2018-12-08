@@ -3,6 +3,7 @@
 //----------------------------------------------------------------------------------
 #include  <d3d11utility\components/Renderable.h>
 #include  <d3d11utility\components/Transform.h>
+#include  <d3d11utility\graphics\Material.h>
 #include  <d3d11utility\Systems\ComponentManager.h>
 #include  <d3d11utility\Systems\IDirect3DRenderer.h>
 #include  <d3d11utility\Systems\TextureManager.h>
@@ -33,32 +34,21 @@ Renderable::Renderable() :
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
 		m_meshId( 0 ),
+		m_materialId( 1 ),
 		m_diffuseId( TEXTURE_ID_INVALID ),
 		m_normalId( TEXTURE_ID_INVALID )
 {
 
 }
 
-/*
-Renderable::Renderable( LPCSTR  fileName, Graphics::eRasterMode  rasterMode ) :
-		m_pVertexShader( nullptr ),
-		m_pGeometryShader( nullptr ),
-		m_pPixelShader( nullptr ),
-		m_meshId( 0 ),
-		m_diffuseId( TEXTURE_ID_INVALID ),
-		m_normalId( TEXTURE_ID_INVALID ),
-		m_nRasterMode( rasterMode )
-{
-		m_isRendering = true;
-}
-*/
 
-Renderable::Renderable( Graphics::MeshId  meshId, Graphics::eRasterMode  rasterMode ) :
+Renderable::Renderable( Graphics::MeshId  meshId, Graphics::eRasterMode  rasterMode, Graphics::MaterialId  id ) :
 		m_pVertexBuffer( nullptr ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
 		m_meshId( meshId ),
+		m_materialId( id ),
 		m_diffuseId( TEXTURE_ID_INVALID ),
 		m_normalId( TEXTURE_ID_INVALID ),
 		m_nRasterMode( rasterMode )
@@ -70,18 +60,16 @@ Renderable::Renderable( Graphics::MeshId  meshId, Graphics::eRasterMode  rasterM
 
 		auto  fbxLoader = m_pVertexBuffer->GetFbxLoader();
 		Material  material = fbxLoader->GetMaterial( 0 );
-		this->SetDiffuse( material.diffuse );
-		this->SetAmbient( material.ambient );
-		this->SetSpecular( material.specular );
 }
 
 
-Renderable::Renderable( Graphics::VertexBuffer*  pVertexBuffer, Graphics::eRasterMode  rasterMode ) :
+Renderable::Renderable( Graphics::VertexBuffer*  pVertexBuffer, Graphics::eRasterMode  rasterMode, Graphics::MaterialId  id ) :
 		m_pVertexBuffer( pVertexBuffer ),
 		m_pVertexShader( nullptr ),
 		m_pGeometryShader( nullptr ),
 		m_pPixelShader( nullptr ),
 		m_meshId( 0 ),
+		m_materialId( id ),
 		m_diffuseId( TEXTURE_ID_INVALID ),
 		m_normalId( TEXTURE_ID_INVALID ),
 		m_nRasterMode( rasterMode )
@@ -93,9 +81,6 @@ Renderable::Renderable( Graphics::VertexBuffer*  pVertexBuffer, Graphics::eRaste
 
 		auto  fbxLoader = m_pVertexBuffer->GetFbxLoader();
 		Material  material = fbxLoader->GetMaterial( 0 );
-		this->SetDiffuse( material.diffuse );
-		this->SetAmbient( material.ambient );
-		this->SetSpecular( material.specular );
 }
 
 
@@ -173,27 +158,22 @@ void  Renderable::UpdateConstantBuffer( Matrix4x4  world )
 		m_cbuffer.world = world;
 }
 
-void  Renderable::SetAmbient( Vector4  v4Color )
+
+Graphics::Material*  Renderable::GetMaterial()
 {
-		m_cbuffer.ambient = v4Color;
+		return  m_pRenderer->GetMaterial( m_materialId );
 }
 
 
-void  Renderable::SetDiffuse( Vector4  v4Color )
+void  Renderable::SetMaterial( Graphics::Material*  material )
 {
-		m_cbuffer.diffuse = v4Color;
+		m_materialId = material->GetMaterialId();
 }
 
 
-void  Renderable::SetEmissive( Vector4  v4Color )
+void  Renderable::SetMaterial( Graphics::MaterialId  id )
 {
-		m_cbuffer.emissive = v4Color;
-}
-
-
-void  Renderable::SetSpecular( Vector4  v4Color )
-{
-		m_cbuffer.specular = v4Color;
+		m_materialId = id;
 }
 
 

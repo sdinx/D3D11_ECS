@@ -46,6 +46,9 @@ namespace  D3D11Utility
 						MaxRasterMode
 				};// enum eRasterMode
 
+				class  Material;
+				using  MaterialId = int;
+
 		}// namespace Graphics
 
 		class  Entity;

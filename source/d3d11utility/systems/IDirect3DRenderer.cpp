@@ -6,6 +6,7 @@
 #include  <d3d11utility\components/Camera.h>
 #include  <d3d11utility\components/Renderable.h>
 #include  <d3d11utility\components/PointLight.h>
+#include  <d3d11utility/graphics/Material.h>
 #include  <d3d11utility\Systems\ComponentManager.h>
 #include  <d3d11utility\Systems\IDirect3DRenderer.h>
 #include  <d3d11utility\Systems\TextureManager.h>
@@ -109,7 +110,10 @@ void  IDirect3DRenderer::Rendering()const
 						render = renderable->GetComponent<Renderable>();
 						textureManager->SetDiffuse( render->m_diffuseId );
 						textureManager->SetNormal( render->m_normalId );
+
 						pd3dDeviceContext->RSSetState( m_rasterStates[render->m_nRasterMode] );
+						m_materialList[render->m_materialId]->UpdateConstantBuffer();
+
 						render->Rendering();
 				}
 
@@ -652,7 +656,31 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 }
 
 
-Graphics::VertexBuffer*  IDirect3DRenderer::GetVertexBuffer( Graphics::MeshId  index )
+Graphics::Material*  IDirect3DRenderer::CreateMaterial()
+{
+		Graphics::Material*  material = new  Graphics::Material( m_materialList.size() );
+		m_materialList.emplace_back( material );
+
+		return  m_materialList.back();
+}
+
+
+Graphics::Material*  IDirect3DRenderer::CreateMaterial( Vector3  _ambient, Vector3  _diffuse, Vector4  _specular, Vector4  _emissive )
+{
+		Graphics::Material*  material = new  Graphics::Material( m_materialList.size(), _ambient, _diffuse, _specular, _emissive );
+		m_materialList.emplace_back( material );
+
+		return  m_materialList.back();
+}
+
+
+Graphics::Material*  IDirect3DRenderer::GetMaterial( Graphics::MaterialId  index )const
+{
+		return  m_materialList[index];
+}
+
+
+Graphics::VertexBuffer*  IDirect3DRenderer::GetVertexBuffer( Graphics::MeshId  index )const
 {
 		if ( ( size_t ) index < m_vertexBufferList.size() )
 				return  m_vertexBufferList[index];

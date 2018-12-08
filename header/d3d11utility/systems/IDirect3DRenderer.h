@@ -62,7 +62,7 @@ namespace  D3D11Utility
 										SafeRelease( m_pTexture );
 										SafeRelease( m_pSRView );
 								}
-								
+
 								eViews  m_numViews;
 								ID3D11RenderTargetView* m_pRTView = nullptr;
 								ID3D11Texture2D*  m_pTexture = nullptr;
@@ -88,6 +88,7 @@ namespace  D3D11Utility
 
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManager;
+						std::vector<Graphics::Material*>  m_materialList;
 						std::vector<Graphics::VertexBuffer*>  m_vertexBufferList;
 						std::vector<Graphics::VertexShader*>  m_vertexShaderList;
 						std::vector<Graphics::GeometryShader*>  m_geometryShaderList;
@@ -138,6 +139,8 @@ namespace  D3D11Utility
 
 						// レンダーターゲットビューの生成 ( MRT用 )
 						HRESULT  CreateMultipleRenderTargetView();
+						Graphics::Material*  CreateMaterial();
+						Graphics::Material*  CreateMaterial( Vector3  _ambient, Vector3  _diffuse, Vector4  _specular, Vector4  _emissive );
 						Graphics::VertexBuffer*  CreateVertexBuffer( const  FbxLoader&  fbxLoader );
 						Graphics::VertexShader*  CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel = "vs_5_0", UINT  numLayouts = 0, D3D11_INPUT_ELEMENT_DESC*  layouts = nullptr );
 						Graphics::GeometryShader*  CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel = "gs_5_0" );
@@ -145,7 +148,8 @@ namespace  D3D11Utility
 						Graphics::VertexBuffer*  LoadFbxModel( FbxString  fileName );
 
 						/* Getter */
-						Graphics::VertexBuffer*  GetVertexBuffer( Graphics::MeshId  index );
+						Graphics::Material*  GetMaterial( Graphics::MaterialId  index )const;
+						Graphics::VertexBuffer*  GetVertexBuffer( Graphics::MeshId  index )const;
 						Graphics::VertexShader*  GetVertexShader( size_t  index )const;
 						Graphics::GeometryShader*  GetGeometryShader( size_t  index )const;
 						Graphics::PixelShader*  GetPixelShader( size_t  index )const;

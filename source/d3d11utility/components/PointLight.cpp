@@ -1,8 +1,10 @@
 //----------------------------------------------------------------------------------
 // Include
 //----------------------------------------------------------------------------------
-#include  <d3d11utility\components/PointLight.h>
-#include  <d3d11utility\Systems\ComponentManager.h>
+#include  <d3d11utility/components/PointLight.h>
+#include  <d3d11utility/graphics/Material.h>
+#include  <d3d11utility/Systems/ComponentManager.h>
+#include  <d3d11utility/Systems/IDirect3DRenderer.h>
 
 //----------------------------------------------------------------------------------
 // using  namespace
@@ -18,13 +20,27 @@ const  UINT  PointLight::s_nConstantBufferSlot;
 ID3D11Buffer*  PointLight::s_pConstantBuffer = nullptr;
 
 
-PointLight::PointLight( Vector3  position, Vector3  ambient, Vector3  diffuse, Vector4  specular, Vector3  attenuate )
+PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::Material  material )
 {
+		m_pRenderer = _Singleton<Systems::IDirect3DRenderer>::GetInstance();
+
+		//	Transform Ç™Ç»Ç¢èÍçáÇÕí«â¡.
+
 		m_cbuffer.position = position;
-		m_cbuffer.ambient = ambient;
-		m_cbuffer.diffuse = diffuse;
-		m_cbuffer.specular = specular;
 		m_cbuffer.attenuate = attenuate;
+		m_materialId = material.GetMaterialId();
+}
+
+
+PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::MaterialId  id )
+{
+		m_pRenderer = _Singleton<Systems::IDirect3DRenderer>::GetInstance();
+
+		//	Transform Ç™Ç»Ç¢èÍçáÇÕí«â¡.
+
+		m_cbuffer.position = position;
+		m_cbuffer.attenuate = attenuate;
+		m_materialId = id;
 }
 
 
@@ -51,8 +67,28 @@ void  PointLight::Update()
 
 void  PointLight::UpdateConstantBuffer()
 {
+		m_cbuffer.position = GetComponent<Transform>()->GetPosition();
+
 		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &m_cbuffer, 0, 0 );
 		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+}
+
+
+void  PointLight::SetMaterial( Graphics::Material  material )
+{
+		m_materialId = material.GetMaterialId();
+}
+
+
+void  PointLight::SetMaterial( Graphics::MaterialId  id )
+{
+		m_materialId = id;
+}
+
+
+Graphics::Material*  PointLight::GetMaterial()
+{
+		return  m_pRenderer->GetMaterial( m_materialId );
 }

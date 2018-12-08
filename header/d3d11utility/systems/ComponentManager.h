@@ -86,7 +86,7 @@ namespace  D3D11Utility
 								const  UINT  entityId = entity.index;
 								UINT  nComponentPosition = 0;
 								ComponentId  componentId = T::GetStaticComponentId();
-								
+
 								// 初登録コンポーネントにstatic_idを割り当て
 								if ( componentId == COMPONENT_ID_INVALID )
 								{
@@ -156,7 +156,7 @@ namespace  D3D11Utility
 						{
 								const  ComponentId  componentId = T::GetStaticComponentId();
 
-								if ( componentId != COMPONENT_ID_INVALID&& componentId < ( int ) m_componentTable.size() && numComponents < m_componentTable[componentId].size() )
+								if ( componentId != COMPONENT_ID_INVALID && componentId < ( int ) m_componentTable.size() && numComponents < m_componentTable[componentId].size() )
 										return  dynamic_cast< T* >( m_componentTable[componentId][numComponents] );
 
 								return  nullptr;

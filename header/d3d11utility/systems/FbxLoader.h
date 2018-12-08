@@ -10,6 +10,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility.h>
+#include  <d3d11utility/graphics/Material.h>
 #include  <fbxsdk.h>
 #include  <string>
 #include  <vector>
@@ -78,7 +79,7 @@ namespace  D3D11Utility
 						FbxScene*  m_pScene;
 						FbxImporter*  m_pImporter;
 						std::vector<ModelContainer>  m_modelContainer;
-						std::vector<Material>  m_materials;
+						std::vector<Graphics::Material>  m_materials;
 						std::vector<AnimeContainer>  m_animeContainer;
 
 				public:
@@ -97,7 +98,7 @@ namespace  D3D11Utility
 						Vector3  LoadNormal( FbxGeometryElementNormal*&  pNormals, uint  vertexIndex, uint  vertexCount );
 						Vector2  LoadTexcoord( FbxGeometryElementUV*&  pTexcoords, uint  vertexIndex, uint  texcoordIndex );
 						std::vector<INT>  LoadIndices( FbxMesh*  pMesh );
-						Material  LoadMaterial( FbxSurfaceMaterial*  material );
+						Graphics::Material  LoadMaterial( FbxSurfaceMaterial*  material );
 						SkinMesh  LoadSkin( FbxMesh*  pMesh );
 
 				public:
@@ -126,11 +127,11 @@ namespace  D3D11Utility
 										return  m_modelContainer[i];
 								return  ModelContainer();
 						}
-						Material  GetMaterial( uint  i )const
+						Graphics::Material  GetMaterial( uint  i )const
 						{
 								if ( m_materials.size() > i )
 										return  m_materials[i];
-								return  Material();
+								return  Graphics::Material();
 						}
 						Matrix4x4  GetMeshMatrix( uint  frame, uint  meshIndex );
 						ModelContainer  SetAnimation( uint  meshIndex, uint  animationIndex, FbxTime&  fbxTime );

@@ -13,35 +13,30 @@ cbuffer CBuffer : register( b0 )
 cbuffer CObject : register( b1 )
 {
     float4x4 g_world;
-    float4 g_ambient;
-    float4 g_diffuse;
-    float4 g_emissive;
-    float4 g_specular;
 };
 
-cbuffer CDirectionLight : register( b2 )
+cbuffer CMaterial : register( b2 )
 {
-    float3 g_dirLightDirection;
-    float3 g_dirLightAmbient;
-    float3 g_dirLightDiffuse;
-    float4 g_dirLightSpecular;
+    float3 g_ambient;
+    float3 g_diffuse;
+    float4 g_emissive;
+    float4 g_specular;
 }
 
-cbuffer CPointLight : register( b3 )
+cbuffer CDirectionLight : register( b3 )
+{
+    float3 g_dirLightDirection;
+}
+
+cbuffer CPointLight : register( b4 )
 {
     float3 g_pointLightPos;
-    float3 g_pointLightAmbient;
-    float3 g_pointLightDiffuse;
-    float4 g_pointLightSpecular;
     float3 g_pointLightAttenuate;
 }
 
-cbuffer CSpotLight : register( b4 )
+cbuffer CSpotLight : register( b5 )
 {
     float3 g_spotLightPos;
-    float3 g_spotLightAmbient;
-    float3 g_spotLightDiffuse;
-    float4 g_spotLightSpecular;
     float3 g_spotLightAttenuate;
 }
 

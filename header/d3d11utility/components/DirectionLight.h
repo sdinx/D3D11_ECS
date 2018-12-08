@@ -9,7 +9,8 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <d3d11utility\components/Transform.h>
+#include  <d3d11utility/components/Transform.h>
+#include  <memory>
 
 
 namespace  D3D11Utility
@@ -20,9 +21,6 @@ namespace  D3D11Utility
 				struct  CBufferDirectionLight
 				{
 						Vector3  direction;
-						Vector3  ambient;
-						Vector3  diffuse;
-						Vector4  specular;
 				};
 
 		public:
@@ -30,7 +28,8 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 				DirectionLight() {}
-				DirectionLight( Vector3  direction, Vector3  ambient, Vector3  diffuse, Vector4  specular );
+				DirectionLight( Vector3  direction, Graphics::Material  material );
+				DirectionLight( Vector3  direction, Graphics::MaterialId  id );
 				~DirectionLight();
 
 
@@ -43,7 +42,9 @@ namespace  D3D11Utility
 				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferDirectionLight;
 				static  ID3D11Buffer  *s_pConstantBuffer;
 
+				std::shared_ptr<Systems::IDirect3DRenderer>  m_pRenderer;
 				CBufferDirectionLight  m_cbuffer;
+				Graphics::MaterialId  m_materialId;
 
 		public:
 				//----------------------------------------------------------------------------------
@@ -78,14 +79,11 @@ namespace  D3D11Utility
 				}
 
 				/* setter */
-				void  SetAmbient( Vector3  color )
-				{
-						m_cbuffer.ambient = color;
-				}
-				void  SetDiffuse( Vector3  color )
-				{
-						m_cbuffer.diffuse = color;
-				}
+				void  SetMaterial( Graphics::Material  material );
+				void  SetMaterial( Graphics::MaterialId  id );
+
+				/* getter */
+				Graphics::Material*  GetMaterial();
 
 				/* derived virtual */
 				void  HandleMessage( const  Message&  msg ) {}

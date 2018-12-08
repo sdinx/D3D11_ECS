@@ -40,6 +40,7 @@
     <ClInclude Include="header\d3d11utility\Entity.h" />
     <ClInclude Include="header\d3d11utility\graphics\GeometryShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\IShader.h" />
+    <ClInclude Include="header\d3d11utility\graphics\Material.h" />
     <ClInclude Include="header\d3d11utility\graphics\PixelShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\Texture.h" />
     <ClInclude Include="header\d3d11utility\graphics\VertexBuffer.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp" />
     <ClCompile Include="source\d3d11utility\Entity.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\Material.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\PixelShader.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\Texture.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\VertexBuffer.cpp" />
@@ -189,7 +191,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
