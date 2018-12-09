@@ -172,10 +172,9 @@ void  Camera::UpdateConstantBuffer()
 
 void  Camera::Release()
 {
-		Vector3&  pos = m_transform->GetPosition();
-		m_focusPosition = Vector3( 0.0f, 0.0f, 1.0f ) + pos;
+		m_focusPosition = Vector3( 0.0f, 0.0f, 1.0f );
 		m_upDirection = Vector3( 0.0f, 1.0f, 0.0f );
 
-		UpdateView();
-		UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
+		//UpdateView();
+		//UpdateProjection( DirectX::XM_PIDIV2, GetAspectRatio(), 0.01f, 1000.0f );
 }

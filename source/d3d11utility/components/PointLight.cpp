@@ -16,30 +16,47 @@ using  namespace  DirectX;
 // static  variables
 //----------------------------------------------------------------------------------
 ComponentId  PointLight::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
-const  UINT  PointLight::s_nConstantBufferSlot;
-ID3D11Buffer*  PointLight::s_pConstantBuffer = nullptr;
+const  uint  PointLight::s_nConstantBufferSlot;
+const  uint  PointLight::s_nLightCounts;
+PointLight::CBufferPointLight  PointLight::s_instanceLights[NUM_POINT_LIGHT_COUNTS];
+Graphics::StructuredBuffer<PointLight::CBufferPointLight>*  PointLight::s_pStructureBuffer;
+static  uint  s_lightCounts = 0;
 
 
-PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::Material  material )
+PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::Material  material ) :
+		m_nInstanceId( s_lightCounts )
 {
+		s_lightCounts++;
 		m_pRenderer = _Singleton<Systems::IDirect3DRenderer>::GetInstance();
 
 		//	Transform Ç™Ç»Ç¢èÍçáÇÕí«â¡.
 
-		m_cbuffer.position = position;
-		m_cbuffer.attenuate = attenuate;
+		s_instanceLights[m_nInstanceId].position.x = position.m_floats[0];
+		s_instanceLights[m_nInstanceId].position.y = position.m_floats[1];
+		s_instanceLights[m_nInstanceId].position.z = position.m_floats[2];
+
+		s_instanceLights[m_nInstanceId].attenuate.x = attenuate.m_floats[0];
+		s_instanceLights[m_nInstanceId].attenuate.y = attenuate.m_floats[1];
+		s_instanceLights[m_nInstanceId].attenuate.z = attenuate.m_floats[2];
 		m_materialId = material.GetMaterialId();
 }
 
 
-PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::MaterialId  id )
+PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::MaterialId  id ) :
+		m_nInstanceId( s_lightCounts )
 {
+		s_lightCounts++;
 		m_pRenderer = _Singleton<Systems::IDirect3DRenderer>::GetInstance();
 
 		//	Transform Ç™Ç»Ç¢èÍçáÇÕí«â¡.
 
-		m_cbuffer.position = position;
-		m_cbuffer.attenuate = attenuate;
+		s_instanceLights[m_nInstanceId].position.x = position.m_floats[0];
+		s_instanceLights[m_nInstanceId].position.y = position.m_floats[1];
+		s_instanceLights[m_nInstanceId].position.z = position.m_floats[2];
+
+		s_instanceLights[m_nInstanceId].attenuate.x = attenuate.m_floats[0];
+		s_instanceLights[m_nInstanceId].attenuate.y = attenuate.m_floats[1];
+		s_instanceLights[m_nInstanceId].attenuate.z = attenuate.m_floats[2];
 		m_materialId = id;
 }
 
@@ -52,27 +69,16 @@ PointLight::~PointLight()
 
 void  PointLight::SetConstantBuffer()
 {
-		if ( s_pConstantBuffer == nullptr )
-		{
-				CreateConstantBuffer( s_pConstantBuffer, sizeof( CBufferPointLight ) );
-		}
+		s_pStructureBuffer = new  Graphics::StructuredBuffer<CBufferPointLight>( s_nLightCounts, D3D11_BIND_SHADER_RESOURCE, true );
 }
 
 
 void  PointLight::Update()
 {
-		UpdateConstantBuffer();
-}
-
-
-void  PointLight::UpdateConstantBuffer()
-{
-		m_cbuffer.position = GetComponent<Transform>()->GetPosition();
-
-		pd3dDeviceContext->UpdateSubresource( s_pConstantBuffer, 0, nullptr, &m_cbuffer, 0, 0 );
-		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
-		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		Vector3  position = GetComponent<Transform>()->GetPosition();
+		s_instanceLights[m_nInstanceId].position.x = position.m_floats[0];
+		s_instanceLights[m_nInstanceId].position.y = position.m_floats[1];
+		s_instanceLights[m_nInstanceId].position.z = position.m_floats[2];
 }
 
 

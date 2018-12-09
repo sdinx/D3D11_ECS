@@ -13,6 +13,7 @@
 
 INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCmdLine, INT  nCmdShow )
 {
+		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 		auto  d3d11 = _Singleton<D3D11Utility::Systems::IDirect3D>::GetInstance();
 
 		if ( FAILED( d3d11->CreateScreen( D3D11Utility::SCREEN_WIDTH, D3D11Utility::SCREEN_HEIGHT, hInstance ) ) )
@@ -30,11 +31,10 @@ INT  WINAPI  WinMain( HINSTANCE  hInstance, HINSTANCE  nPrevInstance, PSTR  lpCm
 		Input::InitMouse( d3d11->GetWindowHandle() );
 		InitController( ControllerMax::CMAX_1 );
 
-		_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 		d3d11->MainLoop();
-		_CrtDumpMemoryLeaks();
 
 		UninitController();
+		_CrtDumpMemoryLeaks();
 
 		return  0;
 

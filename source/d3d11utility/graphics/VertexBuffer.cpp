@@ -106,15 +106,20 @@ void  VertexBuffer::BindBuffer()
 {
 		// 入力アセンブラに頂点バッファを設定
 		pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVertexBuffer, &m_nStride, &m_nOffset );
-		pd3dDeviceContext->IASetIndexBuffer( m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0 );
+		//pd3dDeviceContext->IASetIndexBuffer( m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 
 		// プリミティブの種類を設定
 		pd3dDeviceContext->IASetPrimitiveTopology( primitiveType );
 
 		//if ( m_pIndexBuffer == nullptr )
-		pd3dDeviceContext->Draw( m_nVertexCounts, 0 );
 		//else
 		//		pd3dDeviceContext->DrawIndexed( m_numIndexCounts, 0, 0 );
+}
+
+
+void  VertexBuffer::Render()
+{
+		pd3dDeviceContext->Draw( m_nVertexCounts, 0 );
 }
 
 

@@ -41,12 +41,23 @@ cbuffer CSpotLight : register( b5 )
 }
 
 //-----------------------------------------------------------------------------------
-// Texture variables
+// Texture buffers
 //-----------------------------------------------------------------------------------
 Texture2D diffuseTexture : register( t0 );
 SamplerState diffuseTextureSampler : register( s0 );
 Texture2D normalTexture : register( t1 );
 SamplerState normalTextureSampler : register( s1 );
+
+
+//-----------------------------------------------------------------------------------
+// Structured buffers
+//-----------------------------------------------------------------------------------
+struct SPointLight
+{
+    float3 pos;
+    float3 attenuate;
+};
+StructuredBuffer<SPointLight> ptLights : register( t3 );
 
 //-----------------------------------------------------------------------------------
 // VSInput structure

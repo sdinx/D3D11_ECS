@@ -150,13 +150,27 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->PSSetSamplers( 0, 0, nullptr );
 
 				Renderable*  ptRender = nullptr;
-				for ( auto ptLight : m_componentManager->GetComponents<PointLight>() )
-				{
-						ptRender = ptLight->GetComponent<Renderable>();
-						pd3dDeviceContext->UpdateSubresource( ptRender->s_pConstantBuffer, 0, nullptr, &ptRender->m_cbuffer, 0, 0 );
+				//for ( auto ptLight : m_componentManager->GetComponents<PointLight>() )
+				//{
+				//		ptRender = ptLight->GetComponent<Renderable>();
+				//		pd3dDeviceContext->UpdateSubresource( ptRender->s_pConstantBuffer, 0, nullptr, &ptRender->m_cbuffer, 0, 0 );
+				//
+				//		m_pVertexPtLight->BindBuffer();
+				//}
 
-						m_pVertexPtLight->BindBuffer();
-				}
+				auto  strBuffer = PointLight::GetStructuredBuffer();
+				auto  ptLights = strBuffer->Map();
+				for ( int i = 0; i < PointLight::s_nLightCounts; i++ )
+						ptLights[i] = PointLight::s_instanceLights[i];
+
+				strBuffer->Unmap();
+				ID3D11ShaderResourceView*  srvLight = strBuffer->GetShaderResourceView();
+				pd3dDeviceContext->VSSetShaderResources( 3, 1, &srvLight );
+				pd3dDeviceContext->PSSetShaderResources( 3, 1, &srvLight );
+
+
+				m_pVertexPtLight->BindBuffer();
+				pd3dDeviceContext->DrawInstanced( m_pVertexPtLight->GetVertexCounts(), PointLight::s_nLightCounts, 0, 0 );
 
 				pd3dDeviceContext->GSSetShader( nullptr, nullptr, 0 );
 
@@ -367,6 +381,10 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				m_pClusterVShader = CreateVertexShader( L"shader/Light.hlsl", "vsmain", "vs_5_0", numClusterLayouts, clLayout );
 				m_pClusterGShader = CreateGeometryShader( L"shader/Light.hlsl", "gsmain" );
 				m_pClusterPShader = CreatePixelShader( L"shader/Light.hlsl", "psmain" );
+
+				// ポイントライトの構造体バッファを作成
+				PointLight::SetConstantBuffer();
+
 		}
 
 
@@ -656,18 +674,21 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 }
 
 
-Graphics::Material*  IDirect3DRenderer::CreateMaterial()
+Graphics::Material*  IDirect3DRenderer::CreateMaterial( std::string  name )
 {
 		Graphics::Material*  material = new  Graphics::Material( m_materialList.size() );
+		material->SetName( name );
 		m_materialList.emplace_back( material );
+
 
 		return  m_materialList.back();
 }
 
 
-Graphics::Material*  IDirect3DRenderer::CreateMaterial( Vector3  _ambient, Vector3  _diffuse, Vector4  _specular, Vector4  _emissive )
+Graphics::Material*  IDirect3DRenderer::CreateMaterial( std::string  name, Vector3  _ambient, Vector3  _diffuse, Vector4  _specular, Vector4  _emissive )
 {
 		Graphics::Material*  material = new  Graphics::Material( m_materialList.size(), _ambient, _diffuse, _specular, _emissive );
+		material->SetName( name );
 		m_materialList.emplace_back( material );
 
 		return  m_materialList.back();

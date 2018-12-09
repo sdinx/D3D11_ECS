@@ -32,6 +32,7 @@ DebugSystem::DebugSystem()
 		SetupConsole();
 
 		m_pd3dInterface = _Singleton<IDirect3D>::GetInstance();
+		m_pd3dRenderer = _Singleton<IDirect3DRenderer>::GetInstance();
 
 		// imgui ‰Šú‰»
 		IMGUI_CHECKVERSION();
@@ -97,6 +98,24 @@ void  DebugSystem::RenderImGui()
 		ImGui::Text( stextCount.c_str() );
 		ImGui::End();
 
+		/* Material editor */
+		ImGui::Begin( "Material Editor" );
+		{
+				int  i = 0;
+				for ( auto& material : m_pd3dRenderer->m_materialList )
+				{
+						ImGui::SetNextTreeNodeOpen( true, ImGuiSetCond_Once );
+						if ( ImGui::TreeNode( ( std::to_string( i ) + " : " + material->GetName() ).c_str() ) )
+						{
+								ImGui::SliderFloat3( "Ambient color", material->ambient, 0.0f, 1.0f );
+								ImGui::SliderFloat3( "Diffuse color", material->diffuse, 0.0f, 1.0f );
+						}
+						i++;
+						ImGui::TreePop();
+				}// for ( auto& material : m_materialList )
+		}
+		ImGui::End();
+
 		// •`‰æ
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData( ImGui::GetDrawData() );
@@ -108,6 +127,7 @@ void  DebugSystem::RenderImGui()
 
 void  DebugSystem::Release()
 {
+
 		_fcloseall();
 		FreeConsole();
 }

@@ -268,6 +268,12 @@
     <ClInclude Include="header\d3d11utility\graphics\Material.h">
       <Filter>header\d3d11utility\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="shader\header\ShaderDefines.h">
+      <Filter>shader\header</Filter>
+    </ClInclude>
+    <ClInclude Include="header\d3d11utility\graphics\StructuredBuffer.h">
+      <Filter>header\d3d11utility\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp">

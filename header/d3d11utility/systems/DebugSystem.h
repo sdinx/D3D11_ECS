@@ -21,6 +21,11 @@
 #define  _INCLUDED_D3D11_UTILITY_SYSTEMS_DEBUG_SYSTEM_
 
 //----------------------------------------------------------------------------------
+// defines
+//----------------------------------------------------------------------------------
+#define  DEBUG_SYSTEM_
+
+//----------------------------------------------------------------------------------
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility/Systems/ISystem.h>
@@ -49,6 +54,7 @@ namespace  D3D11Utility
 						static  SystemId  STATIC_SYSTEM_ID;
 
 						std::shared_ptr<IDirect3D>  m_pd3dInterface;
+						std::shared_ptr<IDirect3DRenderer>  m_pd3dRenderer;
 
 				public:
 						//----------------------------------------------------------------------------------

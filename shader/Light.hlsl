@@ -22,19 +22,20 @@ struct LightPSOutput
 };
 
 
-LightPSInput vsmain( LightVSInput IN )
+LightPSInput vsmain( LightVSInput IN, in uint instanceId : SV_InstanceID )
 {
     LightPSInput OUT = (LightPSInput) 0;
 
 	// ワールド空間に変換
-    OUT.position = mul( g_world, IN.position );
+    OUT.position = float4( ptLights[instanceId].pos + IN.position.xyz, IN.position.w );
 
 	// ビュー空間に変換
     OUT.position = mul( g_view, OUT.position );
 
 	// 射影空間に変換
     OUT.position = mul( g_proj, OUT.position );
-    OUT.index = 5;
+
+    OUT.index = instanceId;
 
     return OUT;
 }

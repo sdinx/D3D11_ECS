@@ -85,6 +85,7 @@ namespace  D3D11Utility
 						HRESULT  CreateVertexBuffer( void*  pData, uint  nVertexCounts, uint  nStride, uint  nOffset = 0 );
 						HRESULT  CreateIndexBuffer( const  int*  nPrimitiveVertices, const  uint  nIndexCounts );
 						// Getter
+						uint  GetVertexCounts() { return  m_nVertexCounts; }
 						MeshId  GetMeshId()
 						{
 								return  m_meshId;
@@ -100,6 +101,7 @@ namespace  D3D11Utility
 						}
 						// •`‰æ‚ğs‚¤‚Æ‚«‚ÉŒÄ‚Ño‚·
 						void  BindBuffer();
+						void  Render();
 						void  Release();
 
 				}; // class VertexBuffer

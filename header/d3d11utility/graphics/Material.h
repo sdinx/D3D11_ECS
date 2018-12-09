@@ -21,6 +21,7 @@ namespace  D3D11Utility
 
 				class  Material
 				{
+						friend  class  Systems::DebugSystem;
 						struct  CBufferMaterial
 						{
 								Vector3  g_ambient;
@@ -49,10 +50,8 @@ namespace  D3D11Utility
 						static  ID3D11Buffer  *s_pConstantBuffer;
 
 						const  MaterialId  materialId;
-						union
-						{
-								CBufferMaterial  m_cbuffer;
-						};
+						std::string  m_name;
+						CBufferMaterial  m_cbuffer;
 						Vector3  ambient;
 						Vector3  diffuse;
 						Vector4  specular;
@@ -79,6 +78,10 @@ namespace  D3D11Utility
 						static  void  SetConstantBuffer();
 
 						/* Getter */
+						std::string  GetName()
+						{
+								return  m_name;
+						}
 						MaterialId  GetMaterialId()
 						{
 								return  materialId;
@@ -101,6 +104,10 @@ namespace  D3D11Utility
 						}
 
 						/* Setter */
+						void  SetName( std::string  name )
+						{
+								m_name = name;
+						}
 						void  SetAmbient( Vector3  v3Color )
 						{
 								ambient = v3Color;

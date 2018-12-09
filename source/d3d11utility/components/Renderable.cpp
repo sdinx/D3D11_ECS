@@ -136,6 +136,7 @@ void  Renderable::Rendering()const
 		*/
 
 		m_pVertexBuffer->BindBuffer();
+		m_pVertexBuffer->Render();
 
 }
 

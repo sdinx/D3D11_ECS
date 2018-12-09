@@ -14,9 +14,10 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
+#include  <D3D11Utility.h>
 #include  <d3d11utility\IComponent.h>
 #include  <d3d11utility\IEntity.h>
-#include  <D3D11Utility.h>
+#include  <d3d11utility/systems/DebugSystem.h>
 #include  <vector>
 #include  <list>
 

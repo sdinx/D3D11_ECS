@@ -33,7 +33,7 @@ Tutorial::Tutorial()
 
 Tutorial::~Tutorial()
 {
-
+		Release();
 }
 
 
@@ -109,9 +109,9 @@ void  Tutorial::InputFPSCamera()
 void  Tutorial::Awake()
 {
 		/* システムクラス生成 */
-		m_pComponentManager.reset( new  ComponentManager() );
-		m_pEntityManager.reset( new  EntityManager( m_pComponentManager.get() ) );
-		m_pSystemManager.reset( new  SystemManager( m_pComponentManager.get(), m_pEntityManager.get() ) );
+		m_pComponentManager = std::make_unique<ComponentManager>();
+		m_pEntityManager = std::make_unique<EntityManager>( m_pComponentManager.get() );
+		m_pSystemManager = std::make_unique<SystemManager>( m_pComponentManager.get(), m_pEntityManager.get() );
 
 		m_pd3dRenderer = _Singleton<IDirect3DRenderer>::GetInstance();
 		m_pd3dRenderer->SetComponentManager( m_pComponentManager.get() );
@@ -144,16 +144,16 @@ void  Tutorial::Awake()
 		//Graphics::VertexShader*  vsToon = m_pd3dRenderer->CreateVertexShader( L"Shader/BumpMapping.fx", "OutlineVS" );
 
 		/* マテリアル作成 */
-		Graphics::Material*  matDefault = m_pd3dRenderer->CreateMaterial();
-		Graphics::Material*  matPtLight = m_pd3dRenderer->CreateMaterial( Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector4( 1, 1, 1, 1 ), Vector4( 1, 1, 1, 1 ) );
+		Graphics::Material*  matDefault = m_pd3dRenderer->CreateMaterial( "Default Material" );
+		Graphics::Material*  matPtLight = m_pd3dRenderer->CreateMaterial( "PointLight Material", Vector3( 1, 1, 1 ), Vector3( 1, 1, 1 ), Vector4( 1, 1, 1, 1 ), Vector4( 1, 1, 1, 1 ) );
 
 		// 定数バッファの初期化
 		Camera::SetConstantBuffer();
 		Renderable::SetConstantBuffer();
 		Graphics::Material::SetConstantBuffer();
 		DirectionLight::SetConstantBuffer();
-		PointLight::SetConstantBuffer();
-		SpotLight::SetConstantBuffer();
+		//PointLight::SetConstantBuffer();
+		//SpotLight::SetConstantBuffer();
 
 
 		/* ゲームシステムクラス生成 */
@@ -266,7 +266,7 @@ void  Tutorial::Awake()
 		}
 
 		/* Init light */
-		const  EntityId  ptLightId = m_pEntityManager->CreateEntity( "Direction Light" );
+		const  EntityId  ptLightId = m_pEntityManager->CreateEntity( "Point Light" );
 		Entity*  ptLightEntity = m_pEntityManager->GetEntity( ptLightId );
 		Transform*  ptLightTrans = ptLightEntity->AddComponent<Transform>();
 		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), Vector3( 0.5f, 0.1f, 0.1f ) );
@@ -276,7 +276,21 @@ void  Tutorial::Awake()
 				ptLightTrans->SetScale( 0.2f );
 				ptLightRender->SetVertexShader( vs );
 				ptLightRender->SetPixelShader( ps );
-				ptLight->UpdateConstantBuffer();
+				ptLightRender->SetMaterial( matPtLight );
+		}
+
+		/* Init light */
+		const  EntityId  ptLight2Id = m_pEntityManager->CreateEntity( "Point Light 2" );
+		Entity*  ptLight2Entity = m_pEntityManager->GetEntity( ptLight2Id );
+		Transform*  ptLight2Trans = ptLight2Entity->AddComponent<Transform>();
+		PointLight*  ptLight2 = ptLight2Entity->AddComponent<PointLight>( Vector3( -0.8f, 3, -0.2f ), Vector3( 0.5f, 0.1f, 0.1f ) );
+		Renderable*  ptLight2Render = ptLight2Entity->AddComponent<Renderable>( eMeshId::eSphere );
+		{
+				ptLight2Trans->SetPosition( -0.8f, 3, -0.2f );
+				ptLight2Trans->SetScale( 0.5f );
+				ptLight2Render->SetVertexShader( vs );
+				ptLight2Render->SetPixelShader( ps );
+				ptLight2Render->SetMaterial( matPtLight );
 		}
 
 		m_FPSCamera = cam;
@@ -287,6 +301,7 @@ void  Tutorial::Awake()
 
 void  Tutorial::Init()
 {
+		m_isInit = true;
 
 		GameScene.SetMethodState( &Scene::BaseScene::Update );
 }
@@ -332,7 +347,8 @@ void  Tutorial::Update()
 
 		if ( Input::IsKeyPress( DIK_ESCAPE ) )
 		{
-				GameScene.SetMethodState( &Scene::BaseScene::Release );
+				//GameScene.SetMethodState( &Scene::BaseScene::Release );
+				exit( 0 );
 		}
 
 		/* Update systems */
@@ -345,7 +361,10 @@ void  Tutorial::Update()
 
 void  Tutorial::Release()
 {
-		m_pTextureManager.~shared_ptr();
-		m_pd3dRenderer.~shared_ptr();
-		exit( 0 );
+		if ( m_isInit )
+		{
+
+		}// if ( m_isInit == true )
+
+		m_isInit = false;
 }

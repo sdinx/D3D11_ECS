@@ -9,31 +9,32 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <d3d11utility\components/Transform.h>
+#include  <d3d11utility/components/Transform.h>
+#include  <d3d11utility/graphics/StructuredBuffer.h>
 #include  <memory>
-
+#include  <../shader/header/ShaderDefines.h>
 
 namespace  D3D11Utility
 {
 
 		class  PointLight :public  Component
 		{
+				friend  class  Systems::IDirect3DRenderer;
 
 				struct  CBufferPointLight
 				{
-						Vector3  position;
-						Vector3  attenuate;
+						DirectX::XMFLOAT3  position;
+						DirectX::XMFLOAT3  attenuate;
 				};
 
 		public:
 				//----------------------------------------------------------------------------------
 				// other
 				//----------------------------------------------------------------------------------
-				PointLight() {}
+				PointLight() = delete;
 				PointLight( Vector3  position, Vector3  attenuate, Graphics::Material  material );
 				PointLight( Vector3  position, Vector3  attenuate, Graphics::MaterialId  id = 0 );
 				~PointLight();
-
 
 		private:
 				//----------------------------------------------------------------------------------
@@ -42,11 +43,13 @@ namespace  D3D11Utility
 
 				static  ComponentId  STATIC_COMPONENT_ID;
 				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferPointLight;
-				static  ID3D11Buffer  *s_pConstantBuffer;
+				static  const  uint  s_nLightCounts = NUM_POINT_LIGHT_COUNTS;
+				static  CBufferPointLight  s_instanceLights[NUM_POINT_LIGHT_COUNTS];
+				static  Graphics::StructuredBuffer<CBufferPointLight>*  s_pStructureBuffer;
 
+				const  uint  m_nInstanceId;
 				std::shared_ptr<Systems::IDirect3DRenderer>  m_pRenderer;
 				Transform*  m_transform;
-				CBufferPointLight  m_cbuffer;
 				Graphics::MaterialId  m_materialId;
 
 		public:
@@ -68,10 +71,7 @@ namespace  D3D11Utility
 
 				/* static */
 				static  void  SetConstantBuffer();
-				static  ComponentId  GetStaticComponentId()
-				{
-						return  STATIC_COMPONENT_ID;
-				}
+				static  ComponentId  GetStaticComponentId() { return  STATIC_COMPONENT_ID; }
 				static  void  SetStaticComponentId( ComponentId  id )
 				{
 						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
@@ -80,6 +80,7 @@ namespace  D3D11Utility
 								// TODO: need output debug string.
 						}
 				}
+				static  Graphics::StructuredBuffer<CBufferPointLight>*  GetStructuredBuffer() { return  s_pStructureBuffer; }
 
 				/* setter */
 				void  SetMaterial( Graphics::Material  material );
@@ -91,9 +92,6 @@ namespace  D3D11Utility
 				/* derived virtual */
 				void  HandleMessage( const  Message&  msg ) {}
 				void  Update();
-
-				/* original */
-				void  UpdateConstantBuffer();
 
 		};// class  PointLight
 

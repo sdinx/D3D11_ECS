@@ -36,6 +36,7 @@ namespace  D3D11Utility
 				class  IDirect3DRenderer :public  IGraphicsRenderer, public  _Singleton<IDirect3DRenderer>
 				{
 						friend  class  _Singleton<IDirect3DRenderer>;
+						friend  class  DebugSystem;
 
 						struct  RenderTarget
 						{
@@ -68,6 +69,11 @@ namespace  D3D11Utility
 								ID3D11Texture2D*  m_pTexture = nullptr;
 								ID3D11ShaderResourceView*  m_pSRView = nullptr;
 						};
+
+						struct  InstancedLightData
+						{
+								DirectX::XMFLOAT3  instancePos;
+						};// struct InstancedLightData
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -139,8 +145,8 @@ namespace  D3D11Utility
 
 						// レンダーターゲットビューの生成 ( MRT用 )
 						HRESULT  CreateMultipleRenderTargetView();
-						Graphics::Material*  CreateMaterial();
-						Graphics::Material*  CreateMaterial( Vector3  _ambient, Vector3  _diffuse, Vector4  _specular, Vector4  _emissive );
+						Graphics::Material*  CreateMaterial( std::string  name );
+						Graphics::Material*  CreateMaterial( std::string  name, Vector3  _ambient, Vector3  _diffuse, Vector4  _specular, Vector4  _emissive );
 						Graphics::VertexBuffer*  CreateVertexBuffer( const  FbxLoader&  fbxLoader );
 						Graphics::VertexShader*  CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel = "vs_5_0", UINT  numLayouts = 0, D3D11_INPUT_ELEMENT_DESC*  layouts = nullptr );
 						Graphics::GeometryShader*  CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel = "gs_5_0" );

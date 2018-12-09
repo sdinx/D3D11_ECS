@@ -42,6 +42,7 @@
     <ClInclude Include="header\d3d11utility\graphics\IShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\Material.h" />
     <ClInclude Include="header\d3d11utility\graphics\PixelShader.h" />
+    <ClInclude Include="header\d3d11utility\graphics\StructuredBuffer.h" />
     <ClInclude Include="header\d3d11utility\graphics\Texture.h" />
     <ClInclude Include="header\d3d11utility\graphics\VertexBuffer.h" />
     <ClInclude Include="header\d3d11utility\graphics\VertexShader.h" />
@@ -120,6 +121,7 @@
     <ClInclude Include="header\IRenderable.h" />
     <ClInclude Include="header\Singleton.h" />
     <ClInclude Include="header\StateTransition.h" />
+    <ClInclude Include="shader\header\ShaderDefines.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\D3D11Utility.cpp" />
