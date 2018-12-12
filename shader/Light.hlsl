@@ -22,7 +22,7 @@ struct LightPSOutput
 };
 
 
-LightPSInput vsmain( LightVSInput IN, in uint instanceId : SV_InstanceID )
+LightPSInput vsmain( LightVSInput IN, uint instanceId : SV_InstanceID, out uint instId : InstanceId )
 {
     LightPSInput OUT = (LightPSInput) 0;
 
@@ -36,6 +36,7 @@ LightPSInput vsmain( LightVSInput IN, in uint instanceId : SV_InstanceID )
     OUT.position = mul( g_proj, OUT.position );
 
     OUT.index = instanceId;
+    instId = instanceId;
 
     return OUT;
 }
@@ -57,11 +58,12 @@ void gsmain( triangle LightVSInput IN[3], inout TriangleStream<LightPSInput> tri
 }
 
 
-LightPSOutput psmain( LightPSInput IN )
+LightPSOutput psmain( LightPSInput IN, in uint instanceId : InstanceId )
 {
     LightPSOutput OUT = (LightPSOutput) 0;
 
-    OUT.cluster = uint2( 100, 100 );
+    uint pointLightIndex = instanceId << 16;
+    OUT.cluster = uint2( 100, pointLightIndex );
 
     return OUT;
 }

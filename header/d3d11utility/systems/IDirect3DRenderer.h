@@ -102,17 +102,17 @@ namespace  D3D11Utility
 						std::unordered_map<size_t, FbxLoader>  m_fbxLoaderMap;
 
 						/* rendering variables */
-						WRL::ComPtr<ID3D11RenderTargetView>  m_pRTView = nullptr;
-						WRL::ComPtr<ID3D11RenderTargetView>  m_pClusterRTView = nullptr;
-						WRL::ComPtr<ID3D11DepthStencilView>  m_pDSView = nullptr;
-						WRL::ComPtr<ID3D11Texture2D>  m_pRTTexture = nullptr;
-						WRL::ComPtr<ID3D11Texture2D>  m_pDSTexture = nullptr;
-						WRL::ComPtr<ID3D11Texture3D>  m_pClusterRTTexture = nullptr;
-						WRL::ComPtr<ID3D11ShaderResourceView>  m_pRTShaderResourceView = nullptr;
-						WRL::ComPtr<ID3D11ShaderResourceView>  m_pClusterRTShaderResourceView = nullptr;
-						WRL::ComPtr<ID3D11ShaderResourceView>  m_pDSShaderResourceView = nullptr;
-						WRL::ComPtr<ID3D11ShaderResourceView>  m_pSTShaderResourceView = nullptr;
-						WRL::ComPtr<ID3D11UnorderedAccessView>  m_pClusterUAV = nullptr;
+						WRL::ComPtr<ID3D11RenderTargetView>  m_pRTView;
+						WRL::ComPtr<ID3D11RenderTargetView>  m_pClusterRTView;
+						WRL::ComPtr<ID3D11DepthStencilView>  m_pDSView;
+						WRL::ComPtr<ID3D11Texture2D>  m_pRTTexture;
+						WRL::ComPtr<ID3D11Texture2D>  m_pDSTexture;
+						WRL::ComPtr<ID3D11Texture3D>  m_pClusterRTTexture;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pRTShaderResourceView;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pClusterRTShaderResourceView;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pDSShaderResourceView;
+						WRL::ComPtr<ID3D11ShaderResourceView>  m_pSTShaderResourceView;
+						WRL::ComPtr<ID3D11UnorderedAccessView>  m_pClusterUAV;
 						WRL::ComPtr<ID3D11DepthStencilState>  m_pDepthStencilState;
 						std::vector<RenderTarget>  m_renderTagets;
 						ID3D11Buffer*  m_pVtxBuffer = nullptr;
