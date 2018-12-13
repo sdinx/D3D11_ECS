@@ -76,7 +76,7 @@ namespace  D3D11Utility
 						m_nDataCounts( nDataCounts )
 				{
 						CD3D11_BUFFER_DESC  desc(
-								sizeof( T )*nDataCounts,
+								sizeof( T ) * nDataCounts,
 								bindFlags,
 								dynamic ? D3D11_USAGE_DYNAMIC : D3D11_USAGE_DEFAULT,
 								dynamic ? D3D11_CPU_ACCESS_WRITE : 0,

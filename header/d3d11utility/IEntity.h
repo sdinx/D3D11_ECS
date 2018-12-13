@@ -121,10 +121,8 @@ namespace  D3D11Utility
 				{
 						return  m_pComponentManager->GetComponent<T>( m_entityId );
 				}
-				inline  const  EntityId  GetEntityId()const
-				{
-						return  m_entityId;
-				}
+				std::string  GetName() const { return  m_name; }
+				inline  const  EntityId  GetEntityId()const { return  m_entityId; }
 
 				inline  bool  operator==( const  std::string  name ) const
 				{

@@ -41,21 +41,21 @@ LightPSInput vsmain( LightVSInput IN, uint instanceId : SV_InstanceID, out uint 
     return OUT;
 }
 
-
-[maxvertexcount( 3 )]
-void gsmain( triangle LightVSInput IN[3], inout TriangleStream<LightPSInput> triOutputStream )
-{
-    LightPSInput OUT = (LightPSInput) 0;
+// –¢Žg—p
+//[maxvertexcount( 3 )]
+//void gsmain( triangle LightVSInput IN[3], inout TriangleStream<LightPSInput> triOutputStream )
+//{
+//    LightPSInput OUT = (LightPSInput) 0;
 	
-    for ( int i = 0; i < 3; ++i )
-    {
-        OUT.position = IN[i].position;
-        OUT.index = 5;
+//    for ( int i = 0; i < 3; ++i )
+//    {
+//        OUT.position = IN[i].position;
+//        OUT.index = 5;
 
-        triOutputStream.Append( OUT );
-    }
+//        triOutputStream.Append( OUT );
+//    }
 
-}
+//}
 
 
 LightPSOutput psmain( LightPSInput IN, in uint instanceId : InstanceId )

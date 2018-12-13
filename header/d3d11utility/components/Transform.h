@@ -34,6 +34,7 @@ namespace  D3D11Utility
 		class  Transform :public  Component
 		{
 				// TODO: オブジェクトに必要な座標や行列情報の変数を用意
+				friend  class Systems::DebugSystem;
 
 		public:
 				//----------------------------------------------------------------------------------

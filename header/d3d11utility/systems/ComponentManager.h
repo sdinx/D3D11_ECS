@@ -15,6 +15,7 @@
 // Includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility.h>
+#include  <d3d11utility\Interface.h>
 #include  <d3d11utility\IComponent.h>
 #include  <d3d11utility\IEntity.h>
 #include  <d3d11utility/systems/DebugSystem.h>

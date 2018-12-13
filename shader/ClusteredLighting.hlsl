@@ -9,18 +9,14 @@ struct PointLight
     float3 attenuate;
 };
 
-PointLight lights[10];
-
 Texture2D<float2> texNormal : register( t0 );
-SamplerState ssNormal : register( s0 );
 Texture2D<float4> texDiffuse : register( t1 );
-SamplerState ssDiffuse : register( s1 );
 Texture2D<float> texSpecular : register( t2 );
-SamplerState ssSpecular : register( s2 );
 Texture2D<float> texDepth : register( t3 );
-SamplerState ssDepth : register( s3 );
 Texture2D<uint> texStencil : register( t4 );
-SamplerState ssStencil : register( s4 );
+Texture3D<uint2> texCluster : register( t5 );
+
+SamplerState samState : register( s0 );
 
 Texture3D<uint2> texCluster : register( t5 ); // クラスタマップ ( R32 : offset, G32 : [PointLightCount, SpotLightCount] )
 Texture1D<uint> texLightIndex : register( t6 );
@@ -51,8 +47,8 @@ float4 main( PSDeferredInput IN ) : SV_Target
         uint index = lightLists[lightIndex++].x;
 		
 		// ライト情報.
-        float3 lightPos = lights[index].position;
-        float3 color = lights[index].diffuse;
+        float3 lightPos = ptLights[index].position;
+        float3 color = ptLights[index].diffuse;
 		
 		// ライティング処理...
     }

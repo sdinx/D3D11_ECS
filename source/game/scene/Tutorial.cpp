@@ -161,10 +161,8 @@ void  Tutorial::Awake()
 		// 弾丸のベースとなるエンティティを作成
 		static  const  EntityId  bulletId = m_pEntityManager->CreateEntity( "Bullet" );
 		Entity*  bulletEntity = m_pEntityManager->GetEntity( bulletId );
-		bulletEntity->AddComponent<Transform>();
-		bulletEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eFrontSolid );
-		Renderable*  bulletRender = bulletEntity->GetComponent<Renderable>();
-		Transform*  bulletTrans = bulletEntity->GetComponent<Transform>();
+		Transform*  bulletTrans = bulletEntity->AddComponent<Transform>();
+		Renderable*  bulletRender = bulletEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eFrontSolid );
 		bulletRender->SetVertexShader( vs );
 		bulletRender->SetPixelShader( psSmooth );
 		{/* Parameter */
@@ -178,10 +176,8 @@ void  Tutorial::Awake()
 		/* Init Cube */
 		static  const  EntityId  cubeId = m_pEntityManager->CreateEntity( "Cube" );
 		Entity*  cubeEntity = m_pEntityManager->GetEntity( cubeId );
-		cubeEntity->AddComponent<Transform>();
-		cubeEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eNoneSolid );
-		Renderable*  cubeRender = cubeEntity->GetComponent<Renderable>();
-		Transform*  cubeTrans = cubeEntity->GetComponent<Transform>();
+		Transform*  cubeTrans = cubeEntity->AddComponent<Transform>();
+		Renderable*  cubeRender = cubeEntity->AddComponent<Renderable>( eMeshId::eCube, Graphics::eNoneSolid );
 		cubeRender->SetVertexShader( vs );
 		cubeRender->SetPixelShader( ps );
 		cubeRender->SetDiffuseTexId( texGroundId );
@@ -197,10 +193,8 @@ void  Tutorial::Awake()
 		/* Init SkySphere */
 		static  const  EntityId  sphereId = m_pEntityManager->CreateEntity( "SkySphere" );
 		Entity*  sphereEntity = m_pEntityManager->GetEntity( sphereId );
-		sphereEntity->AddComponent<Transform>();
-		sphereEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eBackSolid );
-		Renderable*  sphereRender = sphereEntity->GetComponent<Renderable>();
-		Transform*  sphereTrans = sphereEntity->GetComponent<Transform>();
+		Transform*  sphereTrans = sphereEntity->AddComponent<Transform>();
+		Renderable*  sphereRender = sphereEntity->AddComponent<Renderable>( eMeshId::eSphere, Graphics::eBackSolid );
 		sphereRender->SetVertexShader( vs );
 		sphereRender->SetPixelShader( ps );
 		{/* Parameter */
@@ -217,10 +211,8 @@ void  Tutorial::Awake()
 		static  const  EntityId  rifleId = m_pEntityManager->CreateEntity( "Rifle" );
 		Entity*  rifleEntity = m_pEntityManager->GetEntity( rifleId );
 		rifleEntity->SetTag( "Player" );
-		rifleEntity->AddComponent<Transform>();
-		rifleEntity->AddComponent<Renderable>( vtxRifle );
-		Renderable*  rifleRender = rifleEntity->GetComponent<Renderable>();
-		Transform*  rifleTrans = rifleEntity->GetComponent<Transform>();
+		Transform*  rifleTrans = rifleEntity->AddComponent<Transform>();
+		Renderable*  rifleRender = rifleEntity->AddComponent<Renderable>( vtxRifle );
 		{
 				rifleRender->SetVertexShader( vs );
 				rifleRender->SetPixelShader( ps );
@@ -237,12 +229,10 @@ void  Tutorial::Awake()
 		static  const  EntityId  playerId = m_pEntityManager->CreateEntity( "Player" );
 		m_playerEntity = m_pEntityManager->GetEntity( playerId );
 		m_playerEntity->SetTag( "Player" );
-		m_playerEntity->AddComponent<Transform>();
-		m_playerEntity->AddComponent<Renderable>( vtxFubuking );
-		Renderable*  playerRender = m_playerEntity->GetComponent<Renderable>();
+		Transform*  trans2 = m_playerEntity->AddComponent<Transform>();
+		Renderable*  playerRender = m_playerEntity->AddComponent<Renderable>( vtxFubuking );
 		playerRender->SetVertexShader( vs );
 		playerRender->SetPixelShader( psSmooth );
-		Transform*  trans2 = m_playerEntity->GetComponent<Transform>();
 		{/* Parameter */
 				playerRender->SetDiffuseTexId( texFubukiId );
 				playerRender->SetNormalTexId( texMutantNorId );
@@ -257,8 +247,7 @@ void  Tutorial::Awake()
 		static  const  EntityId  cameraId = m_pEntityManager->CreateEntity( "Camera" );
 		Entity*  cameraEntity = m_pEntityManager->GetEntity( cameraId );
 		Transform*  camTrans = cameraEntity->AddComponent<Transform>();
-		cameraEntity->AddComponent<Camera>( camTrans );
-		Camera*  cam = cameraEntity->GetComponent<Camera>();
+		Camera*  cam =cameraEntity->AddComponent<Camera>( camTrans );
 		//rifleTrans->SetParent( camTrans );
 		{/* Parameter */
 				camTrans->SetPosition( 0.0f, 2.0f, 0.0f );

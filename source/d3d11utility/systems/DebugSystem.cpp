@@ -1,8 +1,10 @@
 //----------------------------------------------------------------------------------
 // Includes
 //----------------------------------------------------------------------------------
-#include  <d3d11utility\Systems\DebugSystem.h>
+#include  <d3d11utility\components\Transform.h>
+#include  <d3d11utility\systems\DebugSystem.h>
 #include  <d3d11utility/systems/IDirect3DRenderer.h>
+#include  <d3d11utility/systems/ComponentManager.h>
 #include  <d3d11utility/Object.h>
 #include  <game/GameUtility.h>
 #include  <imgui/imgui.h>
@@ -81,27 +83,10 @@ void  DebugSystem::RenderImGui()
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		static  uint  counter = 0;
-		ImGui::Begin( "test" );
-		ImGui::Text( "let press" );
-		if ( ImGui::Button( "click here" ) )
-				counter++;
-		std::string  textCount = "count : " + std::to_string( counter );
-		ImGui::Text( textCount.c_str() );
-		ImGui::End();
-
-		ImGui::Begin( "testd" );
-		ImGui::Text( "let press" );
-		if ( ImGui::Button( "click here" ) )
-				counter++;
-		std::string  stextCount = "count : " + std::to_string( counter );
-		ImGui::Text( stextCount.c_str() );
-		ImGui::End();
-
+		int  i = 0;
 		/* Material editor */
-		ImGui::Begin( "Material Editor" );
+		ImGui::Begin( "Material editor" );
 		{
-				int  i = 0;
 				for ( auto& material : m_pd3dRenderer->m_materialList )
 				{
 						ImGui::SetNextTreeNodeOpen( true, ImGuiSetCond_Once );
@@ -110,9 +95,27 @@ void  DebugSystem::RenderImGui()
 								ImGui::SliderFloat3( "Ambient color", material->ambient, 0.0f, 1.0f );
 								ImGui::SliderFloat3( "Diffuse color", material->diffuse, 0.0f, 1.0f );
 						}
-						i++;
 						ImGui::TreePop();
+						i++;
 				}// for ( auto& material : m_materialList )
+		}
+		ImGui::End();
+
+
+		ImGui::Begin( "Component editor" );
+		{
+				Transform*  transform = nullptr;
+				for ( auto& component : m_pComponentManager->GetComponents<Transform>() )
+				{
+						transform = component->GetComponent<Transform>();
+						ImGui::SetNextTreeNodeOpen( true, ImGuiSetCond_Once );
+						if ( ImGui::TreeNode( ( std::to_string( i ) + " : " + transform->GetEntityId().parent->GetName() ).c_str() ) )
+						{
+								ImGui::DragFloat3( "position", transform->m_position, 0.01f );
+						}
+						ImGui::TreePop();
+						i++;
+				}
 		}
 		ImGui::End();
 

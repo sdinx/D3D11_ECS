@@ -318,8 +318,8 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				tex3dDesc.MipLevels = 1;
 				tex3dDesc.Format = DXGI_FORMAT_R32G32_UINT;// R32 : offset, G32 : [PointLightCount, SpotLightCount]
 				tex3dDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-				tex3dDesc.Usage = D3D11_USAGE_DEFAULT;
-				tex3dDesc.CPUAccessFlags = 0;
+				tex3dDesc.Usage = D3D11_USAGE_DYNAMIC;
+				tex3dDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 				tex3dDesc.MiscFlags = 0;
 
 				hr = pd3dDevice->CreateTexture3D( &tex3dDesc, nullptr, &m_pClusterRTTexture );
@@ -356,7 +356,7 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				uavDesc.Texture3D.FirstWSlice = 0;
 				uavDesc.Texture3D.MipSlice = 0;
 
-				//pd3dDevice->CreateUnorderedAccessView( m_pClusterRTTexture.Get(), &uavDesc, &m_pClusterUAV );
+				pd3dDevice->CreateUnorderedAccessView( m_pClusterRTTexture.Get(), nullptr, &m_pClusterUAV );
 
 		}
 
