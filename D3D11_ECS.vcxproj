@@ -21,9 +21,11 @@
   <ItemGroup>
     <Text Include="ChangeLog.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Text>
     <Text Include="Reference.txt">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -38,12 +40,14 @@
     <ClInclude Include="header\d3d11utility\components\Transform.h" />
     <ClInclude Include="header\d3d11utility\DIKeyboard.h" />
     <ClInclude Include="header\d3d11utility\Entity.h" />
+    <ClInclude Include="header\d3d11utility\graphics\ComputeShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\GeometryShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\IShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\Material.h" />
     <ClInclude Include="header\d3d11utility\graphics\PixelShader.h" />
     <ClInclude Include="header\d3d11utility\graphics\StructuredBuffer.h" />
     <ClInclude Include="header\d3d11utility\graphics\Texture.h" />
+    <ClInclude Include="header\d3d11utility\graphics\Texture1D.h" />
     <ClInclude Include="header\d3d11utility\graphics\VertexBuffer.h" />
     <ClInclude Include="header\d3d11utility\graphics\VertexShader.h" />
     <ClInclude Include="header\d3d11utility\IComponent.h" />
@@ -134,10 +138,12 @@
     <ClCompile Include="source\d3d11utility\components\Transform.cpp" />
     <ClCompile Include="source\d3d11utility\DIKeyBoard.cpp" />
     <ClCompile Include="source\d3d11utility\Entity.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\ComputeShader.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\Material.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\PixelShader.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\Texture.cpp" />
+    <ClCompile Include="source\d3d11utility\graphics\Texture1D.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\VertexBuffer.cpp" />
     <ClCompile Include="source\d3d11utility\graphics\VertexShader.cpp" />
     <ClCompile Include="source\d3d11utility\physical\BoxCollider.cpp">
@@ -194,7 +200,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
@@ -210,6 +216,17 @@
     <FxCompile Include="shader\ComputeClusteredLight.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="shader\ComputeLight.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="shader\Default.fx">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
@@ -250,9 +267,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">psmain</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="shader\Smoothing.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

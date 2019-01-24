@@ -10,7 +10,6 @@ const int NUM_DEPTH_SLICES = 16;
 void test( uint3 DTid : SV_DispatchThreadID )
 {
 
-
 	{
 
         int x = 0; // 一番左から
@@ -53,7 +52,7 @@ void FrustumCulling()
 	// 指数関数的にフラスタムを分割
     for ( uint sliceIndex = 1; sliceIndex <= NUM_DEPTH_SLICES; sliceIndex++ )
     {
-        z = lerp( 0.0f, 1.0f, log( sliceIndex / NUM_DEPTH_SLICES * ( a - 1 ) + 1 ) / log( a ) );
+        z = lerp( 0.1f, 1000.0f, log( sliceIndex / NUM_DEPTH_SLICES * ( a - 1 ) + 1 ) / log( a ) );
     } // end for
 }
 

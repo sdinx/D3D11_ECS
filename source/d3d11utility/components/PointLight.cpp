@@ -18,12 +18,13 @@ using  namespace  DirectX;
 ComponentId  PointLight::STATIC_COMPONENT_ID = STATIC_ID_INVALID;
 const  uint  PointLight::s_nConstantBufferSlot;
 const  uint  PointLight::s_nLightCounts;
+Camera*  PointLight::s_camera;
 PointLight::CBufferPointLight  PointLight::s_instanceLights[NUM_POINT_LIGHT_COUNTS];
 Graphics::StructuredBuffer<PointLight::CBufferPointLight>*  PointLight::s_pStructureBuffer;
 static  uint  s_lightCounts = 0;
 
 
-PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::Material  material ) :
+PointLight::PointLight( Vector3  position, float  distance, Graphics::Material  material ) :
 		m_nInstanceId( s_lightCounts )
 {
 		s_lightCounts++;
@@ -35,14 +36,12 @@ PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::Materia
 		s_instanceLights[m_nInstanceId].position.y = position.m_floats[1];
 		s_instanceLights[m_nInstanceId].position.z = position.m_floats[2];
 
-		s_instanceLights[m_nInstanceId].attenuate.x = attenuate.m_floats[0];
-		s_instanceLights[m_nInstanceId].attenuate.y = attenuate.m_floats[1];
-		s_instanceLights[m_nInstanceId].attenuate.z = attenuate.m_floats[2];
+		s_instanceLights[m_nInstanceId].distance = distance;
 		m_materialId = material.GetMaterialId();
 }
 
 
-PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::MaterialId  id ) :
+PointLight::PointLight( Vector3  position, float  distance, Graphics::MaterialId  id ) :
 		m_nInstanceId( s_lightCounts )
 {
 		s_lightCounts++;
@@ -54,9 +53,7 @@ PointLight::PointLight( Vector3  position, Vector3  attenuate, Graphics::Materia
 		s_instanceLights[m_nInstanceId].position.y = position.m_floats[1];
 		s_instanceLights[m_nInstanceId].position.z = position.m_floats[2];
 
-		s_instanceLights[m_nInstanceId].attenuate.x = attenuate.m_floats[0];
-		s_instanceLights[m_nInstanceId].attenuate.y = attenuate.m_floats[1];
-		s_instanceLights[m_nInstanceId].attenuate.z = attenuate.m_floats[2];
+		s_instanceLights[m_nInstanceId].distance = distance;
 		m_materialId = id;
 }
 
@@ -76,6 +73,7 @@ void  PointLight::SetConstantBuffer()
 void  PointLight::Update()
 {
 		Vector3  position = GetComponent<Transform>()->GetPosition();
+
 		s_instanceLights[m_nInstanceId].position.x = position.m_floats[0];
 		s_instanceLights[m_nInstanceId].position.y = position.m_floats[1];
 		s_instanceLights[m_nInstanceId].position.z = position.m_floats[2];

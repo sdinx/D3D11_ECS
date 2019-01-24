@@ -99,6 +99,7 @@ namespace  D3D11Utility
 				{
 						return  m_pComponentManager->GetComponent<T>( m_parentsEntityId );
 				}
+
 				volatile  const  EntityId  GetEntityId()
 				{
 						return  m_parentsEntityId;

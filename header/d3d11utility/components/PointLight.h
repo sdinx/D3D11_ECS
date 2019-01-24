@@ -10,6 +10,7 @@
 // Includes
 //----------------------------------------------------------------------------------
 #include  <d3d11utility/components/Transform.h>
+#include  <d3d11utility/components/Camera.h>
 #include  <d3d11utility/graphics/StructuredBuffer.h>
 #include  <memory>
 #include  <../shader/header/ShaderDefines.h>
@@ -24,7 +25,7 @@ namespace  D3D11Utility
 				struct  CBufferPointLight
 				{
 						DirectX::XMFLOAT3  position;
-						DirectX::XMFLOAT3  attenuate;
+						float  distance;
 				};
 
 		public:
@@ -32,8 +33,8 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 				PointLight() = delete;
-				PointLight( Vector3  position, Vector3  attenuate, Graphics::Material  material );
-				PointLight( Vector3  position, Vector3  attenuate, Graphics::MaterialId  id = 0 );
+				PointLight( Vector3  position, float  distance, Graphics::Material  material );
+				PointLight( Vector3  position, float  distance, Graphics::MaterialId  id = 0 );
 				~PointLight();
 
 		private:
@@ -41,6 +42,7 @@ namespace  D3D11Utility
 				// private variables
 				//----------------------------------------------------------------------------------
 
+				static  Camera*  s_camera;
 				static  ComponentId  STATIC_COMPONENT_ID;
 				static  const  uint  s_nConstantBufferSlot = eCbufferId::eCBufferPointLight;
 				static  const  uint  s_nLightCounts = NUM_POINT_LIGHT_COUNTS;
@@ -70,8 +72,10 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 
 				/* static */
-				static  void  SetConstantBuffer();
 				static  ComponentId  GetStaticComponentId() { return  STATIC_COMPONENT_ID; }
+				static  Graphics::StructuredBuffer<CBufferPointLight>*  GetStructuredBuffer() { return  s_pStructureBuffer; }
+				static  void  SetConstantBuffer();
+				static  void  SetMainCamera( Camera*  camera ) { s_camera = camera; }
 				static  void  SetStaticComponentId( ComponentId  id )
 				{
 						if ( STATIC_COMPONENT_ID == STATIC_ID_INVALID )
@@ -80,7 +84,6 @@ namespace  D3D11Utility
 								// TODO: need output debug string.
 						}
 				}
-				static  Graphics::StructuredBuffer<CBufferPointLight>*  GetStructuredBuffer() { return  s_pStructureBuffer; }
 
 				/* setter */
 				void  SetMaterial( Graphics::Material  material );

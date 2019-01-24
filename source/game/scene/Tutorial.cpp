@@ -72,8 +72,8 @@ void  Tutorial::InputFPSCamera()
 
 		if ( Input::IsKeyTrigger( DIK_RETURN ) )
 		{
-				isMouse = !isMouse;
 				ShowCursor( isMouse );
+				isMouse = !isMouse;
 		}
 
 		if ( Input::IsKeyPress( DIK_W ) || GetControllerButtonPress( XIP_D_UP ) )
@@ -99,10 +99,8 @@ void  Tutorial::InputFPSCamera()
 		else if ( Input::IsKeyPress( DIK_E ) )
 				move += Vector3( 0, 0.002f, 0 );
 
-		if ( isMouse ) {
+		if ( isMouse )
 				SetCursorPos( GetSystemMetrics( SM_CXSCREEN ) / 2, GetSystemMetrics( SM_CYSCREEN ) / 2 );
-				ShowCursor( false );
-		}
 }
 
 
@@ -247,18 +245,19 @@ void  Tutorial::Awake()
 		static  const  EntityId  cameraId = m_pEntityManager->CreateEntity( "Camera" );
 		Entity*  cameraEntity = m_pEntityManager->GetEntity( cameraId );
 		Transform*  camTrans = cameraEntity->AddComponent<Transform>();
-		Camera*  cam =cameraEntity->AddComponent<Camera>( camTrans );
+		Camera*  cam = cameraEntity->AddComponent<Camera>( camTrans );
 		//rifleTrans->SetParent( camTrans );
 		{/* Parameter */
 				camTrans->SetPosition( 0.0f, 2.0f, 0.0f );
 				cam->HandleMessage( Message( Camera::MSG_UPDATE_ALL ) );
 		}
+		PointLight::SetMainCamera( cam );
 
 		/* Init light */
 		const  EntityId  ptLightId = m_pEntityManager->CreateEntity( "Point Light" );
 		Entity*  ptLightEntity = m_pEntityManager->GetEntity( ptLightId );
 		Transform*  ptLightTrans = ptLightEntity->AddComponent<Transform>();
-		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), Vector3( 0.5f, 0.1f, 0.1f ) );
+		PointLight*  ptLight = ptLightEntity->AddComponent<PointLight>( Vector3( 0.5f, 6, -0.2f ), 1.0f );
 		Renderable*  ptLightRender = ptLightEntity->AddComponent<Renderable>( eMeshId::eSphere );
 		{
 				ptLightTrans->SetPosition( 0.5f, 6, -0.2f );
@@ -272,7 +271,7 @@ void  Tutorial::Awake()
 		const  EntityId  ptLight2Id = m_pEntityManager->CreateEntity( "Point Light 2" );
 		Entity*  ptLight2Entity = m_pEntityManager->GetEntity( ptLight2Id );
 		Transform*  ptLight2Trans = ptLight2Entity->AddComponent<Transform>();
-		PointLight*  ptLight2 = ptLight2Entity->AddComponent<PointLight>( Vector3( -0.8f, 3, -0.2f ), Vector3( 0.5f, 0.1f, 0.1f ) );
+		PointLight*  ptLight2 = ptLight2Entity->AddComponent<PointLight>( Vector3( -0.8f, 3, -0.2f ), 0.3f );
 		Renderable*  ptLight2Render = ptLight2Entity->AddComponent<Renderable>( eMeshId::eSphere );
 		{
 				ptLight2Trans->SetPosition( -0.8f, 3, -0.2f );

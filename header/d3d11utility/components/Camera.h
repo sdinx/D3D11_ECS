@@ -57,6 +57,8 @@ namespace  D3D11Utility
 				Matrix4x4  m_projection;
 				Vector3  m_focusPosition;// 注視点 ( カメラ位置からの差分座標として使う )
 				Vector3  m_upDirection;
+				float  m_fNearClip;
+				float  m_fFarClip;
 
 
 		public:

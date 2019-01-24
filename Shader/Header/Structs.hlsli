@@ -7,6 +7,7 @@ cbuffer CBuffer : register( b0 )
     float4x4 g_proj;
     float4x4 g_invView;
     float4x4 g_invProjection;
+    float2 g_nearFarClip;
     float3 g_cameraPos;
 };
 
@@ -48,6 +49,9 @@ SamplerState diffuseTextureSampler : register( s0 );
 Texture2D normalTexture : register( t1 );
 SamplerState normalTextureSampler : register( s1 );
 
+// cluster 3d texture
+RWTexture3D<uint2> texCluster : register( u0 );
+RWTexture1D<uint> texLightList : register( u1 );
 
 //-----------------------------------------------------------------------------------
 // Structured buffers
@@ -55,9 +59,9 @@ SamplerState normalTextureSampler : register( s1 );
 struct SPointLight
 {
     float3 pos;
-    float3 attenuate;
+    float distance;
 };
-StructuredBuffer<SPointLight> ptLights : register( t3 );
+StructuredBuffer<SPointLight> g_ptLight : register( t7 );
 
 //-----------------------------------------------------------------------------------
 // VSInput structure

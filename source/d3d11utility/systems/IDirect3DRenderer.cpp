@@ -134,51 +134,9 @@ void  IDirect3DRenderer::Rendering()const
 		}/* Done first rendering */
 
 		/* Begin light rendering */
-		{
-				ID3D11RenderTargetView*  srv = m_pClusterRTView.Get();
-				pd3dDeviceContext->ClearRenderTargetView( m_pClusterRTView.Get(), m_fClearColors );
-				pd3dDeviceContext->OMSetRenderTargets( 1, &srv, nullptr );
+		ComputeLight();
 
-				m_pClusterVShader->UpdateShader();
-				//m_pClusterGShader->UpdateShader();
-				m_pClusterPShader->UpdateShader();
-
-				pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
-
-				pd3dDeviceContext->RSSetState( m_rasterStates[Graphics::eNoneSolid] );
-				pd3dDeviceContext->PSSetShaderResources( 0, 0, nullptr );
-				pd3dDeviceContext->PSSetSamplers( 0, 0, nullptr );
-
-				Renderable*  ptRender = nullptr;
-				//for ( auto ptLight : m_componentManager->GetComponents<PointLight>() )
-				//{
-				//		ptRender = ptLight->GetComponent<Renderable>();
-				//		pd3dDeviceContext->UpdateSubresource( ptRender->s_pConstantBuffer, 0, nullptr, &ptRender->m_cbuffer, 0, 0 );
-				//
-				//		m_pVertexPtLight->BindBuffer();
-				//}
-
-				auto  strBuffer = PointLight::GetStructuredBuffer();
-				auto  ptLights = strBuffer->Map();
-				for ( int i = 0; i < PointLight::s_nLightCounts; i++ )
-						ptLights[i] = PointLight::s_instanceLights[i];
-
-				strBuffer->Unmap();
-				ID3D11ShaderResourceView*  srvLight = strBuffer->GetShaderResourceView();
-				pd3dDeviceContext->VSSetShaderResources( 3, 1, &srvLight );
-				pd3dDeviceContext->PSSetShaderResources( 3, 1, &srvLight );
-
-
-				m_pVertexPtLight->BindBuffer();
-				pd3dDeviceContext->DrawInstanced( m_pVertexPtLight->GetVertexCounts(), PointLight::s_nLightCounts, 0, 0 );
-
-				pd3dDeviceContext->GSSetShader( nullptr, nullptr, 0 );
-
-				// todo: ライトをインスタンス描画する.
-
-		}/* Done light rendering */
-
-		 /* Begin deferred rendering */
+		/* Begin deferred rendering */
 		{
 
 				ID3D11RenderTargetView*  defRtv = m_pRTView.Get();
@@ -192,7 +150,7 @@ void  IDirect3DRenderer::Rendering()const
 				pd3dDeviceContext->IASetVertexBuffers( 0, 1, &m_pVtxBuffer, &stride, &offset );
 				pd3dDeviceContext->RSSetState( m_rasterStates[Graphics::eNoneSolid] );
 
-				constexpr  uint  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 3;
+				constexpr  uint  RT_TEXTURE_COUNTS = RT_ARRAY_COUNTS + 2;
 				ID3D11ShaderResourceView*  srvs[RT_TEXTURE_COUNTS];
 				int  nSRViewCounts = 0;
 				for ( auto& rt : m_renderTagets )
@@ -202,12 +160,12 @@ void  IDirect3DRenderer::Rendering()const
 				}
 
 				srvs[nSRViewCounts] = m_pDSShaderResourceView.Get();
-
 				nSRViewCounts++;
+
 				srvs[nSRViewCounts] = m_pSTShaderResourceView.Get();
-
 				nSRViewCounts++;
-				srvs[nSRViewCounts] = m_pClusterRTShaderResourceView.Get();
+
+				//srvs[nSRViewCounts] = m_pClusterRTShaderResourceView.Get();
 
 				pd3dDeviceContext->PSSetShaderResources( 0, RT_TEXTURE_COUNTS, srvs );
 				pd3dDeviceContext->PSSetSamplers( 0, 1, &m_sampler );
@@ -234,6 +192,51 @@ void  IDirect3DRenderer::Rendering()const
 #endif // ! _DEBUG
 
 }// end Rendering()const
+
+
+void  IDirect3DRenderer::ComputeLight()const
+
+{
+		pd3dDeviceContext->OMSetRenderTargets( 0, nullptr, nullptr );
+
+
+		//m_pClusterVShader->UpdateShader();
+		//m_pClusterPShader->UpdateShader();
+		//pd3dDeviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
+		//pd3dDeviceContext->RSSetState( m_rasterStates[Graphics::eNoneSolid] );
+		//pd3dDeviceContext->PSSetShaderResources( 0, 0, nullptr );
+		//pd3dDeviceContext->PSSetSamplers( 0, 0, nullptr );
+
+		auto  strBuffer = PointLight::GetStructuredBuffer();
+		auto  ptLights = strBuffer->Map();
+		for ( int i = 0; i < PointLight::s_nLightCounts; i++ )
+				ptLights[i] = PointLight::s_instanceLights[i];
+
+		strBuffer->Unmap();
+
+		ID3D11ShaderResourceView*  srvLight = strBuffer->GetShaderResourceView();
+		pd3dDeviceContext->PSSetShaderResources( 7, 1, &srvLight );
+		pd3dDeviceContext->CSSetShaderResources( 7, 1, &srvLight );
+		ID3D11UnorderedAccessView*  uav[ ] = { m_pClusterUAV.Get(), m_pLightIndexTexture->GetUnorderedAccessView() };
+		pd3dDeviceContext->CSSetUnorderedAccessViews( 0, 2, uav, 0 );
+
+		m_pClusterCShader->UpdateShader();
+
+		//m_pVertexPtLight->BindBuffer();
+		//pd3dDeviceContext->DrawInstanced( m_pVertexPtLight->GetVertexCounts(), PointLight::s_nLightCounts, 0, 0 );
+
+		POINT  scSize = m_pID3D->GetScreenSize();
+		const  uint  thread_x = ( scSize.x + NUM_TILE_PER_PIXELS - 1 ) / NUM_TILE_PER_PIXELS;
+		const  uint  thread_y = ( scSize.y + NUM_TILE_PER_PIXELS - 1 ) / NUM_TILE_PER_PIXELS;
+		constexpr  uint  thread_z = NUM_DEPTH_SIZE;
+		pd3dDeviceContext->Dispatch( thread_x, thread_y, thread_z );
+
+		pd3dDeviceContext->CSSetShader( nullptr, nullptr, 0 );
+		pd3dDeviceContext->GSSetShader( nullptr, nullptr, 0 );
+
+		// todo: ライトをインスタンス描画する.
+
+}/* Done light rendering */
 
 
 HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
@@ -314,12 +317,12 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				ZeroMemory( &tex3dDesc, sizeof( tex3dDesc ) );
 				tex3dDesc.Width = screen.x;
 				tex3dDesc.Height = screen.y;
-				tex3dDesc.Depth = 16;
+				tex3dDesc.Depth = NUM_DEPTH_SIZE;
 				tex3dDesc.MipLevels = 1;
 				tex3dDesc.Format = DXGI_FORMAT_R32G32_UINT;// R32 : offset, G32 : [PointLightCount, SpotLightCount]
-				tex3dDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-				tex3dDesc.Usage = D3D11_USAGE_DYNAMIC;
-				tex3dDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+				tex3dDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
+				tex3dDesc.Usage = D3D11_USAGE_DEFAULT;
+				tex3dDesc.CPUAccessFlags = 0;
 				tex3dDesc.MiscFlags = 0;
 
 				hr = pd3dDevice->CreateTexture3D( &tex3dDesc, nullptr, &m_pClusterRTTexture );
@@ -332,11 +335,11 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				D3D11_RENDER_TARGET_VIEW_DESC  rtDesc;
 				rtDesc.Format = tex3dDesc.Format;
 				rtDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
-				rtDesc.Texture3D.WSize = 16;
+				rtDesc.Texture3D.WSize = NUM_DEPTH_SIZE;
 				rtDesc.Texture3D.FirstWSlice = 0;
 				rtDesc.Texture3D.MipSlice = 0;
 
-				hr = pd3dDevice->CreateRenderTargetView( m_pClusterRTTexture.Get(), nullptr, &m_pClusterRTView );
+				//hr = pd3dDevice->CreateRenderTargetView( m_pClusterRTTexture.Get(), nullptr, &m_pClusterRTView );
 
 				D3D11_SHADER_RESOURCE_VIEW_DESC  srvDesc;
 				ZeroMemory( &srvDesc, sizeof( srvDesc ) );
@@ -352,12 +355,13 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				ZeroMemory( &uavDesc, sizeof( uavDesc ) );
 				uavDesc.Format = tex3dDesc.Format;
 				uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE3D;
-				uavDesc.Texture3D.WSize = 16;
+				uavDesc.Texture3D.WSize = NUM_DEPTH_SIZE;
 				uavDesc.Texture3D.FirstWSlice = 0;
 				uavDesc.Texture3D.MipSlice = 0;
 
-				pd3dDevice->CreateUnorderedAccessView( m_pClusterRTTexture.Get(), nullptr, &m_pClusterUAV );
+				pd3dDevice->CreateUnorderedAccessView( m_pClusterRTTexture.Get(), &uavDesc, &m_pClusterUAV );
 
+				m_pLightIndexTexture = new  Graphics::Texture1D( DXGI_FORMAT_R16_UINT, 1000, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS );
 		}
 
 		// クラスタ用 インプットレイアウト.
@@ -381,6 +385,7 @@ HRESULT  IDirect3DRenderer::CreateMultipleRenderTargetView()
 				m_pClusterVShader = CreateVertexShader( L"shader/Light.hlsl", "vsmain", "vs_5_0", numClusterLayouts, clLayout );
 				m_pClusterGShader = CreateGeometryShader( L"shader/Light.hlsl", "gsmain" );
 				m_pClusterPShader = CreatePixelShader( L"shader/Light.hlsl", "psmain" );
+				m_pClusterCShader = CreateComputeShader( L"shader/ComputeLight.hlsl", "main" );
 
 				// ポイントライトの構造体バッファを作成
 				PointLight::SetConstantBuffer();
@@ -674,6 +679,54 @@ Graphics::PixelShader*  IDirect3DRenderer::CreatePixelShader( LPCWSTR  szFileNam
 }
 
 
+Graphics::ComputeShader*  IDirect3DRenderer::CreateComputeShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szCSModel )
+{
+		_bstr_t  bstr( szFileName );
+		std::string  strShader = bstr;
+		strShader += "-";
+		strShader += szEntryPoint;
+		const  size_t  shaderHash = std::hash<std::string>()( strShader );
+		const  Graphics::ShaderId  shaderId = m_computeShaderList.size();
+
+		// 重複で生成を防止
+		for ( auto cs : m_computeShaderList )
+		{
+				if ( cs->entryPointHash == shaderHash )
+						return  cs;
+		}
+
+		HRESULT  hr = S_OK;
+		ID3DBlob*  pCSBlob = nullptr;
+		ID3D11ComputeShader*  pComputeShader = nullptr;
+
+		hr = D3D11Utility::CompileShaderFromFile( szFileName, szEntryPoint, szCSModel, &pCSBlob );
+		if ( FAILED( hr ) )
+		{
+				std::cout << "<IDirect3DRenderer>  Failed to compile a pixel shader by: " << szEntryPoint << std::endl;
+				SafeRelease( pCSBlob );
+				return  nullptr;
+		}
+
+		// ピクセルシェーダーの生成
+		hr = pd3dDevice->CreateComputeShader( pCSBlob->GetBufferPointer(), pCSBlob->GetBufferSize(), NULL, &pComputeShader );
+		SafeRelease( pCSBlob );
+		if ( FAILED( hr ) )
+		{
+				std::cout << "<IDirect3DRenderer>  Failed to create a pixel shader.\n";
+				return  nullptr;
+		}
+
+		// シェーダ生成
+		m_computeShaderList.push_back( new  Graphics::ComputeShader( pComputeShader ) );
+		// ハッシュ値と固有IDの設定
+		m_computeShaderList.back()->entryPointHash = shaderHash;
+		m_computeShaderList.back()->m_shaderId = shaderId;
+		m_computeShaderList.back()->m_name = strShader;
+
+		return  m_computeShaderList.back();
+}
+
+
 Graphics::Material*  IDirect3DRenderer::CreateMaterial( std::string  name )
 {
 		Graphics::Material*  material = new  Graphics::Material( m_materialList.size() );
@@ -741,6 +794,16 @@ Graphics::PixelShader*  IDirect3DRenderer::GetPixelShader( size_t  index )const
 }
 
 
+Graphics::ComputeShader*  IDirect3DRenderer::GetComputeShader( size_t  index )const
+{
+		if ( index < m_computeShaderList.size() )
+				return  m_computeShaderList[index];
+
+		printf( "<IDirect3DRenderer> GetComputeShader( %d ) invalid value.\n", index );
+		return  nullptr;
+}
+
+
 FbxLoader  IDirect3DRenderer::GetFbxLoader( std::string  fileName )const
 {
 		size_t  meshHash = std::hash<std::string>()( fileName );
@@ -748,7 +811,8 @@ FbxLoader  IDirect3DRenderer::GetFbxLoader( std::string  fileName )const
 #if  defined  (DEBUG) || (_DEBUG)
 		return  m_fbxLoaderMap.at( meshHash );// 範囲外指定時に例外を投げる.
 #else// RELEASE
-		return  m_fbxLoaderMap[meshHash];// 範囲外指定時に例外を投げないで要素数拡張.
+		return  m_fbxLoaderMap.at( meshHash );// 範囲外指定時に例外を投げる.
+		//return  m_fbxLoaderMap[meshHash];// 範囲外指定時に例外を投げないで要素数拡張.
 #endif
 }
 

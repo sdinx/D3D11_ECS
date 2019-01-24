@@ -14,6 +14,8 @@
 #include  <d3d11utility/Systems\IDirect3D.h>
 #include  <IGraphicsRenderer.h>
 #include  <d3d11utility/components/Renderable.h>
+#include  <d3d11utility/graphics/ComputeShader.h>
+#include  <d3d11utility/graphics/Texture1D.h>
 #include  <d3d11utility/systems/FbxLoader.h>
 #include  <unordered_map>
 #include  <vector>
@@ -99,6 +101,7 @@ namespace  D3D11Utility
 						std::vector<Graphics::VertexShader*>  m_vertexShaderList;
 						std::vector<Graphics::GeometryShader*>  m_geometryShaderList;
 						std::vector<Graphics::PixelShader*>  m_pixelShaderList;
+						std::vector<Graphics::ComputeShader*>  m_computeShaderList;
 						std::unordered_map<size_t, FbxLoader>  m_fbxLoaderMap;
 
 						/* rendering variables */
@@ -124,6 +127,8 @@ namespace  D3D11Utility
 						Graphics::VertexShader*  m_pClusterVShader;
 						Graphics::GeometryShader*  m_pClusterGShader;
 						Graphics::PixelShader*  m_pClusterPShader;
+						Graphics::ComputeShader*  m_pClusterCShader;
+						Graphics::Texture1D*  m_pLightIndexTexture;
 						FLOAT  m_fClearColors[4] = { 0.0f,0.125f,0.3f,1.0f };
 
 				public:
@@ -151,6 +156,7 @@ namespace  D3D11Utility
 						Graphics::VertexShader*  CreateVertexShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szVSModel = "vs_5_0", UINT  numLayouts = 0, D3D11_INPUT_ELEMENT_DESC*  layouts = nullptr );
 						Graphics::GeometryShader*  CreateGeometryShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szGSModel = "gs_5_0" );
 						Graphics::PixelShader*  CreatePixelShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szPSModel = "ps_5_0" );
+						Graphics::ComputeShader*  CreateComputeShader( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szCSModel = "cs_5_0" );
 						Graphics::VertexBuffer*  LoadFbxModel( FbxString  fileName );
 
 						/* Getter */
@@ -159,8 +165,11 @@ namespace  D3D11Utility
 						Graphics::VertexShader*  GetVertexShader( size_t  index )const;
 						Graphics::GeometryShader*  GetGeometryShader( size_t  index )const;
 						Graphics::PixelShader*  GetPixelShader( size_t  index )const;
+						Graphics::ComputeShader*  GetComputeShader( size_t  index )const;
 						FbxLoader  GetFbxLoader( std::string  fileName )const;
 
+						/* Utilities */
+						void  ComputeLight()const;
 						void  Release();
 						void  Rendering()const;
 

@@ -27,6 +27,7 @@ struct  ConstantBufferForPerFrame
 		Matrix4x4  projection;
 		Matrix4x4  invView;
 		Matrix4x4  invProjection;
+		DirectX::XMFLOAT2  nearFarClip;
 		DirectX::XMVECTOR  cameraPos;
 };
 
@@ -134,7 +135,7 @@ void  Camera::UpdateView()
 
 		auto  mtxFocus = DirectX::XMMatrixTranslationFromVector( m_focusPosition.get128() );
 		mtxFocus = XMMatrixMultiply( mtxFocus, XMLoadFloat4x4( &mtxWorld ) );
-		
+
 		// ƒrƒ…[s—ñ•ÏŠ·
 		DirectX::XMStoreFloat4x4(
 				&m_view,
@@ -148,6 +149,8 @@ void  Camera::UpdateView()
 
 void  Camera::UpdateProjection( FLOAT fovAngleY, FLOAT aspectHByW, FLOAT nearZ, FLOAT farZ )
 {
+		m_fNearClip = nearZ;
+		m_fFarClip = farZ;
 		DirectX::XMStoreFloat4x4( &m_projection, DirectX::XMMatrixPerspectiveFovLH( fovAngleY, aspectHByW, nearZ, farZ ) );
 }
 
@@ -157,6 +160,7 @@ void  Camera::UpdateConstantBuffer()
 		ConstantBufferForPerFrame  cbuffer;
 		cbuffer.view = GetMatrix4x4View();
 		cbuffer.projection = GetMatrix4x4Projection();
+		cbuffer.nearFarClip = { m_fNearClip, m_fFarClip };
 		cbuffer.cameraPos = m_transform->GetPosition().get128();
 		XMVECTOR  vec;
 		XMStoreFloat4x4( &cbuffer.invView, XMMatrixInverse( &vec, XMLoadFloat4x4( &cbuffer.view ) ) );
@@ -166,6 +170,7 @@ void  Camera::UpdateConstantBuffer()
 		pd3dDeviceContext->VSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 		pd3dDeviceContext->GSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 		pd3dDeviceContext->PSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
+		pd3dDeviceContext->CSSetConstantBuffers( s_nConstantBufferSlot, 1, &s_pConstantBuffer );
 
 }
 
