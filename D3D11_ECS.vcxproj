@@ -109,6 +109,7 @@
     <ClInclude Include="header\d3d11utility\systems\TextureManager.h" />
     <ClInclude Include="header\d3d11utility\Timer.h" />
     <ClInclude Include="header\d3d11utility\XInputController.h" />
+    <ClInclude Include="header\Engine.h" />
     <ClInclude Include="header\game\GameObject.h" />
     <ClInclude Include="header\game\GameUtility.h" />
     <ClInclude Include="header\game\scene\BaseScene.h" />
@@ -182,8 +183,8 @@
     <ClCompile Include="source\d3d11utility\systems\TextureManager.cpp" />
     <ClCompile Include="source\d3d11utility\systems\Timer.cpp" />
     <ClCompile Include="source\d3d11utility\XInputController.cpp" />
+    <ClCompile Include="source\Engine.cpp" />
     <ClCompile Include="source\EntryPoint.cpp" />
-    <ClCompile Include="source\GameLoop.cpp" />
     <ClCompile Include="source\game\GameObject.cpp" />
     <ClCompile Include="source\game\GameUtility.cpp" />
     <ClCompile Include="source\game\scene\Tutorial.cpp" />

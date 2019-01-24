@@ -7,16 +7,22 @@
 #define  _INCLUDED_D3D11_UTILITY_OBJECT_
 
 //----------------------------------------------------------------------------------
-// Includes
+// includes
 //----------------------------------------------------------------------------------
 #include  <d3d11utility.h>
 #include  <d3d11utility/Interface.h>
 #include  <d3d11utility/Timer.h>
-#include  <vector>
+#include  <d3d11utility/systems/IDirect3D.h>
+#include  <unordered_map>
+
+//----------------------------------------------------------------------------------
+// defines
+//----------------------------------------------------------------------------------
+
 
 namespace  D3D11Utility
 {
-		using  ObjectId = uint;
+		using  ObjectId = unsigned;
 
 		class  Object
 		{
@@ -27,29 +33,18 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 
-				Object() = delete;
-				Object( Object&  object ) :
-						m_objectId( object.m_objectId ),
-						m_ptr( &object )
-				{
-						m_isAlive = true;
-				}
-				Object( std::string  name ) :
+				Object() :
 						m_isAlive( true ),
-						m_objectId( s_objectList.size() ),
-						m_ptr( this ),
-						m_endTime( 0.0f )
+						m_objectId( std::hash<Object*>()( this ) ),
+						m_ptr( this )
 				{
-						m_className = typeid( *this ).name();
-
-						//s_objectList.push_back( *this );
-
+						//m_className = nullptr;
+						auto  d3dInterface = _Singleton<Systems::IDirect3D>::GetInstance();
+						pd3dDevice = d3dInterface->GetDevice();
+						pd3dDeviceContext = d3dInterface->GetDeviceContext();
 				}
-				~Object()
+				virtual  ~Object()
 				{
-						s_objectList[m_objectId].m_isAlive = false;
-						s_objectList[m_objectId].m_endTime = m_timer.GetElapsed();
-
 						m_className.clear();
 						m_className.shrink_to_fit();
 				}
@@ -58,14 +53,19 @@ namespace  D3D11Utility
 				//----------------------------------------------------------------------------------
 				// private variables
 				//----------------------------------------------------------------------------------
-				static  std::vector<Object>  s_objectList;
-
 				bool  m_isAlive;
 				const  ObjectId  m_objectId;
 				const  void*  m_ptr;
 				float  m_endTime;
 				Timer  m_timer;
 				std::string  m_className;
+
+		protected:
+				//----------------------------------------------------------------------------------
+				// protected variables
+				//----------------------------------------------------------------------------------
+				ID3D11Device*  pd3dDevice;
+				ID3D11DeviceContext*  pd3dDeviceContext;
 
 		private:
 				//----------------------------------------------------------------------------------

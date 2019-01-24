@@ -15,6 +15,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <d3d11utility/Platform.h>
+#include  <d3d11utility/Object.h>
 #include  <d3d11.h>
 #include  <memory>
 #include  <wrl/client.h>
@@ -23,7 +24,7 @@ namespace  D3D11Utility
 {
 		namespace  Graphics
 		{
-				class  Texture1D
+				class  Texture1D :public  Object
 				{
 
 				public:

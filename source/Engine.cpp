@@ -1,24 +1,29 @@
 //----------------------------------------------------------------------------------
+// Include
+//----------------------------------------------------------------------------------
+#include  <d3d11utility/Timer.h>
+#include  <Engine.h>
+#include  <game\Scene\Tutorial.h>
+
+//----------------------------------------------------------------------------------
+// using  namespace
+//----------------------------------------------------------------------------------
+using  namespace  D3D11Utility;
+using  namespace  D3D11Utility::Systems;
+
+//----------------------------------------------------------------------------------
 // comments
 //----------------------------------------------------------------------------------
 /* NOTHING */
 
-//----------------------------------------------------------------------------------
-// Includes
-//----------------------------------------------------------------------------------
-#include  <game/GameUtility.h>
-#include  <game\Scene\Tutorial.h>
-#include  <d3d11utility/Timer.h>
-using  namespace  D3D11Utility::Systems;
 
-
-void  GameUtility::GameInit()
+void  Engine::GameInit()
 {
 
 }
 
 
-void  GameUtility::GameLoop()
+void  Engine::GameLoop()
 {
 		static bool isInit = true;
 		if ( isInit ) {

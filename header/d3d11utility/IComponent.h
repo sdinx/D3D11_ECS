@@ -39,7 +39,7 @@ namespace  D3D11Utility
 		/* const variables */
 		static  const  int  COMPONENT_ID_INVALID = STATIC_ID_INVALID;
 
-		class  IComponent
+		class  IComponent :public  Object
 		{
 				friend  class  Systems::ComponentManager;
 
@@ -48,7 +48,7 @@ namespace  D3D11Utility
 				// other
 				//----------------------------------------------------------------------------------
 
-				IComponent() :
+				IComponent() :Object(),
 						m_isActive( true ),
 						m_isUpdating( true )
 				{}

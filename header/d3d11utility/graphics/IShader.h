@@ -15,6 +15,7 @@
 // Includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Interface.h>
+#include  <d3d11utility/Object.h>
 #include  <d3d11.h>
 #include  <string>
 
@@ -25,7 +26,7 @@ namespace  D3D11Utility
 		{
 				using  ShaderId = int;
 
-				class  IShader
+				class  IShader :public  Object
 				{
 						friend  class  Systems::IDirect3DRenderer;
 

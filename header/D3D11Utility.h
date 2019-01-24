@@ -27,7 +27,8 @@
 #include  <string>
 #include  <d3d11.h>
 #include  <d3dcompiler.h>
-#include  <D3D11utility\Platform.h>
+#include  <d3d11utility/Object.h>
+#include  <d3d11utility\Platform.h>
 
 
 namespace  D3D11Utility
@@ -111,24 +112,15 @@ namespace  D3D11Utility
 		CONST INT  SCREEN_HEIGHT = 600;
 
 		//----------------------------------------------------------------------------------
-		// extern variables
-		// todo: àÍéûìIÇ»Ç‡ÇÃÇ»ÇÃÇ≈îÒêÑèß
-		//----------------------------------------------------------------------------------
-		extern  ID3D11Device*  pd3dDevice;
-		extern  ID3D11DeviceContext*  pd3dDeviceContext;
-		extern  ID3D11Buffer*  pCBufferObject;
-
-		//----------------------------------------------------------------------------------
 		// functions
 		//----------------------------------------------------------------------------------
 		HRESULT  CompileShaderFromFile( LPCWSTR  szFileName, LPCSTR  szEntryPoint, LPCSTR  szShaderModel, ID3DBlob**  ppBlobOut );
 		HRESULT  CreateConstantBuffer( ID3D11Buffer*&  ppCB, size_t  byteWidth );
 		UINT  CreatePrimitive( ePrimitiveType  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices );
 		UINT  CreatePrimitive( ePrimitiveType  primitiveType, Vector3  position, Vector3  size, VERTEX*&  ppVertices, INT*& pIndices );
-		void  SetD3DDevices( ID3D11Device*  pDevice, ID3D11DeviceContext*  pDeviceContext );
 		FLOAT  GetAspectRatio();
-		// ID3D11Device*  GetD3DDevice();
-		// ID3D11DeviceContext*  GetD3DDeviceContext();
+		ID3D11Device*  GetD3DDevice();
+		ID3D11DeviceContext*  GetD3DDeviceContext();
 
 } // namespace  D3D11Utility
 

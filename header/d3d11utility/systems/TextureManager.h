@@ -47,7 +47,7 @@ namespace  D3D11Utility
 		{
 				using  SystemId = int;
 
-				class  TextureManager:  public  _Singleton<TextureManager>
+				class  TextureManager : public  _Singleton<TextureManager>, public  Object
 				{
 						friend  class  _Singleton<TextureManager>;
 

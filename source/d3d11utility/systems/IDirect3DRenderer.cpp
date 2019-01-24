@@ -26,6 +26,8 @@ IDirect3DRenderer::IDirect3DRenderer( ComponentManager*  pComponentManagerInstan
 		m_componentManager( pComponentManagerInstance ),
 		m_pID3D( _Singleton<IDirect3D>::GetInstance() )
 {
+		pd3dDevice = m_pID3D->GetDevice();
+		pd3dDeviceContext = m_pID3D->GetDeviceContext();
 		CreateMultipleRenderTargetView();
 }
 

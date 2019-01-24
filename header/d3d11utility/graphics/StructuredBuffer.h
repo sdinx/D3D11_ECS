@@ -22,7 +22,7 @@ namespace  D3D11Utility
 		{
 
 				template<class  T>
-				class  StructuredBuffer  final
+				class  StructuredBuffer  final :public  Object
 				{
 
 				public:

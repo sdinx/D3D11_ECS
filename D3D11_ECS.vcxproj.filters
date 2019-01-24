@@ -280,6 +280,9 @@
     <ClInclude Include="header\d3d11utility\graphics\Texture1D.h">
       <Filter>header\d3d11utility\graphics</Filter>
     </ClInclude>
+    <ClInclude Include="header\Engine.h">
+      <Filter>header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\d3d11utility\graphics\GeometryShader.cpp">
@@ -360,9 +363,6 @@
     <ClCompile Include="source\EntryPoint.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="source\GameLoop.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\D3D11Utility.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -419,6 +419,9 @@
     </ClCompile>
     <ClCompile Include="source\d3d11utility\graphics\Texture1D.cpp">
       <Filter>source\d3d11utility\graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Engine.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

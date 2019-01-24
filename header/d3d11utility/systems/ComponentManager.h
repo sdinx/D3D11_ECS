@@ -55,6 +55,8 @@ namespace  D3D11Utility
 						// private  variables
 						//----------------------------------------------------------------------------------
 
+						ID3D11Device*  pd3dDevice;
+						ID3D11DeviceContext*  pd3dDeviceContext;
 						EntityComponentTable  m_entityComponetIdTable;
 						ComponentTable  m_componentTable;
 
@@ -117,6 +119,8 @@ namespace  D3D11Utility
 								component->m_parentsEntityId = entity;
 								component->m_pComponentManager = this;
 								component->m_componentId = componentId;
+								component->pd3dDevice = pd3dDevice;
+								component->pd3dDeviceContext = pd3dDeviceContext;
 
 								m_componentTable[componentId].push_back( component );
 								// TODO: need to output debug string.

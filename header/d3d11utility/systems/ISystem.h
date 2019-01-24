@@ -23,7 +23,7 @@ namespace  D3D11Utility
 				using  SystemId = int;
 				static  const  SystemId  SYSTEM_ID_INVALID = STATIC_ID_INVALID;
 
-				class  ISystem
+				class  ISystem :public  Object
 				{
 						friend  class  SystemManager;
 

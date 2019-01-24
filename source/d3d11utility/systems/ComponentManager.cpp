@@ -2,6 +2,7 @@
 // Include
 //----------------------------------------------------------------------------------
 #include  <d3d11utility/systems/ComponentManager.h>
+#include  <d3d11utility/systems/IDirect3D.h>
 #include  <d3d11utility/Timer.h>
 #include  <omp.h>
 
@@ -19,7 +20,9 @@ using  namespace  D3D11Utility::Systems;
 //----------------------------------------------------------------------------------
 ComponentManager::ComponentManager()
 {
-
+		auto  d3dInterface = _Singleton<IDirect3D>::GetInstance();
+		pd3dDevice = d3dInterface->GetDevice();
+		pd3dDeviceContext = d3dInterface->GetDeviceContext();
 }
 
 
@@ -43,9 +46,9 @@ void  ComponentManager::AddEntity( const  EntityId  entity )
 }
 
 
- //----------------------------------------------------------------------------------
- // func: Release() : void
- //----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+// func: Release() : void
+//----------------------------------------------------------------------------------
 void  ComponentManager::Release()
 {
 		for ( auto entityTable : m_entityComponetIdTable )

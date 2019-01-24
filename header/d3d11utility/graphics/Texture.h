@@ -26,7 +26,7 @@ namespace  D3D11Utility
 		{
 				using  TextureId = int;
 
-				class  Texture
+				class  Texture :public  Object
 				{
 						friend  class  Systems::TextureManager;
 

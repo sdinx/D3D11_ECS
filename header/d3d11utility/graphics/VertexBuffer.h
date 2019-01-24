@@ -27,7 +27,7 @@ namespace  D3D11Utility
 		{
 				using  MeshId = int;
 
-				class  VertexBuffer
+				class  VertexBuffer :public  Object
 				{
 
 				public:

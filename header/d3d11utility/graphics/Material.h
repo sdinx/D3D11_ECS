@@ -19,7 +19,7 @@ namespace  D3D11Utility
 		namespace  Graphics
 		{
 
-				class  Material
+				class  Material :public  Object
 				{
 						friend  class  Systems::DebugSystem;
 						struct  CBufferMaterial

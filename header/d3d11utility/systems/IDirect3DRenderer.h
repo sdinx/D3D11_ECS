@@ -94,6 +94,9 @@ namespace  D3D11Utility
 
 						static  const  unsigned  RT_ARRAY_COUNTS = 3;
 
+						ID3D11Device*  pd3dDevice;
+						ID3D11DeviceContext*  pd3dDeviceContext;
+
 						std::shared_ptr<IDirect3D>  m_pID3D;
 						ComponentManager*  m_componentManager;
 						std::vector<Graphics::Material*>  m_materialList;

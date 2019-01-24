@@ -4,6 +4,7 @@
 #include  <d3d11utility\Systems\IDirect3D.h>
 #include  <D3D11Utility.h>
 #include  <d3d11utility\components/Renderable.h>
+#include  <Engine.h>
 #include  <game/GameUtility.h>
 #include  <imgui/imgui.h>
 #include  <imgui/imgui_impl_dx11.h>
@@ -300,8 +301,8 @@ HRESULT  IDirect3D::CreateDefaultDepthStencil()
 VOID  IDirect3D::MainLoop()
 {
 		// デバイスのポインタを名前空間のグローバル変数へ保持させる
-		D3D11Utility::SetD3DDevices( m_pd3dDevice, m_pd3dDeviceContext );
-		GameUtility::GameInit();
+		Engine  engine;
+		engine.GameInit();
 
 		MSG msg;
 		ZeroMemory( &msg, sizeof( msg ) );
@@ -316,7 +317,7 @@ VOID  IDirect3D::MainLoop()
 				}// end if
 				else
 				{
-						GameUtility::GameLoop();
+						engine.GameLoop();
 				}// end else
 
 		}// end while
