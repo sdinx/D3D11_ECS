@@ -19,14 +19,66 @@
 
 namespace  D3D11Utility
 {
+
+		struct  Keyframe
+		{
+				int64  frameNum;
+				FbxAMatrix  globalMatrix;
+				Keyframe*  next;
+
+				Keyframe() :next( nullptr )
+				{}
+		};// struct KeyFrame
+
+		struct  Joint
+		{
+				int  parentIndex;
+				std::string  name;
+				FbxAMatrix  globalBindposeInverse;
+				std::vector<Keyframe>  keyframes;
+				FbxNode*  pNode;
+
+				Joint() :
+						pNode( nullptr )
+				{
+						globalBindposeInverse.SetIdentity();
+						parentIndex = -1;
+				}
+				~Joint()
+				{
+						for ( auto anim : keyframes )
+						{
+
+						}
+				}
+		};// struct Joint
+
+		struct  WeightPair
+		{
+				uint  index;
+				float  weight;
+		};
+
+		struct  Skeleton
+		{
+				std::vector<Joint>  joints;
+		};
+
+		struct  AnimationClip
+		{
+				double  duration;
+				std::vector<Keyframe>  keyframes;
+		};// struct AnimationClip
+
 		struct  SkinMesh
 		{
-				std::vector<std::vector<float>>  weights;
+				std::vector<WeightPair>  weightPair;
 				std::vector<FbxAMatrix>  base_inverse;
 		};// struct SkinMesh
 
 		struct  AnimeContainer
 		{
+
 				FbxString  animName;
 				int64  animLength;
 		};// struct AnimeContainer
@@ -78,9 +130,11 @@ namespace  D3D11Utility
 						FbxString  m_fileName;
 						FbxScene*  m_pScene;
 						FbxImporter*  m_pImporter;
+						Skeleton  m_skeleton;
 						std::vector<ModelContainer>  m_modelContainer;
 						std::vector<Graphics::Material>  m_materials;
 						std::vector<AnimeContainer>  m_animeContainer;
+						bool  m_isAnimation;
 
 				public:
 						//----------------------------------------------------------------------------------
@@ -100,6 +154,10 @@ namespace  D3D11Utility
 						std::vector<INT>  LoadIndices( FbxMesh*  pMesh );
 						Graphics::Material  LoadMaterial( FbxSurfaceMaterial*  material );
 						SkinMesh  LoadSkin( FbxMesh*  pMesh );
+						void  LoadAnimation( FbxScene*  pScene );
+						void  LoadSkeltonHierarchy( FbxNode*  pRoot );
+						void  LoadSkeletonHierarchyRecursively( FbxNode*  pNode, int  nDepth, int  myIndex, int  parentIndex );
+						uint  FindJointIndexFromName( const  std::string&  jointName );
 
 				public:
 						//----------------------------------------------------------------------------------

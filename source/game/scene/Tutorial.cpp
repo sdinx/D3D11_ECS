@@ -122,6 +122,7 @@ void  Tutorial::Awake()
 		//Graphics::VertexBuffer*  vtxMutant = m_pd3dRenderer->LoadFbxModel( "res/mutant.fbx" );
 		Graphics::VertexBuffer*  vtxRifle = m_pd3dRenderer->LoadFbxModel( "res/rifle.fbx" );
 		Graphics::VertexBuffer*  vtxFubuking = m_pd3dRenderer->LoadFbxModel( "res/fubuking.fbx" );
+		Graphics::VertexBuffer*  vtxMutant = m_pd3dRenderer->LoadFbxModel( "res/mutant.fbx" );
 
 
 		/* テクスチャ作成 */

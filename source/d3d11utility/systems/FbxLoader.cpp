@@ -2,6 +2,7 @@
 // includes
 //----------------------------------------------------------------------------------
 #include  <D3D11Utility\Systems\FbxLoader.h>
+#include  <iostream>
 
 //----------------------------------------------------------------------------------
 // comments
@@ -23,7 +24,8 @@ FbxManager*  FbxLoader::s_pFbxManager = nullptr;
 
 FbxLoader::FbxLoader() :
 		m_pScene( nullptr ),
-		m_pImporter( nullptr )
+		m_pImporter( nullptr ),
+		m_isAnimation( false )
 {
 		CreateFbxManager();
 }
@@ -31,7 +33,8 @@ FbxLoader::FbxLoader() :
 
 FbxLoader::FbxLoader( FbxString  fileName ) :
 		m_pScene( nullptr ),
-		m_pImporter( nullptr )
+		m_pImporter( nullptr ),
+		m_isAnimation( false )
 {
 		// FbxManager がない場合のみ生成
 		CreateFbxManager();
@@ -70,6 +73,9 @@ void  FbxLoader::CreateFbxManager()
 
 void  FbxLoader::LoadFbxModel( FbxScene*  pScene )
 {
+		LoadSkeltonHierarchy( pScene->GetRootNode() );
+		if ( m_skeleton.joints.empty() == false )
+				m_isAnimation = true;
 
 		FbxMesh*  pMesh = nullptr;
 		uint  nMeshCount = pScene->GetMemberCount<FbxMesh>();
@@ -326,9 +332,17 @@ Graphics::Material  FbxLoader::LoadMaterial( FbxSurfaceMaterial*  material )
 SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 {
 		SkinMesh  skin;
+		FbxNode* pNode = pMesh->GetNode();
+		WeightPair  weightPair;
 
-		const  auto  skinCount = pMesh->GetDeformerCount( FbxDeformer::eSkin );
-		if ( skinCount == 0 )
+		FbxAMatrix  geometryTransform(
+				pNode->GetGeometricTranslation( FbxNode::eSourcePivot ),
+				pNode->GetGeometricRotation( FbxNode::eSourcePivot ),
+				pNode->GetGeometricScaling( FbxNode::eSourcePivot )
+		);
+
+		const  auto  nSkinCounts = pMesh->GetDeformerCount( FbxDeformer::eSkin );
+		if ( nSkinCounts == 0 )
 				return  skin;// スケルタルアニメーションなし
 
 		// 0番目のスキンデフォーマーを取得
@@ -338,68 +352,124 @@ SkinMesh  FbxLoader::LoadSkin( FbxMesh*  pMesh )
 		if ( clusterCount == 0 )
 				return  skin;
 
-		skin.weights.resize( pMesh->GetPolygonVertexCount() );
-		for ( auto& weight : skin.weights )
-		{
-				// サイズ確保と初期値代入
-				weight.resize( clusterCount, 0.0f );
-		}// end for
-
 		skin.base_inverse.resize( clusterCount );
 
 		const  auto  vtxIndexCount = pMesh->GetPolygonVertexCount();
 		const  int*  vtxIndices = pMesh->GetPolygonVertices();
 
 		int  k = 0, j = 0;
-		int  indexCount = 0;
+		int  indexCounts = 0;
 		int*  indices = nullptr;
 		double*  weights = nullptr;
 		float  w = 0;
-		FbxCluster*  cluster = nullptr;
+		FbxCluster*  currentCluster = nullptr;
+		FbxAMatrix  transformMatrix;
+		FbxAMatrix  transformLinkMatrix;
+		FbxAMatrix  globalBindposeInverseMatrix;
 
 		for ( int i = 0; i < clusterCount; i++ )
 		{
-				cluster = fbxSkin->GetCluster( i );
+				currentCluster = fbxSkin->GetCluster( i );
 
-				assert( cluster->GetLinkMode() == FbxCluster::eNormalize );
+				assert( currentCluster->GetLinkMode() == FbxCluster::eNormalize );
 
-				//cluster->GetTransformMatrix()
+				std::string  currentJointName = currentCluster->GetLink()->GetName();
+				uint  currentJointIndex = FindJointIndexFromName( currentJointName );
+				currentCluster->GetTransformMatrix( transformMatrix );
+				currentCluster->GetTransformLinkMatrix( transformLinkMatrix );
+				globalBindposeInverseMatrix = transformLinkMatrix.Inverse() * transformMatrix * geometryTransform;
 
-				indexCount = cluster->GetControlPointIndicesCount();
-				indices = cluster->GetControlPointIndices();
-				weights = cluster->GetControlPointWeights();
+				m_skeleton.joints[currentJointIndex].globalBindposeInverse = globalBindposeInverseMatrix;
+				m_skeleton.joints[currentJointIndex].pNode = currentCluster->GetLink();
 
-				for ( j = 0; j < indexCount; j++ )
+				indexCounts = currentCluster->GetControlPointIndicesCount();
+				indices = currentCluster->GetControlPointIndices();
+				weights = currentCluster->GetControlPointWeights();
+				weightPair.index = currentJointIndex;
+				skin.weightPair.resize( pMesh->GetPolygonVertexCount() );
+				for ( j = 0; j < indexCounts; j++ )
 				{
-						w = static_cast< float >( weights[j] );
-						for ( k = 0; k < vtxIndexCount; k++ )
-								if ( vtxIndices[k] == indices[j] )
-										skin.weights[k][i] = w;
+						weightPair.weight = static_cast< float >( weights[j] );
+						skin.weightPair[currentCluster->GetControlPointIndices()[j]] = weightPair;
+				}
 
-				}//end for
+				//return  skin;
+				if ( m_pScene->GetSrcObjectCount<FbxAnimStack>() == 0 )
+						continue;
+
+				// アニメーション情報取得
+				AnimeContainer  animeContainer;
+
+				FbxAnimStack*  animStack = m_pScene->GetSrcObject < FbxAnimStack>( 0 );
+				FbxString  animStackName = animStack->GetName();
+				animeContainer.animName = animStackName;
+
+				FbxTakeInfo*  takeInfo = m_pScene->GetTakeInfo( animStackName );
+				FbxTime  start = takeInfo->mLocalTimeSpan.GetStart();
+				FbxTime  end = takeInfo->mLocalTimeSpan.GetStop();
+				animeContainer.animLength = end.GetFrameCount( FbxTime::eFrames24 ) - start.GetFrameCount( FbxTime::eFrames24 ) + 1;
+				std::vector<Keyframe>&  keyframes = m_skeleton.joints[currentJointIndex].keyframes;
+				keyframes.resize( animeContainer.animLength );
+				FbxAMatrix  transformOffset;
+				int  keyIndex = 0;
+
+				for ( int64 i = start.GetFrameCount( FbxTime::eFrames24 ); i < end.GetFrameCount( FbxTime::eFrames24 ); i++ )
+				{
+						FbxTime  time;
+						time.SetFrame( i, FbxTime::eFrames24 );
+						keyframes[keyIndex].frameNum = i;
+						transformOffset = pNode->EvaluateGlobalTransform( time )*geometryTransform;
+						keyframes[keyIndex].globalMatrix = transformOffset.Inverse()*currentCluster->GetLink()->EvaluateGlobalTransform( time );
+						keyIndex++;
+				}
+
 		}// end for
 
 		return  skin;
-		// アニメーション情報取得
-		AnimeContainer  animeContainer;
+}
 
-		FbxAnimStack*  animStack = m_pScene->GetSrcObject < FbxAnimStack>( 0 );
-		FbxString  animStackName = animStack->GetName();
-		animeContainer.animName = animStackName;
 
-		FbxTakeInfo*  takeInfo = m_pScene->GetTakeInfo( animStackName );
-		FbxTime  start = takeInfo->mLocalTimeSpan.GetStart();
-		FbxTime  end = takeInfo->mLocalTimeSpan.GetStop();
-		animeContainer.animLength = end.GetFrameCount( FbxTime::eFrames24 ) - start.GetFrameCount( FbxTime::eFrames24 ) + 1;
-
-		for ( int64 i = start.GetFrameCount( FbxTime::eFrames24 ); i < end.GetFrameCount( FbxTime::eFrames24 ); i++ )
+void  FbxLoader::LoadSkeltonHierarchy( FbxNode*  pRoot )
+{
+		FbxNode*  pNode = nullptr;
+		for ( int childIndex = 0; childIndex < pRoot->GetChildCount(); childIndex++ )
 		{
-				FbxTime  time;
-				time.SetFrame( i, FbxTime::eFrames24 );
-
+				pNode = pRoot->GetChild( childIndex );
+				LoadSkeletonHierarchyRecursively( pNode, 0, 0, -1 );
 		}
+}
 
-		return  skin;
+
+void  FbxLoader::LoadSkeletonHierarchyRecursively( FbxNode*  pNode, int  nDepth, int  myIndex, int  parentIndex )
+{
+		Joint joint;
+		if ( pNode->GetNodeAttribute() && pNode->GetNodeAttribute()->GetAttributeType() && pNode->GetNodeAttribute()->GetAttributeType() == FbxNodeAttribute::eSkeleton )
+		{
+				joint.parentIndex = parentIndex;
+				joint.name = pNode->GetName();
+				m_skeleton.joints.push_back( joint );
+		}
+		for ( int i = 0; i < pNode->GetChildCount(); i++ )
+		{
+				LoadSkeletonHierarchyRecursively( pNode->GetChild( i ), nDepth + 1, m_skeleton.joints.size(), myIndex );
+		}
+}
+
+
+uint  FbxLoader::FindJointIndexFromName( const  std::string&  jointName )
+{
+		for ( uint i = 0; i < m_skeleton.joints.size(); ++i )
+				if ( m_skeleton.joints[i].name == jointName )
+						return  i;
+
+		std::cout << "<FbxLoader> Not found joint name :  " << jointName << std::endl;
+		return  -1;
+}
+
+
+void  FbxLoader::LoadAnimation( FbxScene*  pScene )
+{
+
 }
 
 

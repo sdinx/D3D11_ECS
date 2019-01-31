@@ -37,7 +37,7 @@ namespace  D3D11Utility
 		using  ComponentId = int;
 
 		/* const variables */
-		static  const  int  COMPONENT_ID_INVALID = STATIC_ID_INVALID;
+		static  const  ComponentId  COMPONENT_ID_INVALID = STATIC_ID_INVALID;
 
 		class  IComponent :public  Object
 		{
@@ -60,7 +60,7 @@ namespace  D3D11Utility
 				// private  variables
 				//----------------------------------------------------------------------------------
 
-				ComponentId  m_componentId = -1;
+				ComponentId  m_componentId = STATIC_ID_INVALID;
 
 		protected:
 				//----------------------------------------------------------------------------------
